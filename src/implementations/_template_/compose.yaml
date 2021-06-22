@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  router:
+    image: apollo-federation-implementations/graph-router
+    ports:
+      - '4000:4000'
+  users:
+    image: apollo-federation-implementations/users
+    ports:
+      - '4002:4002'
+  inventory:
+    image: apollo-federation-implementations/inventory
+    ports:
+      - '4003:4003'
+  products:
+    build: .
+    ports:
+      - '4001:4001'

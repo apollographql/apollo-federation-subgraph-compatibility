@@ -1,0 +1,36 @@
+{
+  "name": "apollo-federation-implementations",
+  "scripts": {
+    "build": "concurrently \"npm:build:*\"",
+    "docker": "concurrently \"npm:docker:*\"",
+    "minikube:load": "concurrently \"npm:minikube:load:*\"",
+    "minikube:delete": "concurrently \"npm:minikube:delete:*\"",
+    "minikube:delete:service": "concurrently \"npm:minikube:delete:service:*\"",
+    "minikube:delete:deployment": "concurrently \"npm:minikube:delete:deployment:*\"",
+    "minikube:deploy": "concurrently \"npm:minikube:deploy:*\"",
+    "minikube:expose": "concurrently \"npm:minikube:expose:*\"",
+    "start": "concurrently \"npm:start:*\"",
+    "start:graph-router": "node dist/graph-router.js",
+    "start:users": "node dist/subgraphs/users.js",
+    "start:inventory": "node dist/subgraphs/inventory.js",
+    "build:compile": "tsc",
+    "build:supergraph": "npx rover supergraph compose > supergraph.graphql --config supergraph.yaml",
+    "docker:graph-router": "docker build --file=.docker/graph-router.Dockerfile --tag=apollo-federation-implementations/graph-router .",
+    "docker:inventory": "docker build --file=.docker/inventory.Dockerfile --tag=apollo-federation-implementations/inventory .",
+    "docker:users": "docker build --file=.docker/users.Dockerfile --tag=apollo-federation-implementations/users .",
+    "postinstall": "npm run setup",
+    "setup": "npm run build && npm run docker"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@apollo/federation": "^0.25.1",
+    "@apollo/gateway": "^0.28.3",
+    "apollo-server": "^2.25.1",
+    "graphql": "^15.5.0"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "typescript": "^4.3.2"
+  }
+}

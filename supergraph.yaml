@@ -1,0 +1,13 @@
+subgraphs:
+  inventory:
+    routing_url: http://inventory:4003
+    schema:
+      file: ./src/subgraphs/inventory.graphql
+  users:
+    routing_url: http://users:4002
+    schema:
+      file: ./src/subgraphs/users.graphql
+  products:
+    routing_url: http://products:4001
+    schema:
+      file: ./src/implementations/_template_/products.graphql
