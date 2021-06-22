@@ -7,13 +7,13 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-          check-latest: true
+      # - uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '14'
+      #     check-latest: true
 
       #Setup project and package extension
       - run: npm install
