@@ -78,13 +78,15 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
             const startupSuccess = await GraphClient.instance.pingSources();
             if (startupSuccess) {
                 console.log(`Library ${libraryName} started successfully`);
-                results.get(libraryName).startedSuccessfully = true;
-                results.get(libraryName).serviceSdl = await GraphClient.instance.check_service();
-                results.get(libraryName).keySupport.singleField = await GraphClient.instance.check_key_single();
-                results.get(libraryName).keySupport.multipleFields = await GraphClient.instance.check_key_multiple();
-                results.get(libraryName).keySupport.composite = await GraphClient.instance.check_key_composite();
-                results.get(libraryName).requiresSupport = await GraphClient.instance.check_requires();
-                results.get(libraryName).providesSupport = await GraphClient.instance.check_provides();
+                let thing = results.get(libraryName);
+
+                thing.startedSuccessfully = true;
+                thing.serviceSdl = await GraphClient.instance.check_service();
+                thing.keySupport.singleField = await GraphClient.instance.check_key_single();
+                thing.keySupport.multipleFields = await GraphClient.instance.check_key_multiple();
+                thing.keySupport.composite = await GraphClient.instance.check_key_composite();
+                thing.requiresSupport = await GraphClient.instance.check_requires();
+                thing.providesSupport = await GraphClient.instance.check_provides();
 
                 console.log(`Library ${libraryName} complete!`);
             } else {
