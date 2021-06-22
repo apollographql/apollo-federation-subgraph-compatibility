@@ -8,13 +8,13 @@
     "start:users": "node dist/subgraphs/users.js",
     "start:inventory": "node dist/subgraphs/inventory.js",
     "build:compile": "tsc",
-    "build:supergraph": "npx rover supergraph compose > supergraph.graphql --config supergraph.yaml",
+    "build:supergraph": "rover supergraph compose > supergraph.graphql --config supergraph.yaml",
     "docker:graph-router": "docker build --file=.docker/graph-router.Dockerfile --tag=apollo-federation-implementations/graph-router .",
     "docker:inventory": "docker build --file=.docker/inventory.Dockerfile --tag=apollo-federation-implementations/inventory .",
     "docker:users": "docker build --file=.docker/users.Dockerfile --tag=apollo-federation-implementations/users .",
     "postinstall": "npm run setup",
     "setup": "npm run build && npm run docker",
-    "test":"node dist/index.js"
+    "test": "node dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,6 +25,7 @@
     "graphql": "^15.5.0"
   },
   "devDependencies": {
+    "@apollo/rover": "^0.1.6",
     "concurrently": "^6.2.0",
     "typescript": "^4.3.2"
   }
