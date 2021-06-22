@@ -19,7 +19,7 @@ jobs:
       - run: npm install
       - run: npm run test
 
-    - id: get-id
+    - id: create-version
       uses: actions/github-script@0.9.0
       with:
         script: |
@@ -31,7 +31,6 @@ jobs:
           core.exportVariable('GITHUB_SHA_SHORT',sha);
           core.exportVariable('GITHUB_BRANCH_SLUG', branch);
           core.exportVariable('VERSION', version);
-    - run: echo "${{steps.get-id.outputs.id}}"
 
       #Create new release
       - name: Create Release
