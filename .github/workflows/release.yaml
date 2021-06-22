@@ -19,18 +19,18 @@ jobs:
       - run: npm install
       - run: npm run test
 
-    - id: create-version
-      uses: actions/github-script@0.9.0
-      with:
-        script: |
-          const num = context.runNumber;
-          const sha = context.sha.substring(0,7);
-          const branch = context.ref.split('/').pop();
-          const version = `1.0.${num}-${sha}-${branch}`;
+      - id: create-version
+        uses: actions/github-script@0.9.0
+        with:
+          script: |
+            const num = context.runNumber;
+            const sha = context.sha.substring(0,7);
+            const branch = context.ref.split('/').pop();
+            const version = `1.0.${num}-${sha}-${branch}`;
 
-          core.exportVariable('GITHUB_SHA_SHORT',sha);
-          core.exportVariable('GITHUB_BRANCH_SLUG', branch);
-          core.exportVariable('VERSION', version);
+            core.exportVariable('GITHUB_SHA_SHORT',sha);
+            core.exportVariable('GITHUB_BRANCH_SLUG', branch);
+            core.exportVariable('VERSION', version);
 
       #Create new release
       - name: Create Release
