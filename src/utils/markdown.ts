@@ -25,12 +25,12 @@ class MarkdownFile {
     }
     addFrameworkResultToTable(framework: string, result: TestResult) {
         this.content += `| ${framework} `;
-        this.content += result.serviceSdl ? this.check() : this.cross;
-        this.content += result.keySupport.singleField ? this.check() : this.cross;
-        this.content += result.keySupport.multipleFields ? this.check() : this.cross;
-        this.content += result.keySupport.composite ? this.check() : this.cross;
-        this.content += result.requiresSupport ? this.check() : this.cross;
-        this.content += result.providesSupport ? `${this.check()} |` : `${this.cross} |`;
+        this.content += result.serviceSdl ? this.check() : this.cross();
+        this.content += result.keySupport.singleField ? this.check() : this.cross();
+        this.content += result.keySupport.multipleFields ? this.check() : this.cross();
+        this.content += result.keySupport.composite ? this.check() : this.cross();
+        this.content += result.requiresSupport ? this.check() : this.cross();
+        this.content += result.providesSupport ? `${this.check()} |` : `${this.cross()} |`;
     }
     addText(text: string) {
         this.content += `${text}\n`
