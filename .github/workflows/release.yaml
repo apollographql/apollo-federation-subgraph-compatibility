@@ -19,6 +19,19 @@ jobs:
       - run: npm install
       - run: npm run test
 
+    - id: create-version
+      uses: actions/github-script@0.9.0
+      with:
+        script: |
+          const num = context.runNumber;
+          const sha = context.sha.substring(0,7);
+          const branch = context.ref.split('/').pop();
+          const version = `1.0.${num}-${sha}-${branch}`;
+
+          core.exportVariable('GITHUB_SHA_SHORT',sha);
+          core.exportVariable('GITHUB_BRANCH_SLUG', branch);
+          core.exportVariable('VERSION', version);
+
       #Create new release
       - name: Create Release
         id: create_release
@@ -26,8 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: ${{ VERSION }}
+          release_name: Release ${{ VERSION }}
           draft: false
           prerelease: false
 
@@ -40,5 +53,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./results.md
-          asset_name: apollo-federation-subgraph-compatibility-results-${{ github.sha }}.md
+          asset_name: apollo-federation-subgraph-compatibility-results-${{ VERSION }}.md
           asset_content_type: text/markdown
