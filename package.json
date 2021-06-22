@@ -3,12 +3,6 @@
   "scripts": {
     "build": "concurrently \"npm:build:*\"",
     "docker": "concurrently \"npm:docker:*\"",
-    "minikube:load": "concurrently \"npm:minikube:load:*\"",
-    "minikube:delete": "concurrently \"npm:minikube:delete:*\"",
-    "minikube:delete:service": "concurrently \"npm:minikube:delete:service:*\"",
-    "minikube:delete:deployment": "concurrently \"npm:minikube:delete:deployment:*\"",
-    "minikube:deploy": "concurrently \"npm:minikube:deploy:*\"",
-    "minikube:expose": "concurrently \"npm:minikube:expose:*\"",
     "start": "concurrently \"npm:start:*\"",
     "start:graph-router": "node dist/graph-router.js",
     "start:users": "node dist/subgraphs/users.js",
@@ -19,7 +13,8 @@
     "docker:inventory": "docker build --file=.docker/inventory.Dockerfile --tag=apollo-federation-implementations/inventory .",
     "docker:users": "docker build --file=.docker/users.Dockerfile --tag=apollo-federation-implementations/users .",
     "postinstall": "npm run setup",
-    "setup": "npm run build && npm run docker"
+    "setup": "npm run build && npm run docker",
+    "test":"node dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
