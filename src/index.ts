@@ -37,24 +37,55 @@ let results = new Map<string, TestResult>();
 
 async function runDockerCompose(libraryName: string, librariesPath: string) {
     const [dockerComposePromise, dockerComposeObtained] = barrier();
-    const dockerExpose = spawn('docker', ['compose', 'up'], { cwd: resolve(librariesPath, libraryName) });
+    const dockerCompose = spawn('docker-compose', ['up', '--build'], { cwd: resolve(librariesPath, libraryName) });
+    let started = false;
 
-    dockerExpose.stdout.on("data", (message) => {
+    dockerCompose.stdout.on("data", (message) => {
         console.log(message.toString());
     });
-    dockerExpose.on("spawn", () => {
-        setTimeout(() => dockerComposeObtained(), 30000)
+    dockerCompose.on("spawn", () => {
+        if (!started)
+            setTimeout(() => dockerComposeObtained(), 30000)
     });
-    dockerExpose.on("exit", (code, signal) => {
+    dockerCompose.on("exit", (code, signal) => {
+        if (code == 0) {
+            results.get(libraryName).startedSuccessfully = true;
+            if (!started)
+                setTimeout(() => dockerComposeObtained(), 30000)
+        } else {
+            //Error running command, we can exit without waiting
+            dockerComposeObtained();
+        }
+    });
+
+    await dockerComposePromise;
+    dockerCompose.removeAllListeners("exit");
+    dockerCompose.removeAllListeners("spawn");
+    dockerCompose.stdout.removeAllListeners("data")
+
+    return dockerCompose;
+}
+
+async function stopDockerCompose(libraryName: string, librariesPath: string) {
+    const [dockerComposePromise, dockerComposeObtained] = barrier();
+    const dockerCompose = spawn('docker-compose', ['down', '-f="docker-compose.yml"'], { cwd: resolve(librariesPath, libraryName) });
+
+    dockerCompose.stdout.on("data", (message) => {
+        console.log(message.toString());
+    });
+    dockerCompose.on("spawn", () => {
+        setTimeout(() => dockerComposeObtained(), 15000)
+    });
+    dockerCompose.on("exit", (code, signal) => {
         if (code == 0) results.get(libraryName).startedSuccessfully = true;
         dockerComposeObtained();
     });
 
     await dockerComposePromise;
-    dockerExpose.removeAllListeners("exit");
-    dockerExpose.removeAllListeners("spawn");
 
-    return dockerExpose;
+    dockerCompose.removeAllListeners("exit");
+    dockerCompose.removeAllListeners("spawn");
+    dockerCompose.stdout.removeAllListeners("data")
 }
 
 (async () => {
@@ -94,6 +125,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
         } catch (err) {
             console.log(`Library ${libraryName} encountered an error: ${err}`);
         } finally {
+            await stopDockerCompose(libraryName, librariesPath);
             composedGraphForLibrary.kill(0);
         }
     }
