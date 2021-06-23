@@ -33,17 +33,15 @@ export class TestResult {
     requiresSupport: boolean = false;
     providesSupport: boolean = false;
 }
-interface SugraphImplementations {
-    language: string;
-    framework: string;
-}
-
 let results = new Map<string, TestResult>();
 
 async function runDockerCompose(libraryName: string, librariesPath: string) {
     const [dockerComposePromise, dockerComposeObtained] = barrier();
     const dockerExpose = spawn('docker', ['compose', 'up'], { cwd: resolve(librariesPath, libraryName) });
 
+    dockerExpose.stdout.on("data", (message) => {
+        console.log(message.toString());
+    });
     dockerExpose.on("spawn", () => {
         setTimeout(() => dockerComposeObtained(), 30000)
     });
