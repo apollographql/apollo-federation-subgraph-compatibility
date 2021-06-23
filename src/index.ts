@@ -45,7 +45,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
     const dockerExpose = spawn('docker', ['compose', 'up'], { cwd: resolve(librariesPath, libraryName) });
 
     dockerExpose.on("spawn", () => {
-        setTimeout(() => dockerComposeObtained(), 15000)
+        setTimeout(() => dockerComposeObtained(), 30000)
     });
     dockerExpose.on("exit", (code, signal) => {
         if (code == 0) results.get(libraryName).startedSuccessfully = true;
