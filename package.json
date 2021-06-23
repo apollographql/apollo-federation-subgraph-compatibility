@@ -8,7 +8,7 @@
     "start:users": "node dist/subgraphs/users.js",
     "start:inventory": "node dist/subgraphs/inventory.js",
     "build:compile": "tsc",
-    "build:supergraph": "rover supergraph compose > supergraph.graphql --config supergraph.yaml",
+    "build:supergraph": "rover supergraph compose --config supergraph.yaml > supergraph.graphql",
     "docker:graph-router": "docker build --file=.docker/graph-router.Dockerfile --tag=apollo-federation-implementations/graph-router .",
     "docker:inventory": "docker build --file=.docker/inventory.Dockerfile --tag=apollo-federation-implementations/inventory .",
     "docker:users": "docker build --file=.docker/users.Dockerfile --tag=apollo-federation-implementations/users .",

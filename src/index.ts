@@ -33,30 +33,59 @@ export class TestResult {
     requiresSupport: boolean = false;
     providesSupport: boolean = false;
 }
-interface SugraphImplementations {
-    language: string;
-    framework: string;
-}
-
 let results = new Map<string, TestResult>();
 
 async function runDockerCompose(libraryName: string, librariesPath: string) {
     const [dockerComposePromise, dockerComposeObtained] = barrier();
-    const dockerExpose = spawn('docker', ['compose', 'up'], { cwd: resolve(librariesPath, libraryName) });
+    const dockerCompose = spawn('docker-compose', ['up', '--build'], { cwd: resolve(librariesPath, libraryName) });
+    let started = false;
 
-    dockerExpose.on("spawn", () => {
+    dockerCompose.stdout.on("data", (message) => {
+        console.log(message.toString());
+    });
+    dockerCompose.on("spawn", () => {
+        if (!started)
+            setTimeout(() => dockerComposeObtained(), 30000)
+    });
+    dockerCompose.on("exit", (code, signal) => {
+        if (code == 0) {
+            results.get(libraryName).startedSuccessfully = true;
+            if (!started)
+                setTimeout(() => dockerComposeObtained(), 30000)
+        } else {
+            //Error running command, we can exit without waiting
+            dockerComposeObtained();
+        }
+    });
+
+    await dockerComposePromise;
+    dockerCompose.removeAllListeners("exit");
+    dockerCompose.removeAllListeners("spawn");
+    dockerCompose.stdout.removeAllListeners("data")
+
+    return dockerCompose;
+}
+
+async function stopDockerCompose(libraryName: string, librariesPath: string) {
+    const [dockerComposePromise, dockerComposeObtained] = barrier();
+    const dockerCompose = spawn('docker-compose', ['down', '-f="docker-compose.yml"'], { cwd: resolve(librariesPath, libraryName) });
+
+    dockerCompose.stdout.on("data", (message) => {
+        console.log(message.toString());
+    });
+    dockerCompose.on("spawn", () => {
         setTimeout(() => dockerComposeObtained(), 15000)
     });
-    dockerExpose.on("exit", (code, signal) => {
+    dockerCompose.on("exit", (code, signal) => {
         if (code == 0) results.get(libraryName).startedSuccessfully = true;
         dockerComposeObtained();
     });
 
     await dockerComposePromise;
-    dockerExpose.removeAllListeners("exit");
-    dockerExpose.removeAllListeners("spawn");
 
-    return dockerExpose;
+    dockerCompose.removeAllListeners("exit");
+    dockerCompose.removeAllListeners("spawn");
+    dockerCompose.stdout.removeAllListeners("data")
 }
 
 (async () => {
@@ -78,13 +107,15 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
             const startupSuccess = await GraphClient.instance.pingSources();
             if (startupSuccess) {
                 console.log(`Library ${libraryName} started successfully`);
-                results.get(libraryName).startedSuccessfully = true;
-                results.get(libraryName).serviceSdl = await GraphClient.instance.check_service();
-                results.get(libraryName).keySupport.singleField = await GraphClient.instance.check_key_single();
-                results.get(libraryName).keySupport.multipleFields = await GraphClient.instance.check_key_multiple();
-                results.get(libraryName).keySupport.composite = await GraphClient.instance.check_key_composite();
-                results.get(libraryName).requiresSupport = await GraphClient.instance.check_requires();
-                results.get(libraryName).providesSupport = await GraphClient.instance.check_provides();
+                let thing = results.get(libraryName);
+
+                thing.startedSuccessfully = true;
+                thing.serviceSdl = await GraphClient.instance.check_service();
+                thing.keySupport.singleField = await GraphClient.instance.check_key_single();
+                thing.keySupport.multipleFields = await GraphClient.instance.check_key_multiple();
+                thing.keySupport.composite = await GraphClient.instance.check_key_composite();
+                thing.requiresSupport = await GraphClient.instance.check_requires();
+                thing.providesSupport = await GraphClient.instance.check_provides();
 
                 console.log(`Library ${libraryName} complete!`);
             } else {
@@ -94,6 +125,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
         } catch (err) {
             console.log(`Library ${libraryName} encountered an error: ${err}`);
         } finally {
+            await stopDockerCompose(libraryName, librariesPath);
             composedGraphForLibrary.kill(0);
         }
     }
