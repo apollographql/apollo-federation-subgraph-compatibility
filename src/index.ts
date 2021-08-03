@@ -4,9 +4,6 @@ import { spawn } from "child_process";
 import { GraphClient } from "./utils/client";
 import { generateMarkdown } from "./utils/markdown";
 
-const yargs = require("yargs/yargs");
-const { hideBin } = require("yargs/helpers");
-
 function getFolderNamesFromPath(path: string) {
     return readdirSync(path, {
         withFileTypes: true,
@@ -32,6 +29,7 @@ export class TestResult {
     keySupport: KeySupport = new KeySupport();
     requiresSupport: boolean = false;
     providesSupport: boolean = false;
+    ftv1Support: boolean = false;
 }
 let results = new Map<string, TestResult>();
 
@@ -92,13 +90,18 @@ async function stopDockerCompose(libraryName: string, librariesPath: string) {
     GraphClient.init();
 
     //npm install will also setup project by building docker images along with supergraph sdl
-    const { libraries }: { libraries: string } = yargs(hideBin(process.argv)).argv;
+    const libraries = process.argv.length > 2 ? process.argv[2] as string : undefined;
 
     const librariesPath = resolve(__dirname, '..', 'src', "implementations");
-    const libraryNames = libraries ? libraries.split(",") : getFolderNamesFromPath(librariesPath);
+    const implementationFolders = getFolderNamesFromPath(librariesPath);
+    const libraryNames = libraries ? libraries.split(",") : implementationFolders;
 
     for (const libraryName of libraryNames) {
         if (libraryName == '_template_') continue;
+        if (!implementationFolders.includes(libraryName)) {
+            console.log(`Library ${libraryName} was not found in the implementations folder`);
+            continue;
+        }
 
         results.set(libraryName, new TestResult());
 
@@ -116,6 +119,7 @@ async function stopDockerCompose(libraryName: string, librariesPath: string) {
                 thing.keySupport.composite = await GraphClient.instance.check_key_composite();
                 thing.requiresSupport = await GraphClient.instance.check_requires();
                 thing.providesSupport = await GraphClient.instance.check_provides();
+                thing.ftv1Support = await GraphClient.instance.check_ftv1();
 
                 console.log(`Library ${libraryName} complete!`);
             } else {

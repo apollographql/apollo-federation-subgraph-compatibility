@@ -12,7 +12,6 @@
     "docker:graph-router": "docker build --file=.docker/graph-router.Dockerfile --tag=apollo-federation-implementations/graph-router .",
     "docker:inventory": "docker build --file=.docker/inventory.Dockerfile --tag=apollo-federation-implementations/inventory .",
     "docker:users": "docker build --file=.docker/users.Dockerfile --tag=apollo-federation-implementations/users .",
-    "postinstall": "npm run setup",
     "setup": "npm run build && npm run docker",
     "test": "node dist/index.js"
   },
@@ -26,6 +25,7 @@
   },
   "devDependencies": {
     "@apollo/rover": "^0.1.6",
+    "@types/yargs": "^17.0.2",
     "concurrently": "^6.2.0",
     "typescript": "^4.3.2"
   }

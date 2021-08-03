@@ -1,74 +1,61 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "pwa-node",
-            "request": "launch",
-            "name": "Debug Test",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/dist/index.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ],
-            "preLaunchTask": "npm: build:compile"
-        },
-        {
-            "type": "pwa-node",
-            "request": "launch",
-            "name": "Debug Gateway",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/dist/gateway.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ],
-            "preLaunchTask": "npm: build"
-        },
-        {
-            "type": "pwa-node",
-            "request": "launch",
-            "name": "Debug Users",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/dist/subgraphs/users.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ],
-            "preLaunchTask": "npm: build:compile"
-        },
-        {
-            "type": "pwa-node",
-            "request": "launch",
-            "name": "Debug Inventory",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/dist/subgraphs/inventory.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ],
-            "preLaunchTask": "npm: build:compile"
-        },
-        {
-            "type": "pwa-node",
-            "request": "launch",
-            "name": "Debug Products",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "dist/index.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ],
-            "preLaunchTask": "build",
-            "cwd": "${workspaceFolder}/src/implementations/apollo-server"
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Test",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/dist/index.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "preLaunchTask": "npm: build:compile",
+      "args": []
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Graph Router",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/dist/gateway.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "preLaunchTask": "npm: build"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Users",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/dist/subgraphs/users.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "preLaunchTask": "npm: build:compile"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Inventory",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/dist/subgraphs/inventory.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "preLaunchTask": "npm: build:compile"
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Products:apollo-server",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "dist/index.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      "preLaunchTask": "build",
+      "cwd": "${workspaceFolder}/src/implementations/apollo-server"
+    },
+    {
+      "type": "java",
+      "name": "Debug Products:federation-jvm",
+      "request": "launch",
+      "mainClass": "com.apollographql.federation.compatibility.App"
+    }
+  ]
 }

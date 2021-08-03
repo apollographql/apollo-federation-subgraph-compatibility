@@ -19,8 +19,8 @@ class MarkdownFile {
     }
 
     addTable() {
-        this.content += `| Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides |\n`;
-        this.content += `| --- | --- | --- | --- | --- | --- | --- |\n`;
+        this.content += `| Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides | ftv1 |\n`;
+        this.content += `| --- | --- | --- | --- | --- | --- | --- | --- |\n`;
 
     }
     addFrameworkResultToTable(framework: string, result: TestResult) {
@@ -30,7 +30,9 @@ class MarkdownFile {
         this.content += result.keySupport.multipleFields ? this.check() : this.cross();
         this.content += result.keySupport.composite ? this.check() : this.cross();
         this.content += result.requiresSupport ? this.check() : this.cross();
-        this.content += result.providesSupport ? `${this.check()} |` : `${this.cross()} |`;
+        this.content += result.providesSupport ? this.check() : this.cross();
+        this.content += result.ftv1Support ? `${this.check()} |` : `${this.cross()} |`;
+        this.content += '\n'
     }
     addText(text: string) {
         this.content += `${text}\n`

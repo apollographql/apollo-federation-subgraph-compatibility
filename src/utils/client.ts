@@ -3,10 +3,14 @@ import { gql } from "apollo-server-core";
 import { readFileSync } from "fs";
 import { print } from "graphql";
 import { resolve } from "path";
+import { Headers } from 'apollo-server-env';
 interface IGraph {
     router: RemoteGraphQLDataSource;
     products: RemoteGraphQLDataSource
 }
+
+const pingQuery = 'query { __typename }';
+const productsUrl = 'http://localhost:4001';
 
 export class GraphClient {
     sources: IGraph;
@@ -16,7 +20,7 @@ export class GraphClient {
     constructor() {
         this.sources = {
             router: new RemoteGraphQLDataSource({ url: 'http://localhost:4000' }),
-            products: new RemoteGraphQLDataSource({ url: 'http://localhost:4001' }),
+            products: new RemoteGraphQLDataSource({ url: productsUrl }),
         }
     }
 
@@ -27,8 +31,8 @@ export class GraphClient {
 
     async pingSources(): Promise<boolean> {
         try {
-            const routerPing = await GraphClient.instance.sources.router.process({ request: { query: "query { __typename }" }, context: {} });
-            const productsPing = await GraphClient.instance.sources.router.process({ request: { query: "query { __typename }" }, context: {} });
+            const routerPing = await GraphClient.instance.sources.router.process({ request: { query: pingQuery }, context: {} });
+            const productsPing = await GraphClient.instance.sources.products.process({ request: { query: pingQuery }, context: {} });
 
             if (routerPing.errors || productsPing.errors) return false;
 
@@ -53,6 +57,25 @@ export class GraphClient {
             const referenceSchema = print(productsReferenceSchema);
 
             if (implenentingLibraryTest == referenceSchema) return true;
+
+            return false;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+
+    async check_ftv1(): Promise<boolean> {
+        try {
+            const headers = new Headers();
+            headers.append("apollo-federation-include-trace", "ftv1");
+
+            const productsPing = await GraphClient.instance.sources.products.process({
+                request: { query: pingQuery, http: { headers, method: "POST", url: productsUrl } },
+                context: {}
+            });
+
+            if (productsPing.extensions.ftv1) return true;
 
             return false;
         } catch (err) {
