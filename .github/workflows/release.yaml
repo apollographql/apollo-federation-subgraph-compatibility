@@ -19,6 +19,7 @@ jobs:
 
       #Setup project and package extension
       - run: npm install
+      - run: npm run setup
       - run: npm run test
 
       - id: create-version
