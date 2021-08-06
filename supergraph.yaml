@@ -2,12 +2,12 @@ subgraphs:
   inventory:
     routing_url: http://inventory:4003
     schema:
-      file: ./src/subgraphs/inventory.graphql
+      file: ./subgraphs/inventory/inventory.graphql
   users:
     routing_url: http://users:4002
     schema:
-      file: ./src/subgraphs/users.graphql
+      file: ./subgraphs/users/users.graphql
   products:
     routing_url: http://products:4001
     schema:
-      file: ./src/implementations/_template_/products.graphql
+      file: ./implementations/_template_/products.graphql

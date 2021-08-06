@@ -49,7 +49,7 @@
       "program": "dist/index.js",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       "preLaunchTask": "build",
-      "cwd": "${workspaceFolder}/src/implementations/apollo-server"
+      "cwd": "${workspaceFolder}/implementations/apollo-server"
     },
     {
       "type": "java",

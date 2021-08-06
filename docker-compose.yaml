@@ -1,0 +1,17 @@
+services:
+  router:
+    image: ghcr.io/apollosolutions/gateway
+    volumes:
+      - ./supergraph.graphql:/etc/config/supergraph.graphql
+    environment:
+      - APOLLO_SCHEMA_CONFIG_EMBEDDED=/etc/config/supergraph.graphql
+    ports:
+      - 4000:4000
+  inventory:
+    image: apollo-federation-implementations/inventory
+    ports:
+      - 4003:4003
+  users:
+    image: apollo-federation-implementations/users
+    ports:
+      - 4002:4002

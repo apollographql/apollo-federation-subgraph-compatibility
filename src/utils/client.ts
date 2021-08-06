@@ -1,189 +1,240 @@
-import { RemoteGraphQLDataSource } from "@apollo/gateway";
-import { gql } from "apollo-server-core";
 import { readFileSync } from "fs";
-import { print } from "graphql";
+import { print, parse } from "graphql";
 import { resolve } from "path";
-import { Headers } from 'apollo-server-env';
-interface IGraph {
-    router: RemoteGraphQLDataSource;
-    products: RemoteGraphQLDataSource
+import fetch from "make-fetch-happen";
+
+const pingQuery = "query { __typename }";
+
+const routerHealthCheck =
+  "http://localhost:4000/.well-known/apollo/server-health";
+
+const productsUrl = "http://localhost:4001";
+
+async function graphqlRequest(
+  url: string,
+  req: {
+    query: string;
+    variables?: { [key: string]: any };
+    operationName?: string;
+  },
+  headers?: { [key: string]: any }
+) {
+  const resp = await fetch(url, {
+    headers: { "content-type": "application/json", ...(headers ?? {}) },
+    method: "POST",
+    body: JSON.stringify(req),
+  });
+
+  if (
+    resp.ok &&
+    resp.headers.get("content-type")?.startsWith("application/json")
+  ) {
+    return resp.json();
+  }
+
+  return resp.text();
 }
 
-const pingQuery = 'query { __typename }';
-const productsUrl = 'http://localhost:4001';
-
 export class GraphClient {
-    sources: IGraph;
+  static instance: GraphClient;
 
-    static instance: GraphClient
+  static init() {
+    if (GraphClient.instance)
+      throw new Error("Only one instance of GraphClient can exist");
+    GraphClient.instance = new GraphClient();
+  }
 
-    constructor() {
-        this.sources = {
-            router: new RemoteGraphQLDataSource({ url: 'http://localhost:4000' }),
-            products: new RemoteGraphQLDataSource({ url: productsUrl }),
+  async pingSources(): Promise<boolean> {
+    const routerPing = await fetch(routerHealthCheck, { retry: 10 });
+
+    if (!routerPing.ok) {
+      console.log("router failed to start");
+      return false;
+    }
+
+    let attempts = 10;
+    let lastError = null;
+    while (attempts--) {
+      try {
+        const implementationPing = await graphqlRequest(productsUrl, {
+          query: pingQuery,
+        });
+
+        if (implementationPing.data?.__typename) {
+          return true;
+        } else {
+          lastError = implementationPing.errors;
         }
+      } catch (e) {
+        lastError = e;
+      }
+
+      await new Promise((r) => setTimeout(r, 1000));
     }
 
-    static init() {
-        if (GraphClient.instance) throw new Error("Only one instance of GraphClient can exist");
-        GraphClient.instance = new GraphClient();
+    console.log("implementation under test failed to start");
+    console.log(lastError);
+    return false;
+  }
+
+  async check_service(): Promise<boolean> {
+    try {
+      const productsPing = await graphqlRequest(productsUrl, {
+        query: "query { _service { sdl } }",
+      });
+      const productsRaw = readFileSync(
+        resolve(
+          __dirname,
+          "..",
+          "..",
+          "implementations",
+          "_template_",
+          "products.graphql"
+        ),
+        "utf-8"
+      );
+
+      if (!productsPing.data?._service?.sdl) return false;
+
+      const implementingLibrarySchema = parse(productsPing.data._service.sdl);
+      const productsReferenceSchema = parse(productsRaw);
+
+      const implementingLibraryTest = print(implementingLibrarySchema);
+      const referenceSchema = print(productsReferenceSchema);
+
+      if (implementingLibraryTest == referenceSchema) return true;
+
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
+  }
 
-    async pingSources(): Promise<boolean> {
-        try {
-            const routerPing = await GraphClient.instance.sources.router.process({ request: { query: pingQuery }, context: {} });
-            const productsPing = await GraphClient.instance.sources.products.process({ request: { query: pingQuery }, context: {} });
+  async check_ftv1(): Promise<boolean> {
+    try {
+      const productsPing = await graphqlRequest(
+        productsUrl,
+        { query: pingQuery },
+        { "apollo-federation-include-trace": "ftv1" }
+      );
 
-            if (routerPing.errors || productsPing.errors) return false;
+      if (productsPing.extensions.ftv1) return true;
 
-            return true;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
+  }
 
-    async check_service(): Promise<boolean> {
-        try {
-            const productsPing = await GraphClient.instance.sources.products.process({ request: { query: "query { _service { sdl } }" }, context: {} });
-            const productsRaw = readFileSync(resolve(__dirname, '..', '..', 'src', 'implementations', '_template_', 'products.graphql'), { encoding: 'utf-8' });
+  async check_key_single(): Promise<boolean> {
+    try {
+      const productsPing = await graphqlRequest(productsUrl, {
+        query:
+          "query ($representations: [_Any!]!){_entities(representations: $representations) {...on Product {sku}}}",
+        variables: {
+          representations: [{ __typename: "Product", id: "apollo-federation" }],
+        },
+      });
 
-            if (!productsPing.data?._service?.sdl) return false;
+      if (productsPing.data._entities[0].sku == "federation") return true;
 
-            const implementingLibrarySchema = gql(productsPing.data._service.sdl);
-            const productsReferenceSchema = gql(productsRaw);
-
-            const implenentingLibraryTest = print(implementingLibrarySchema);
-            const referenceSchema = print(productsReferenceSchema);
-
-            if (implenentingLibraryTest == referenceSchema) return true;
-
-            return false;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
+  }
 
-    async check_ftv1(): Promise<boolean> {
-        try {
-            const headers = new Headers();
-            headers.append("apollo-federation-include-trace", "ftv1");
+  async check_key_multiple(): Promise<boolean> {
+    try {
+      const productsPing = await graphqlRequest(productsUrl, {
+        query:
+          "query ($representations: [_Any!]!){_entities(representations: $representations) {...on Product {id}}}",
+        variables: {
+          representations: [
+            {
+              __typename: "Product",
+              sku: "federation",
+              package: "@apollo/federation",
+            },
+          ],
+        },
+      });
 
-            const productsPing = await GraphClient.instance.sources.products.process({
-                request: { query: pingQuery, http: { headers, method: "POST", url: productsUrl } },
-                context: {}
-            });
+      if (productsPing.data._entities[0]?.id == "apollo-federation")
+        return true;
 
-            if (productsPing.extensions.ftv1) return true;
-
-            return false;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
+  }
 
-    async check_key_single(): Promise<boolean> {
-        try {
-            const productsPing = await GraphClient.instance.sources.products.process({
-                request: {
-                    query: "query ($representations: [_Any!]!){_entities(representations: $representations) {...on Product {sku}}}",
-                    variables: {
-                        representations: [
-                            { __typename: "Product", id: "apollo-federation" }
-                        ]
-                    }
-                }, context: {}
-            });
+  async check_key_composite(): Promise<boolean> {
+    try {
+      const productsPing = await graphqlRequest(productsUrl, {
+        query:
+          "query ($representations: [_Any!]!){_entities(representations: $representations) {...on Product {id}}}",
+        variables: {
+          representations: [
+            {
+              __typename: "Product",
+              sku: "federation",
+              variation: { id: "OSS" },
+            },
+          ],
+        },
+      });
 
+      if (productsPing.data._entities[0]?.id == "apollo-federation")
+        return true;
 
-            if (productsPing.data._entities[0].sku == "federation") return true;
-
-            return false;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
-    async check_key_multiple(): Promise<boolean> {
-        try {
-            const productsPing = await GraphClient.instance.sources.products.process({
-                request: {
-                    query: "query ($representations: [_Any!]!){_entities(representations: $representations) {...on Product {id}}}",
-                    variables: {
-                        representations: [
-                            { __typename: "Product", sku: "federation", package: "@apollo/federation" }
-                        ]
-                    }
-                }, context: {}
-            });
+  }
 
+  async check_requires(): Promise<boolean> {
+    try {
+      const productsPing = await graphqlRequest(productsUrl, {
+        query:
+          "query ($id: ID!){ product(id: $id) { dimensions { size weight } } }",
+        variables: { id: "apollo-federation" },
+      });
 
-            if (productsPing.data._entities[0].id == "apollo-federation") return true;
+      if (
+        productsPing.data?.product?.dimensions?.size == "1" &&
+        productsPing.data?.product?.dimensions?.weight == 1
+      )
+        return true;
 
-            return false;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
-    async check_key_composite(): Promise<boolean> {
-        try {
-            const productsPing = await GraphClient.instance.sources.products.process({
-                request: {
-                    query: "query ($representations: [_Any!]!){_entities(representations: $representations) {...on Product {id}}}",
-                    variables: {
-                        representations: [
-                            { __typename: "Product", sku: "federation", variation: { id: "OSS" } }
-                        ]
-                    }
-                }, context: {}
-            });
+  }
 
+  async check_provides(): Promise<boolean> {
+    try {
+      const productsPing = await graphqlRequest(productsUrl, {
+        query:
+          "query ($id: ID!){ product(id: $id) { createdBy { email totalProductsCreated } } }",
+        variables: { id: "apollo-federation" },
+      });
 
-            if (productsPing.data._entities[0].id == "apollo-federation") return true;
+      if (productsPing.data?.product?.createdBy?.totalProductsCreated !== 4)
+        return true;
 
-            return false;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
-    async check_requires(): Promise<boolean> {
-        try {
-            const productsPing = await GraphClient.instance.sources.products.process({
-                request: {
-                    query: "query ($id: ID!){ product(id: $id) { dimensions { size weight } } }",
-                    variables: { id: "apollo-federation" }
-                }, context: {}
-            });
-
-
-            if (productsPing.data.product.dimensions.size == "1" && productsPing.data.product.dimensions.weight == 1) return true;
-
-            return false;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
-    }
-    async check_provides(): Promise<boolean> {
-        try {
-            const productsPing = await GraphClient.instance.sources.products.process({
-                request: {
-                    query: "query ($id: ID!){ product(id: $id) { createdBy { email totalProductsCreated } } }",
-                    variables: { id: "apollo-federation" }
-                }, context: {}
-            });
-
-
-            if (productsPing.data.product.createdBy.totalProductsCreated !== 4) return true;
-
-            return false;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
-    }
+  }
 }
