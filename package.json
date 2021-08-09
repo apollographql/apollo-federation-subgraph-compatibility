@@ -9,22 +9,22 @@
     "start:inventory": "node dist/subgraphs/inventory.js",
     "build:compile": "tsc",
     "build:supergraph": "rover supergraph compose --config supergraph.yaml > supergraph.graphql",
-    "docker:graph-router": "docker build --file=.docker/graph-router.Dockerfile --tag=apollo-federation-implementations/graph-router .",
-    "docker:inventory": "docker build --file=.docker/inventory.Dockerfile --tag=apollo-federation-implementations/inventory .",
-    "docker:users": "docker build --file=.docker/users.Dockerfile --tag=apollo-federation-implementations/users .",
+    "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
+    "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",
     "setup": "npm run build && npm run docker",
     "test": "node dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@apollo/federation": "^0.25.1",
-    "@apollo/gateway": "^0.28.3",
-    "apollo-server": "^2.25.1",
-    "graphql": "^15.5.0"
+    "execa": "^5.1.1",
+    "graphql": "^15.5.0",
+    "make-fetch-happen": "^8.0.14"
   },
   "devDependencies": {
     "@apollo/rover": "^0.1.6",
+    "@types/make-fetch-happen": "^9.0.0",
+    "@types/node": "^16.4.13",
     "@types/yargs": "^17.0.2",
     "concurrently": "^6.2.0",
     "typescript": "^4.3.2"
