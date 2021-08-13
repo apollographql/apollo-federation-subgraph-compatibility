@@ -99,4 +99,4 @@ def get_product_by_id(id):
 
 
 if __name__ == "__main__":
-    uvicorn.run(application, host="0.0.0.0", port=4001)
+    uvicorn.run(application, host='0.0.0.0', port=4001)
