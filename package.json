@@ -22,7 +22,7 @@
     "make-fetch-happen": "^8.0.14"
   },
   "devDependencies": {
-    "@apollo/rover": "^0.1.6",
+    "@apollo/rover": "^0.1.10",
     "@types/make-fetch-happen": "^9.0.0",
     "@types/node": "^16.4.13",
     "@types/yargs": "^17.0.2",
