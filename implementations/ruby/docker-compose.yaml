@@ -1,0 +1,18 @@
+services:
+  products:
+    # must be relative to the root of the project
+    build: implementations/ruby
+    ports:
+      - 4001:4001
+    # uncomment this out to get live-reload
+    # volumes:
+    #   - ./implementations/ruby:/web
+    # environment:
+    #   - RACK_ENV=development
+    # init: true
+    # command:
+    #   - bundle
+    #   - exec
+    #   - rerun
+    #   - --background
+    #   - "rackup --host 0.0.0.0 --port 4001"
