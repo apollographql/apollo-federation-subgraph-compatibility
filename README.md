@@ -1,4 +1,39 @@
-# Apollo Federation Library Compatibility Testing Strategy
+# Apollo Federation Subgraph Library Compatibility Testing Strategy
+
+The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph library's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). 
+
+## Latest Results
+
+---
+title: Subgraph libraries that support Apollo Federation
+sidebar_title: Supported subgraph libraries
+---
+
+The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite.
+
+| Language | Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides | ftv1 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
+| Python | [ariadne](https://github.com/mirumee/ariadne) | ✔️ | ✔️ | ❌ | ❌ | ✔️ | ✔️ | ❌  |
+| Java | [federation-jvm](https://github.com/apollographql/federation-jvm) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
+| Python | [graphene](https://github.com/preply/graphene-federation) | ✔️ | ✔️ | ✔️ | ❌ | ✔️ | ✔️ | ❌  |
+| Ruby | [apollo-federation-ruby](https://github.com/Gusto/apollo-federation-ruby) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
+
+## "Supported" but full compatibility testing coming soon... 
+
+If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check our our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to see about submitting a PR for your library!
+
+> These are libraries that appear to be actively maintained. We audit this list every few months and remove libraries that are no longer active.
+
+| Language    | Framework     | Library                                                                          |
+| ----------- | ------------- | -------------------------------------------------------------------------------- |
+| Go            | gqlgen        | [gqlgen](https://github.com/99designs/gqlgen/tree/master/plugin/federation)      |
+| Java / Kotlin | dgs           | [dgs](https://github.com/netflix/dgs-framework/)                                 |
+| Kotlin        | graphql-java  | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin)                 |
+| Scala         | caliban       | [caliban](https://github.com/ghostdogpr/caliban)                                 |
+| Rust          | async-graphql | [async-graphql](https://github.com/async-graphql/async-graphql)                  |
+
+## Testing Suite
 
 This repository contains a structured testing suite based on a federated schema that covers the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). The federated schema is constructued of 3 subgraphs (`users`, `inventory` and `products`) that will be started and used to test various libraries that support Apollo Federation. The `users` and `inventory` subgraphs are provided by this repository in addition to the graph router instance. Library implementors will each implement the `products` schema and provide a docker file that can be used with `docker compose`; templates for these files are provided along with examples.
 
