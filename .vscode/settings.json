@@ -1,0 +1,32 @@
+{
+    "yaml.customTags": [
+        "!Equals sequence",
+        "!FindInMap sequence",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!Join sequence",
+        "!Ref",
+        "!Select sequence",
+        "!Split sequence",
+        "!Sub",
+        "!And",
+        "!And sequence",
+        "!If",
+        "!If sequence",
+        "!Not",
+        "!Not sequence",
+        "!Equals",
+        "!Or",
+        "!Or sequence",
+        "!FindInMap",
+        "!Base64",
+        "!Join",
+        "!Cidr",
+        "!Sub sequence",
+        "!ImportValue sequence",
+        "!Select",
+        "!Split"
+    ],
+    "java.format.settings.url": "eclipse-formatter.xml"
+}

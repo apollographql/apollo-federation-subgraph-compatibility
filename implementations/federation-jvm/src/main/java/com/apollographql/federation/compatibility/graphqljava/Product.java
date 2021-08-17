@@ -11,8 +11,9 @@ public class Product {
     private final String productPackage;
     private final ProductVariation variation;
     private final ProductDimension dimensions;
+    private final User createdBy;
 
-    private static List<Product> products = List.of(
+    public static List<Product> products = List.of(
             new Product("apollo-federation", "federation", "@apollo/federation", "OSS"),
             new Product("apollo-studio", "studio", "", "platform"));
 
@@ -22,6 +23,8 @@ public class Product {
         this.productPackage = "";
         this.variation = new ProductVariation("");
         this.dimensions = new ProductDimension("1", 1);
+
+        this.createdBy = new User("support@apollographql.com");
     }
 
     public Product(String id, String sku, String productPackage, String variationId) {
@@ -30,6 +33,7 @@ public class Product {
         this.productPackage = productPackage;
         this.variation = new ProductVariation(variationId);
         this.dimensions = new ProductDimension("1", 1);
+        this.createdBy = new User("support@apollographql.com");
     }
 
     public Product(String sku, String productPackage) {
@@ -38,6 +42,16 @@ public class Product {
         this.productPackage = productPackage;
         this.variation = new ProductVariation("");
         this.dimensions = new ProductDimension("1", 1);
+        this.createdBy = new User("support@apollographql.com");
+    }
+
+    public Product(String sku, ProductVariation variation) {
+        this.id = "";
+        this.productPackage = "";
+        this.sku = sku;
+        this.variation = variation;
+        this.dimensions = new ProductDimension("1", 1);
+        this.createdBy = new User("support@apollographql.com");
     }
 
     public String getId() {
@@ -60,6 +74,10 @@ public class Product {
         return variation;
     }
 
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
     public static Product resolveReference(@NotNull Map<String, Object> reference) {
         if (reference.get("id") instanceof String) {
             String productId = (String) reference.get("id");
@@ -68,17 +86,24 @@ public class Product {
                     return product;
                 }
             }
-        }
-
-        if (reference.get("sku") instanceof String && reference.get("package") instanceof String) {
+        } else {
             String productSku = (String) reference.get("sku");
-            String productPackage = (String) reference.get("package");
-            for (Product product : products) {
-                if (product.getId().equals(productSku) && product.getPackage().equals(productPackage)) {
-                    return product;
+
+            if (reference.get("package") instanceof String) {
+                String productPackage = (String) reference.get("package");
+                for (Product product : products) {
+                    if (product.getSku().equals(productSku) && product.getPackage().equals(productPackage)) {
+                        return product;
+                    }
+                }
+            } else {
+                ProductVariation productVariation = (ProductVariation) reference.get("variation");
+                for (Product product : products) {
+                    if (product.getSku().equals(productSku) && product.getVariation().equals(productVariation)) {
+                        return product;
+                    }
                 }
             }
-
         }
 
         return null;

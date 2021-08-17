@@ -1,8 +1,8 @@
-import { readdirSync } from "fs";
-import { resolve } from "path";
-import { GraphClient } from "./utils/client";
-import { generateMarkdown } from "./utils/markdown";
-import execa from "execa";
+import { readdirSync } from 'fs';
+import { resolve } from 'path';
+import { GraphClient } from './utils/client';
+import { generateMarkdown } from './utils/markdown';
+import execa from 'execa';
 
 function getFolderNamesFromPath(path: string) {
   return readdirSync(path, {
@@ -29,16 +29,17 @@ export class TestResult {
 let results = new Map<string, TestResult>();
 
 async function runDockerCompose(libraryName: string, librariesPath: string) {
-  const proc = execa("docker-compose", [
-    "-f",
-    "docker-compose.yaml",
-    "-f",
+  const proc = execa('docker-compose', [
+    '-f',
+    'docker-compose.yaml',
+    '-f',
     `${librariesPath}/${libraryName}/docker-compose.yaml`,
-    "up",
-    "--build",
-    "--detach",
+    'up',
+    '--build',
+    '--detach',
   ]);
 
+  proc.stdin.pipe(process.stdin);
   proc.stdout.pipe(process.stdout);
   proc.stderr.pipe(process.stderr);
 
@@ -47,11 +48,11 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   if (proc.exitCode === 0) {
     results.get(libraryName).startedSuccessfully = true;
   } else {
-    throw new Error("docker-compose did not start successfully");
+    throw new Error('docker-compose did not start successfully');
   }
 
   return async () => {
-    await execa("docker-compose", ["down", "--remove-orphans"]);
+    await execa('docker-compose', ['down', '--remove-orphans']);
   };
 }
 
@@ -62,12 +63,12 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   const libraries =
     process.argv.length > 2 ? (process.argv[2] as string) : undefined;
 
-  const librariesPath = resolve(__dirname, "..", "implementations");
+  const librariesPath = resolve(__dirname, '..', 'implementations');
   const implementationFolders = getFolderNamesFromPath(librariesPath);
-  const libraryNames = libraries ? libraries.split(",") : implementationFolders;
+  const libraryNames = libraries ? libraries.split(',') : implementationFolders;
 
   for (const libraryName of libraryNames) {
-    if (libraryName == "_template_") continue;
+    if (libraryName == '_template_') continue;
     if (!implementationFolders.includes(libraryName)) {
       console.log(
         `Library ${libraryName} was not found in the implementations folder`
@@ -115,6 +116,6 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
 
   generateMarkdown(results);
 
-  console.log("complete");
+  console.log('complete');
   process.exit();
 })();

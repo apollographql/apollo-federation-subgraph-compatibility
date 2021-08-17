@@ -39,6 +39,13 @@ const products = [
     variation: "platform",
   },
 ];
+const users = [
+  {
+    email: "support@apollographql.com",
+    name: "Apollo Studio Support",
+    totalProductsCreated: 4,
+  },
+];
 ```
 
 ## Debugging the projects
