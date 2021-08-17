@@ -4,11 +4,6 @@ The purpose of this repository is to provide a centralized strategy focused on u
 
 ## Latest Results
 
----
-title: Subgraph libraries that support Apollo Federation
-sidebar_title: Supported subgraph libraries
----
-
 The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite.
 
 | Language | Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides | ftv1 |
@@ -27,11 +22,11 @@ If you want to see a library added to this list, feel free to open an [Issue](ht
 
 | Language    | Framework     | Library                                                                          |
 | ----------- | ------------- | -------------------------------------------------------------------------------- |
-| Go            | gqlgen        | [gqlgen](https://github.com/99designs/gqlgen/tree/master/plugin/federation)      |
-| Java / Kotlin | dgs           | [dgs](https://github.com/netflix/dgs-framework/)                                 |
-| Kotlin        | graphql-java  | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin)                 |
-| Scala         | caliban       | [caliban](https://github.com/ghostdogpr/caliban)                                 |
-| Rust          | async-graphql | [async-graphql](https://github.com/async-graphql/async-graphql)                  |
+| Go            | [gqlgen](https://github.com/99designs/gqlgen/tree/master/plugin/federation)      | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/17)
+| Java / Kotlin | [dgs](https://github.com/netflix/dgs-framework/)                                 | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/18) |
+| Kotlin        | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin)                 | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/19) |
+| Scala         | [caliban](https://github.com/ghostdogpr/caliban)                                 | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/20) |
+| Rust          | [async-graphql](https://github.com/async-graphql/async-graphql)                   | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/21) |
 
 ## Testing Suite
 
