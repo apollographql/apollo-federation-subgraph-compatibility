@@ -1,24 +1,24 @@
-import { readFileSync } from "fs";
-import { ApolloServer, gql } from "apollo-server";
-import { buildFederatedSchema } from "@apollo/federation";
+import { readFileSync } from 'fs';
+import { ApolloServer, gql } from 'apollo-server';
+import { buildSubgraphSchema } from '@apollo/federation';
 
 const port = process.env.PRODUCTS_PORT || 4001;
 const products = [
   {
-    id: "apollo-federation",
-    sku: "federation",
-    package: "@apollo/federation",
-    variation: "OSS",
+    id: 'apollo-federation',
+    sku: 'federation',
+    package: '@apollo/federation',
+    variation: 'OSS',
   },
   {
-    id: "apollo-studio",
-    sku: "studio",
-    package: "",
-    variation: "platform",
+    id: 'apollo-studio',
+    sku: 'studio',
+    package: '',
+    variation: 'platform',
   },
 ];
 
-const sdl = readFileSync("products.graphql", "utf-8");
+const sdl = readFileSync('products.graphql', 'utf-8');
 
 const typeDefs = gql(sdl);
 
@@ -36,10 +36,10 @@ const resolvers = {
       return { id: products.find((p) => p.id == reference.id)?.variation };
     },
     dimensions: () => {
-      return { size: "1", weight: 1 };
+      return { size: '1', weight: 1 };
     },
     createdBy: () => {
-      return { email: "support@apollographql.com", totalProductsCreated: 1337 };
+      return { email: 'support@apollographql.com', totalProductsCreated: 1337 };
     },
     /** @type {(reference: any) => any} */
     __resolveReference: (reference) => {
@@ -57,7 +57,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  schema: buildFederatedSchema({ typeDefs, resolvers }),
+  schema: buildSubgraphSchema({ typeDefs, resolvers }),
 });
 
 server

@@ -46,9 +46,8 @@
       "request": "launch",
       "name": "Debug Products:apollo-server",
       "skipFiles": ["<node_internals>/**"],
-      "program": "dist/index.js",
-      "outFiles": ["${workspaceFolder}/**/*.js"],
-      "preLaunchTask": "build",
+      "program": "index.js",
+      "outFiles": ["${workspaceFolder}/implementations/apollo-server/**/*.js"],
       "cwd": "${workspaceFolder}/implementations/apollo-server"
     },
     {

@@ -1,6 +1,6 @@
 graphql:
   servlet:
-    mapping: /
+    mapping: 
 spring:
   application:
     name: federation-jvm-compatibility  
