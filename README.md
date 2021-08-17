@@ -120,4 +120,4 @@ A `results.md` file will be created that displays the testing results
 
 ## Contributing a new library to this test suite
 
-Fork this repository and navigate to the [Apollo Federation Library Maintainers Implementation Guide](./src/implementations/_template_/README.md) for implementation instructions. Once you've completed the implementations instructions, feel free to create a PR and we'll review it. If you have any questions please open a GitHub issue on this repository.
+Fork this repository and navigate to the [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) for implementation instructions. Once you've completed the implementations instructions, feel free to create a PR and we'll review it. If you have any questions please open a GitHub issue on this repository.
