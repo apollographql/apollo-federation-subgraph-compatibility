@@ -12,17 +12,22 @@
     "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
     "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",
     "setup": "npm run build && npm run docker",
-    "test": "node dist/index.js"
+    "test": "node dist/index.js",
+    "test:jest": "jest src"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "debug": "^4.3.2",
     "execa": "^5.1.1",
     "graphql": "^15.5.0",
-    "make-fetch-happen": "^8.0.14"
+    "jest": "^27.0.6",
+    "make-fetch-happen": "^8.0.14",
+    "ts-jest": "^27.0.5"
   },
   "devDependencies": {
     "@apollo/rover": "^0.1.10",
+    "@types/jest": "^27.0.1",
     "@types/make-fetch-happen": "^9.0.0",
     "@types/node": "^16.4.13",
     "@types/yargs": "^17.0.2",
