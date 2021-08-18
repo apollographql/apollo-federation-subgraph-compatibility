@@ -108,8 +108,8 @@ extend type User @key(fields: "email") {
   - `query { _service { sdl } }`
 - `@key` and `_entities` - support defining a single `@key`, multiple `@key` definitionss, multiple-fields `@key` and a complex fields `@key`. Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
 
-```
-query ($representations: [_Any!]!){
+```graphql
+query ($representations: [_Any!]!) {
     _entities(representations: [{ "__typename": "Product", "id": "apollo-federation" }]) {
         ...on Product {sku package variation { id } dimensions { size weight }
         }
@@ -120,14 +120,28 @@ query ($representations: [_Any!]!){
 - @requires - support defining complex fields
   - This will be tested through a query covering [Product.delivery](http://product.delivery) where the library implementors dimensions { size weight } will need to be an expected { size: "1", weight: 1 } to pass. Example query that will be sent directly to `products` subgraph.
 
-```
-query ($id: ID!){ product(id: $id) { dimensions { size weight } } }
+```graphql
+query ($id: ID!) {
+  product(id: $id) {
+    dimensions {
+      size
+      weight
+    }
+  }
+}
 ```
 
 - @provides - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
 
-```
-query ($id: ID!){ product(id: $id) { createdBy { email totalProductsCreated } } }
+```graphql
+query ($id: ID!) {
+  product(id: $id) {
+    createdBy {
+      email
+      totalProductsCreated
+    }
+  }
+}
 ```
 
 - @external - This is covered in the tests above.
