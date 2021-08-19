@@ -8,7 +8,7 @@ from graphene_federation import build_schema, extend, external, key, provides
 class User(ObjectType):
     email = external(ID(required=True))
     totalProductsCreated = external(Int())
-    
+
     def resolve_total_products_created(parent, info, **kwargs):
         return 1337
 
@@ -42,7 +42,7 @@ class Product(ObjectType):
         return {'size': '1', 'weight': 1.0}
 
     def resolve_created_by(self, info, **kwargs):
-        {'email': 'support@apollographql.com'}
+        {'email': 'support@apollographql.com', 'totalProductsCreated': 1337}
 
     def __resolve_reference(self, info, **kwargs):
         if self.id:
@@ -85,7 +85,7 @@ products = [
 
 def get_product_variation(reference):
     if isinstance(reference, Product) and reference.variation:
-        return {'id': reference.variation} 
+        return {'id': reference.variation}
     elif reference["variation"]:
         return {'id': reference["variation"]}
     variation = next((product for product in products if product['id']
