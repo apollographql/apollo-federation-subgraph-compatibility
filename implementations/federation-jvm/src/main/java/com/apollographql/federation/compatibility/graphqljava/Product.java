@@ -2,6 +2,7 @@ package com.apollographql.federation.compatibility.graphqljava;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,10 +97,10 @@ public class Product {
                         return product;
                     }
                 }
-            } else {
-                ProductVariation productVariation = (ProductVariation) reference.get("variation");
+            } else if (reference.get("variation") instanceof HashMap) {
+                var productVariation = (HashMap) reference.get("variation");
                 for (Product product : products) {
-                    if (product.getSku().equals(productSku) && product.getVariation().equals(productVariation)) {
+                    if (product.getSku().equals(productSku) && product.getVariation().getId().equals(productVariation.get("id"))) {
                         return product;
                     }
                 }
