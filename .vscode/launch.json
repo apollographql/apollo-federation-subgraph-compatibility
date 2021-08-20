@@ -17,15 +17,6 @@
     {
       "type": "pwa-node",
       "request": "launch",
-      "name": "Debug Graph Router",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/dist/gateway.js",
-      "outFiles": ["${workspaceFolder}/**/*.js"],
-      "preLaunchTask": "npm: build"
-    },
-    {
-      "type": "pwa-node",
-      "request": "launch",
       "name": "Debug Users",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/subgraphs/users.js",
