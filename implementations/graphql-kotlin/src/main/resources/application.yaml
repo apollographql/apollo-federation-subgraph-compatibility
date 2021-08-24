@@ -1,0 +1,12 @@
+graphql:
+  endpoint: "/"
+  packages:
+    - "com.example.demo"
+  federation:
+    enabled: true
+    tracing:
+      enabled: true
+      debug: true
+
+server:
+  port: 4001
