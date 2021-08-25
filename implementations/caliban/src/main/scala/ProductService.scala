@@ -17,7 +17,7 @@ object ProductService {
             `package` = Some("@apollo/federation"),
             variation = Some(ProductVariation(ID("OSS"))),
             dimensions = Some(ProductDimension(Some("1"), Some(1.0f))),
-            createdBy = Some(User(ID("support@apollographql.com"), Some(42)))
+            createdBy = Some(User(ID("support@apollographql.com"), Some(1337)))
           ),
           Product(
             id = ID("apollo-studio"),
@@ -25,7 +25,7 @@ object ProductService {
             `package` = Some(""),
             variation = Some(ProductVariation(ID("platform"))),
             dimensions = Some(ProductDimension(Some("1"), Some(1.0f))),
-            createdBy = Some(User(ID("support@apollographql.com"), Some(42)))
+            createdBy = Some(User(ID("support@apollographql.com"), Some(1337)))
           )
         )
       )
