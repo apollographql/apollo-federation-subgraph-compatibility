@@ -70,8 +70,8 @@ val PRODUCTS = listOf(
 )
 
 data class ProductDimension(
-    val size: String,
-    val weight: Float
+    val size: String? = null,
+    val weight: Float? = null
 )
 
 data class ProductVariation(
@@ -84,7 +84,7 @@ data class User(
     @ExternalDirective
     val email: String,
     @ExternalDirective
-    val totalProductsCreated: Int
+    val totalProductsCreated: Int? = null
 )
 
 @Component
