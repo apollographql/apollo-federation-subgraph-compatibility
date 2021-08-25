@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono
 @KeyDirective(fields = FieldSet("id"))
 data class Product(
     val id: ID,
-    val sku: String,
+    val sku: String? = null,
     @GraphQLName("package")
     val pkg: String? = null,
     val variation: ProductVariation? = null,
