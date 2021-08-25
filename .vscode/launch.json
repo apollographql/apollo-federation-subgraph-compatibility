@@ -12,7 +12,12 @@
       "program": "${workspaceFolder}/dist/index.js",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       "preLaunchTask": "npm: build:compile",
-      "args": []
+      "sourceMaps": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "args": [""]
     },
     {
       "type": "pwa-node",
