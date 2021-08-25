@@ -16,7 +16,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | Ruby | [apollo-federation-ruby](https://github.com/Gusto/apollo-federation-ruby) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Scala | [caliban](https://ghostdogpr.github.io/caliban/docs/federation.html) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 
-* Implementation does not support multiple `@key` definitions, but all types of `@key` definitions are supported
+_*_ Implementation does not support multiple `@key` definitions, but all types of `@key` definitions are supported
 
 ## "Supported" but full compatibility testing coming soon... 
 
