@@ -11,18 +11,18 @@ test("@provides", async () => {
     variables: { id: "apollo-federation" },
   });
 
-  const totalProductsCreated: number =
-    resp.data.product.createdBy.totalProductsCreated;
-
   expect(resp).toMatchObject({
     data: {
       product: {
         createdBy: {
           email: "support@apollographql.com",
-          totalProductsCreated: expect.any(totalProductsCreated),
+          totalProductsCreated: expect.any(Number),
         },
       },
     },
   });
+
+  const totalProductsCreated: number =
+    resp.data.product.createdBy.totalProductsCreated;
   expect(totalProductsCreated).not.toEqual(4);
 });
