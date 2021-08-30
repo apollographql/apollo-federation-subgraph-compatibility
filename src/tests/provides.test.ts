@@ -1,6 +1,6 @@
-import { productsRequest } from '../utils/client';
+import { productsRequest } from "../utils/client";
 
-test('@provides', async () => {
+test("@provides", async () => {
   const resp = await productsRequest({
     query: `#graphql
       query ($id: ID!) {
@@ -8,7 +8,7 @@ test('@provides', async () => {
           createdBy { email totalProductsCreated }
         }
       }`,
-    variables: { id: 'apollo-federation' },
+    variables: { id: "apollo-federation" },
   });
 
   const totalProductsCreated: number =
@@ -18,7 +18,7 @@ test('@provides', async () => {
     data: {
       product: {
         createdBy: {
-          email: 'support@apollographql.com',
+          email: "support@apollographql.com",
           totalProductsCreated: expect.any(totalProductsCreated),
         },
       },
