@@ -17,7 +17,11 @@
         "${workspaceFolder}/**",
         "!**/node_modules/**"
       ],
-      "args": [""]
+      "args": ["graphene"],
+      "env": {
+        "DEBUG": "docker,test"
+      },
+      "outputCapture": "std"
     },
     {
       "type": "pwa-node",

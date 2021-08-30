@@ -1,6 +1,6 @@
-import { productsRequest } from "../utils/client";
+import { productsRequest } from '../utils/client';
 
-test("@provides", async () => {
+test('@provides', async () => {
   const resp = await productsRequest({
     query: `#graphql
       query ($id: ID!) {
@@ -8,17 +8,21 @@ test("@provides", async () => {
           createdBy { email totalProductsCreated }
         }
       }`,
-    variables: { id: "apollo-federation" },
+    variables: { id: 'apollo-federation' },
   });
+
+  const totalProductsCreated: number =
+    resp.data.product.createdBy.totalProductsCreated;
 
   expect(resp).toMatchObject({
     data: {
       product: {
         createdBy: {
-          email: "support@apollographql.com",
-          totalProductsCreated: 1337,
+          email: 'support@apollographql.com',
+          totalProductsCreated: expect.any(totalProductsCreated),
         },
       },
     },
   });
+  expect(totalProductsCreated).not.toEqual(4);
 });
