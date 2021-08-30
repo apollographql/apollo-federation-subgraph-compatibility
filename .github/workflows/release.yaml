@@ -1,4 +1,4 @@
-name: CI
+name: Release
 
 on:
   push:
@@ -19,6 +19,8 @@ jobs:
       - run: npm install
       - run: npm run setup
       - run: npm run test
+        env:
+          DEBUG: docker,test
 
       - id: create-version
         uses: actions/github-script@v4

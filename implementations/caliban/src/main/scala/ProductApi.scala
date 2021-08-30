@@ -18,7 +18,7 @@ object ID {
 @GQLDirective(Key(fields = "email"))
 @GQLDirective(Extend)
 case class User(
-  @GQLDirective(External) id: ID,
+  @GQLDirective(External) email: ID,
   @GQLDirective(External) totalProductsCreated: Option[Int]
 )
 

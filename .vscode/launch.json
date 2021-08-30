@@ -12,16 +12,16 @@
       "program": "${workspaceFolder}/dist/index.js",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       "preLaunchTask": "npm: build:compile",
-      "args": []
-    },
-    {
-      "type": "pwa-node",
-      "request": "launch",
-      "name": "Debug Graph Router",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/dist/gateway.js",
-      "outFiles": ["${workspaceFolder}/**/*.js"],
-      "preLaunchTask": "npm: build"
+      "sourceMaps": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "args": [""],
+      "env": {
+        "DEBUG": "docker,test"
+      },
+      "outputCapture": "std"
     },
     {
       "type": "pwa-node",

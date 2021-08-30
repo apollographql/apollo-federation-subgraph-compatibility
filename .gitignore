@@ -72,3 +72,6 @@ target
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+
+tmp/*
+!tmp/.keep
