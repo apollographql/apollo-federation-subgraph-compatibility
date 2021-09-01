@@ -54,10 +54,20 @@ export async function runJest(libraryName: string): Promise<JestResults> {
 
 export interface TestResult {
   name: string;
+  fullName?: string;
+  version?: string;
+  language?: string;
+  documentation?: string;
+  dependencies?: {
+    name: string;
+    url: string;
+    version: string;
+  }[];
   started: boolean;
   tests: {
     [name: string]: {
       success: boolean;
+      caveat?: string;
     };
   };
 }

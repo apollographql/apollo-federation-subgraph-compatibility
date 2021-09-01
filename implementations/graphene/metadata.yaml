@@ -1,0 +1,8 @@
+fullName: Graphene
+dependencies:
+  - name: graphene-federation
+    url: https://pypi.org/project/graphene-federation/
+    version: 0.1.0
+version: 2.1.9
+language: Python
+documentation: https://graphene-python.org/

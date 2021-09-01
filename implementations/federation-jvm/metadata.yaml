@@ -1,0 +1,8 @@
+fullName: graphql-spring-boot-starter
+dependencies:
+  - name: federation-jvm
+    url: https://github.com/apollographql/federation-jvm
+    version: 0.6.5
+version: 5
+language: Java/JVM
+documentation: https://www.graphql-java.com/tutorials/getting-started-with-spring-boot/

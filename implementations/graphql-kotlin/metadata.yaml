@@ -1,0 +1,11 @@
+fullName: graphql-kotlin
+version: 4.2
+language: Kotlin/JVM
+documentation: https://opensource.expediagroup.com/graphql-kotlin/docs/schema-generator/federation/apollo-federation
+tests:
+  "@key single":
+    caveat: All types of `@key` definitions are supported, but multiple `@key` directives on one object is not.
+  "@key multiple":
+    caveat: All types of `@key` definitions are supported, but multiple `@key` directives on one object is not.
+  "@key composite":
+    caveat: All types of `@key` definitions are supported, but multiple `@key` directives on one object is not.

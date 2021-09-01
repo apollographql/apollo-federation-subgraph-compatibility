@@ -1,0 +1,4 @@
+fullName: Apollo Server
+version: 3
+language: TypeScript
+documentation: https://www.apollographql.com/docs/federation/

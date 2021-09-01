@@ -1,10 +1,13 @@
 import { readdirSync } from "fs";
+import { readFile } from "fs/promises";
 import { resolve } from "path";
 import { ping } from "./utils/client";
 import { generateMarkdown } from "./utils/markdown";
 import execa from "execa";
 import debug from "debug";
 import { Writable } from "stream";
+import { load } from "js-yaml";
+import { defaultsDeep } from "lodash";
 import { runJest, TestResult, TESTS } from "./testRunner";
 
 const dockerDebug = debug("docker");
@@ -102,6 +105,22 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
       console.log(`Library ${libraryName} encountered an error: ${err}`);
     } finally {
       await dockerComposeDown();
+    }
+
+    try {
+      const metadataFilePath = resolve(
+        librariesPath,
+        libraryName,
+        "metadata.yaml"
+      );
+      const text = await readFile(metadataFilePath, "utf-8");
+      const yaml = load(text);
+      defaultsDeep(result, yaml);
+    } catch (e) {
+      if (e.code !== "ENOENT") {
+        console.error("error loading metadata file");
+        console.error(e);
+      }
     }
   }
 
