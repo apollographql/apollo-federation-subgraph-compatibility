@@ -1,0 +1,9 @@
+graphql:
+  servlet:
+    mapping: 
+spring:
+  application:
+    name: dgs-compatibility  
+server:
+  port: 4001
+ 
