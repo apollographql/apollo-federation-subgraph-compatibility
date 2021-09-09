@@ -20,7 +20,7 @@ products = [
 
 
 def get_product_variation(root) -> Optional["ProductVariation"]:
-    # TODO: this doesn't look like it is tested yet
+   return root.id
 
 
 def get_product_by_id(id: strawberry.ID) -> Optional["Product"]:
