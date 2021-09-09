@@ -9,10 +9,11 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | Language | Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides | ftv1 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
-| Python | [ariadne](https://github.com/mirumee/ariadne) | ✔️ | ✔️* | ✔️* | ✔️*| ✔️ | ✔️ | ❌  |
 | Java | [federation-jvm](https://github.com/apollographql/federation-jvm) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Kotlin | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin) | ✔️ | ✔️* | ✔️* | ✔️* | ✔️ | ✔️ | ✔️  |
 | Python | [graphene](https://github.com/preply/graphene-federation) | ✔️ | ✔️ | ✔️ | ❌ | ✔️ | ✔️ | ❌  |
+| Python | [ariadne](https://github.com/mirumee/ariadne) | ✔️ | ✔️* | ✔️* | ✔️*| ✔️ | ✔️ | ❌  |
+| Python | [strawberry-graphql](https://strawberry.rocks/docs) | ✔️ | ✔️ | ✔️ | ✔️| ✔️ | ✔️ | ❌  |
 | Ruby | [apollo-federation-ruby](https://github.com/Gusto/apollo-federation-ruby) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Scala | [caliban](https://ghostdogpr.github.io/caliban/docs/federation.html) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 
