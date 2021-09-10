@@ -1,5 +1,5 @@
 import { readdirSync } from "fs";
-import { readFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import { resolve } from "path";
 import { ping } from "./utils/client";
 import { generateMarkdown } from "./utils/markdown";
@@ -63,7 +63,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   const implementationFolders = getFolderNamesFromPath(librariesPath);
   const libraryNames = libraries ? libraries.split(",") : implementationFolders;
 
-  const results = new Map<string, TestResult>();
+  const results: { [key: string]: TestResult } = {};
 
   for (const libraryName of libraryNames) {
     if (libraryName == "_template_") continue;
@@ -75,7 +75,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
     }
 
     const result: TestResult = { name: libraryName, started: false, tests: {} };
-    results.set(libraryName, result);
+    results[libraryName] = result;
 
     const dockerComposeDown = await runDockerCompose(
       libraryName,
@@ -125,6 +125,12 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   }
 
   generateMarkdown(results);
+
+  await writeFile(
+    resolve(__dirname, "..", "results.json"),
+    JSON.stringify(results, null, 2),
+    "utf-8"
+  );
 
   console.log("complete");
   process.exit();

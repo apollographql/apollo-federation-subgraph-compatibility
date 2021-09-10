@@ -2,14 +2,14 @@ import { writeFileSync } from "fs";
 import { resolve } from "path";
 import { TestResult, TESTS } from "../testRunner";
 
-export function generateMarkdown(results: Map<string, TestResult>) {
+export function generateMarkdown(results: { [key: string]: TestResult }) {
   const markdownFile = new MarkdownFile(
     "Subgraph libraries that support Apollo Federation",
     "Supported subgraph libraries"
   );
 
   const PER_TABLE = 4;
-  const groups = [...results.values()].reduce(
+  const groups = [...Object.values(results)].reduce(
     (acc, result) => {
       if (acc[acc.length - 1].length >= PER_TABLE) acc.push([]);
       acc[acc.length - 1].push(result);
