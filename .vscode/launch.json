@@ -55,6 +55,12 @@
       "name": "Debug Products:federation-jvm",
       "request": "launch",
       "mainClass": "com.apollographql.federation.compatibility.App"
+    },
+    {
+      "type": "java",
+      "name": "Debug Products:dgs",
+      "request": "launch",
+      "mainClass": "com.netflix.graphql.dgs.compatibility.App"
     }
   ]
 }

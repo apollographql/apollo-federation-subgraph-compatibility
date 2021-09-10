@@ -10,6 +10,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Java | [federation-jvm](https://github.com/apollographql/federation-jvm) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
+| Java / Kotlin | [dgs](https://github.com/netflix/dgs-framework/) |  ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Kotlin | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin) | ✔️ | ✔️* | ✔️* | ✔️* | ✔️ | ✔️ | ✔️  |
 | Python | [graphene](https://github.com/preply/graphene-federation) | ✔️ | ✔️ | ✔️ | ❌ | ✔️ | ✔️ | ❌  |
 | Python | [ariadne](https://github.com/mirumee/ariadne) | ✔️ | ✔️* | ✔️* | ✔️*| ✔️ | ✔️ | ❌  |
@@ -28,7 +29,6 @@ If you want to see a library added to this list, feel free to open an [Issue](ht
 | Language    | Framework     | Library                                                                          |
 | ----------- | ------------- | -------------------------------------------------------------------------------- |
 | Go            | [gqlgen](https://github.com/99designs/gqlgen/tree/master/plugin/federation)      | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/17)
-| Java / Kotlin | [dgs](https://github.com/netflix/dgs-framework/)                                 | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/18) |
 | Rust          | [async-graphql](https://github.com/async-graphql/async-graphql)                   | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/21) |
 
 ## Testing Suite
