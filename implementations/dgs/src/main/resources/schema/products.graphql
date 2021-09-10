@@ -1,0 +1,36 @@
+ directive @external on FIELD_DEFINITION
+ directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
+ directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+ directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+ directive @extends on OBJECT | INTERFACE
+ scalar _FieldSet
+
+type Product
+  @key(fields: "id")
+  @key(fields: "sku package")
+  @key(fields: "sku variation { id }") {
+  id: ID!
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User @provides(fields: "totalProductsCreated")
+}
+
+type ProductDimension {
+  size: String
+  weight: Float
+}
+
+type ProductVariation {
+  id: ID!
+}
+
+type Query {
+  product(id: ID!): Product
+}
+
+type User @key(fields: "email") @extends {
+  email: ID! @external
+  totalProductsCreated: Int @external
+}
