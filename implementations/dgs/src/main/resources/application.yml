@@ -6,4 +6,6 @@ spring:
     name: dgs-compatibility  
 server:
   port: 4001
- 
+dgs:
+  graphql:
+    path: /

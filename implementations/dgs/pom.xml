@@ -16,6 +16,7 @@
 
     <properties>
         <java.version>11</java.version>
+        <dgs.version>4.7.6</dgs.version>
     </properties>
 
     <dependencyManagement>
@@ -24,7 +25,7 @@
                 <groupId>com.netflix.graphql.dgs</groupId>
                 <artifactId>graphql-dgs-platform-dependencies</artifactId>
                 <!-- The DGS BOM/platform dependency. This is the only place you set version of DGS -->
-                <version>4.1.0</version>
+                <version>${dgs.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
