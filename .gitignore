@@ -63,7 +63,7 @@ build.log
 dependency-reduced-pom.xml
 dump.rdb
 interpolated*.xml
-lib/
+/lib/
 manifest.yml
 out
 overridedb.*

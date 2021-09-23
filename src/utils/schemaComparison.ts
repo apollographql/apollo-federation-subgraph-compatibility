@@ -39,7 +39,7 @@ function matchFields(field: any, fieldToCompareTo: any) {
 }
 
 export function compareSchemas(schemaToCompare: string) {
-  let areShemasTheSame = true;
+  let areSchemasTheSame = true;
 
   visit(parse(schemaToCompare), {
     ObjectTypeExtension(node) {
@@ -50,7 +50,7 @@ export function compareSchemas(schemaToCompare: string) {
               (f) => f.name.value == field.name.value
             ) as any;
 
-            areShemasTheSame = matchFields(matchedField, field);
+            areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
       }
@@ -63,7 +63,7 @@ export function compareSchemas(schemaToCompare: string) {
               (f) => f.name.value == field.name.value
             ) as any;
 
-            areShemasTheSame = matchFields(matchedField, field);
+            areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
         case 'ProductDimension':
@@ -72,7 +72,7 @@ export function compareSchemas(schemaToCompare: string) {
               (f) => f.name.value == field.name.value
             ) as any;
 
-            areShemasTheSame = matchFields(matchedField, field);
+            areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
         case 'ProductVariation':
@@ -81,7 +81,7 @@ export function compareSchemas(schemaToCompare: string) {
               (f) => f.name.value == field.name.value
             ) as any;
 
-            areShemasTheSame = matchFields(matchedField, field);
+            areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
         case 'Query':
@@ -90,7 +90,7 @@ export function compareSchemas(schemaToCompare: string) {
               (f) => f.name.value == field.name.value
             ) as any;
 
-            areShemasTheSame = matchFields(matchedField, field);
+            areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
         case 'User':
@@ -99,14 +99,14 @@ export function compareSchemas(schemaToCompare: string) {
               (f) => f.name.value == field.name.value
             ) as any;
 
-            areShemasTheSame = matchFields(matchedField, field);
+            areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
       }
 
-      if (!areShemasTheSame) return BREAK;
+      if (!areSchemasTheSame) return BREAK;
     },
   });
 
-  return areShemasTheSame;
+  return areSchemasTheSame;
 }
