@@ -5,6 +5,7 @@ use crate::endpoints::create_schema;
 
 mod endpoints;
 mod graphql;
+mod products;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

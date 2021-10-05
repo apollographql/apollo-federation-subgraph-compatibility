@@ -1,44 +1,7 @@
-/*
-type Product
-  @key(fields: "id")
-  @key(fields: "sku package")
-  @key(fields: "sku variation { id }") {
-  id: ID!
-  sku: String
-  package: String
-  variation: ProductVariation
-  dimensions: ProductDimension
-
-  createdBy: User @provides(fields: "totalProductsCreated")
-}
-
-type ProductVariation {
-  id: ID!
-}
-
-type ProductDimension {
-  size: String
-  weight: Float
-}
-
-extend type Query {
-  product(id: ID!): Product
-}
-
-extend type User @key(fields: "email") {
-  email: ID! @external
-  totalProductsCreated: Int @external
-}
-*/
 use async_graphql::*;
+use crate::products::ProductRepository;
 
 pub type ProductSchema = Schema<Query, EmptyMutation, EmptySubscription>;
-
-#[derive(InputObject)]
-struct ProductSkuPackageKey {
-  sku: String,
-  package: String,
-}
 
 #[derive(InputObject)]
 struct VariationIdKey {
@@ -49,110 +12,37 @@ pub struct Query;
 
 #[Object(extends)]
 impl Query {
-    pub async fn product(&self, id: ID) -> Option<Product> {
-      let mut products = Vec::new();
-      products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-        products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-
-      products.into_iter().find(|p| p.id == id)
+    pub async fn product(&self, ctx: &Context<'_>, id: ID) -> Option<Product> {
+      let repo = ctx.data::<ProductRepository>().unwrap();
+      repo.get(id)
     }
 
     #[graphql(entity)]
-    async fn find_product_by_id(&self, id: ID) -> Option<Product> {
-      let mut products = Vec::new();
-      products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-        products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-
-      products.into_iter().find(|p| p.id == id)
+    async fn find_product_by_id(&self, ctx: &Context<'_>, id: ID) -> Option<Product> {
+      let repo = ctx.data::<ProductRepository>().unwrap();
+      repo.get(id)
     }
 
     #[graphql(entity)]
-    async fn find_product_by_sku_and_package(&self, sku: String, package: String) -> Option<Product> {
-      let mut products = Vec::new();
-      products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-        products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-
-        // let ProductSkuPackageKey { sku, package } = key;
-
-        products.into_iter().find(|p| p.sku == Some(sku.clone()) && p.package == Some(package.clone()))
+    async fn find_product_by_sku_and_package(&self, ctx: &Context<'_>, sku: String, package: String) -> Option<Product> {
+      let repo = ctx.data::<ProductRepository>().unwrap();
+      repo.get_with_sku_and_package(sku, package)
     }
 
-  // @key(fields: "sku variation { id }") {
     #[graphql(entity)]
-    async fn find_product_by_sku_and_variation_id(&self, sku: String, variation: VariationIdKey) -> Option<Product> {
-      let mut products = Vec::new();
-      products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-        products.push(Product {
-          id: "apollo-federation".into(),
-          sku: Some("federation".to_string()),
-          package: Some("@apollo/federation".to_string()),
-          variation: Some(ProductVariation {
-            id: "OSS".into()
-          }),
-        });
-
-        // let ProductSkuPackageKey { sku, package } = key;
-
-        // products.into_iter().find(|p| p.sku == Some(sku.clone()) && p.variation.and_then(|v| Some(v.id == variation.id.clone())) == Some(true))
-        products.into_iter().find(|p| p.sku == Some(sku.clone()))
+    async fn find_product_by_sku_and_variation_id(&self, ctx: &Context<'_>, sku: String, variation: VariationIdKey) -> Option<Product> {
+      let repo = ctx.data::<ProductRepository>().unwrap();
+      repo.get_with_sku_and_variation_id(sku, variation.id)
     }
 
 }
 
+#[derive(Clone)]
 pub struct Product {
-    id: ID,
-    sku: Option<String>,
-    package: Option<String>,
-    variation: Option<ProductVariation>,
+    pub id: ID,
+    pub sku: Option<String>,
+    pub package: Option<String>,
+    pub variation: Option<ProductVariation>,
 }
 
 #[Object]
@@ -179,9 +69,9 @@ impl Product {
     }
 }
 
-#[derive(SimpleObject)]
+#[derive(SimpleObject, Clone)]
 pub struct ProductVariation {
-	id: ID,
+	pub id: ID,
 }
 
 #[derive(SimpleObject)]
