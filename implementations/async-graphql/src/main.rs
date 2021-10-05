@@ -18,7 +18,7 @@ async fn main() -> std::io::Result<()> {
             .data(create_schema())
             .configure(endpoints::configure_service)
     })
-    .bind((Ipv4Addr::UNSPECIFIED, 8080))?
+    .bind((Ipv4Addr::UNSPECIFIED, 4001))?
     .run()
     .await
 }

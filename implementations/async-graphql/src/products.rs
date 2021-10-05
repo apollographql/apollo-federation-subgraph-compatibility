@@ -39,7 +39,14 @@ impl ProductRepository {
 
 	pub fn get_with_sku_and_variation_id(&self, sku: String, variation_id: ID) -> Option<Product> {
 		(&self.products).into_iter()
-			.find(|p| p.sku == Some(sku.clone()))
+			.find(|p| {
+                let matches_sku = p.sku == Some(sku.clone());
+                let matches_variation_id = match &p.variation {
+                    Some(variation) => variation.id == variation_id,
+                    None => false,
+                };
+                return matches_sku && matches_variation_id;
+            })
 			.and_then(|p| Some(p.clone()))
 	}
 }
