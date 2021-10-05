@@ -1,0 +1,10 @@
+[package]
+name = "federation-async-graphql-compatibility"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+async-graphql = "2"
+async-graphql-actix-web = "2"
+actix-web = "3"
+env_logger = "0.9"

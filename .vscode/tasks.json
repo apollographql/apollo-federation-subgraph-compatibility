@@ -7,6 +7,11 @@
             "label": "build",
             "type": "shell",
             "command": "cd src/implementations/apollo-server && npm run build"
+        },
+        {
+            "label": "build async-graphql",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/implementations/async-graphql && cargo build"
         }
     ]
 }
