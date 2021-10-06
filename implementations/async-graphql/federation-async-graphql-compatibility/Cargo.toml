@@ -8,3 +8,7 @@ async-graphql = "2"
 async-graphql-actix-web = "2"
 actix-web = "3"
 env_logger = "0.9"
+product-graphql = { path = "../product-graphql" }
+
+[build-dependencies]
+product-graphql = { path = "../product-graphql" }

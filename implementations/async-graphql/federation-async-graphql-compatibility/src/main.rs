@@ -1,11 +1,9 @@
 use std::net::Ipv4Addr;
 use actix_web::{App, HttpServer, middleware::Logger};
 
-use crate::endpoints::create_schema;
+use product_graphql::create_schema;
 
 mod endpoints;
-mod graphql;
-mod products;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
