@@ -65,7 +65,7 @@ impl Product {
 
     #[graphql(provides="totalProductsCreated")]
     pub async fn created_by(&self) -> Option<User> {
-      Some(User { email: "supper@apollographql.com".into(), total_products_created: Some(1337) })
+      Some(User { email: "support@apollographql.com".into(), total_products_created: Some(1337) })
     }
 }
 

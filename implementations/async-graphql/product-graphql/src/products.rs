@@ -15,10 +15,10 @@ impl Default for ProductRepository {
             variation: Some(ProductVariation { id: "OSS".into() }),
         });
         products.push(Product {
-            id: "apollo-federation".into(),
-            sku: Some("federation".to_string()),
-            package: Some("@apollo/federation".to_string()),
-            variation: Some(ProductVariation { id: "OSS".into() }),
+            id: "apollo-studio".into(),
+            sku: Some("sku".to_string()),
+            package: Some("".to_string()),
+            variation: Some(ProductVariation { id: "platform".into() }),
         });
         ProductRepository { products }
     }
