@@ -3,8 +3,8 @@
     "type": "project",
     "minimum-stability": "dev",
     "require": {
-        "webonyx/graphql-php": "^14.9",
-        "skillshare/apollo-federation-php": "dev-master"
+        "webonyx/graphql-php": "^14.9@stable",
+        "skillshare/apollo-federation-php": "dev-master#61772cc"
     },
     "autoload": {
         "psr-4": {
@@ -13,8 +13,8 @@
       },
     "repositories":[
         {
-            "type": "path",
-            "url": "../../../apollo-federation-php"
+            "type": "vcs",
+            "url": "https://github.com/skillshare/apollo-federation-php"
         }
     ]
 }
