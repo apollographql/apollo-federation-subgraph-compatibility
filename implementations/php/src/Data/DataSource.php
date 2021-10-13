@@ -15,15 +15,15 @@ class DataSource
     {
         self::$products = [
             new Product([
-                'id' => 'apollo-federation',
-                'sku' => 'federation',
-                'package' => '@apollo/federation',
+                'id'        => 'apollo-federation',
+                'sku'       => 'federation',
+                'package'   => '@apollo/federation',
                 'variation' => 'OSS',
             ]),
             new Product([
-                'id' => 'apollo-studio',
-                'sku' => 'studio',
-                'package' => '',
+                'id'        => 'apollo-studio',
+                'sku'       => 'studio',
+                'package'   => '',
                 'variation' => 'platform',
             ]),
         ];
