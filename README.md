@@ -16,6 +16,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | Python | [ariadne](https://github.com/mirumee/ariadne) | ✔️ | ✔️* | ✔️* | ✔️*| ✔️ | ✔️ | ❌  |
 | Python | [strawberry-graphql](https://strawberry.rocks/docs) | ✔️ | ✔️ | ✔️ | ✔️| ✔️ | ✔️ | ❌  |
 | Ruby | [apollo-federation-ruby](https://github.com/Gusto/apollo-federation-ruby) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
+| Rust | [async-graphql](https://async-graphql.github.io/async-graphql/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌  |
 | Scala | [caliban](https://ghostdogpr.github.io/caliban/docs/federation.html) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 
 _*_ Implementation does not support multiple `@key` definitions, but all types of `@key` definitions are supported
@@ -29,7 +30,6 @@ If you want to see a library added to this list, feel free to open an [Issue](ht
 | Language    | Framework     | Library                                                                          |
 | ----------- | ------------- | -------------------------------------------------------------------------------- |
 | Go            | [gqlgen](https://github.com/99designs/gqlgen/tree/master/plugin/federation)      | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/17)
-| Rust          | [async-graphql](https://github.com/async-graphql/async-graphql)                   | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/21) |
 
 ## Testing Suite
 

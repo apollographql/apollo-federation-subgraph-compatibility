@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+	"product-graphql",
+	"federation-async-graphql-compatibility"
+]

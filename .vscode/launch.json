@@ -61,6 +61,15 @@
       "name": "Debug Products:dgs",
       "request": "launch",
       "mainClass": "com.netflix.graphql.dgs.compatibility.App"
+    },
+    {
+      "type": "lldb",
+      "name": "Debug Products:async-graphql",
+      "request": "launch",
+      "program": "${workspaceFolder}/implementations/async-graphql/target/debug/federation-async-graphql-compatibility",
+      "args": [],
+      "cwd": "${workspaceFolder}/implementations/async-graphql",
+      "preLaunchTask": "build async-graphql"
     }
   ]
 }
