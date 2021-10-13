@@ -3,12 +3,27 @@ name: Test
 on: pull_request
 
 jobs:
+  build-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: generate matrix
+        id: matrix
+        run: |
+          echo "::set-output name=matrix::$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]"))]')"
+
   build:
+    needs: build-matrix
+    strategy:
+      matrix:
+        name: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: npm install
       - run: npm run setup
-      - run: npm run test
+      - run: npm run test ${{ matrix.name }}
         env:
           DEBUG: docker,test
