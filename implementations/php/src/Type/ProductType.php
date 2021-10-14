@@ -30,7 +30,7 @@ class ProductType extends EntityObjectType {
                         return self::getVariation(DataSource::findProduct($ref->id)->variation);
                     }
                 ],
-                'dimension' => [ 
+                'dimensions' => [ 
                     'type'    => Types::productDimension(),
                     'resolve' => static fn (): array => [
                         'size'   => '1',

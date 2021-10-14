@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ccae77a17a9fd6269f7599dd7d0ee163",
+    "content-hash": "c12354097ba394904fa1842e150cd983",
     "packages": [
         {
             "name": "skillshare/apollo-federation-php",
-            "version": "v1.4",
+            "version": "v1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Skillshare/apollo-federation-php.git",
-                "reference": "e195b5d93a7e8053e9d58af459641d3d33f8beae"
+                "reference": "2b418ba9c8d641df501b44e1876e9f91a12424d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Skillshare/apollo-federation-php/zipball/e195b5d93a7e8053e9d58af459641d3d33f8beae",
-                "reference": "e195b5d93a7e8053e9d58af459641d3d33f8beae",
+                "url": "https://api.github.com/repos/Skillshare/apollo-federation-php/zipball/2b418ba9c8d641df501b44e1876e9f91a12424d3",
+                "reference": "2b418ba9c8d641df501b44e1876e9f91a12424d3",
                 "shasum": ""
             },
             "require": {
@@ -40,12 +40,12 @@
             "license": [
                 "MIT"
             ],
-            "description": "A PHP port of Apollo Federation",
+            "description": "A PHP port of the Apollo Federation specification.",
             "support": {
                 "issues": "https://github.com/Skillshare/apollo-federation-php/issues",
-                "source": "https://github.com/Skillshare/apollo-federation-php/tree/v1.4"
+                "source": "https://github.com/Skillshare/apollo-federation-php/tree/v1.5"
             },
-            "time": "2021-08-31T20:52:44+00:00"
+            "time": "2021-10-14T14:46:59+00:00"
         },
         {
             "name": "webonyx/graphql-php",
