@@ -1,30 +1,30 @@
 use async_graphql::ID;
 use crate::graphql::{Product, ProductVariation};
 
-pub struct ProductRepository {
-    pub products: Vec<Product>,
+pub struct ProductRepository<'a> {
+    pub products: Vec<Product<'a>>,
 }
 
-impl Default for ProductRepository {
+impl Default for ProductRepository<'_> {
     fn default() -> Self {
         let mut products = Vec::new();
         products.push(Product {
             id: "apollo-federation".into(),
-            sku: Some("federation".to_string()),
-            package: Some("@apollo/federation".to_string()),
+            sku: Some("federation"),
+            package: Some("@apollo/federation"),
             variation: Some(ProductVariation { id: "OSS".into() }),
         });
         products.push(Product {
             id: "apollo-studio".into(),
-            sku: Some("sku".to_string()),
-            package: Some("".to_string()),
+            sku: Some("sku"),
+            package: Some(""),
             variation: Some(ProductVariation { id: "platform".into() }),
         });
         ProductRepository { products }
     }
 }
 
-impl ProductRepository {
+impl ProductRepository<'_> {
 	pub fn get(&self, id: ID) -> Option<Product> {
 		(&self.products).into_iter()
 			.find(|p| p.id == id)
@@ -33,14 +33,14 @@ impl ProductRepository {
 
 	pub fn get_with_sku_and_package(&self, sku: String, package: String) -> Option<Product> {
 		(&self.products).into_iter()
-			.find(|p| p.sku == Some(sku.clone()) && p.package == Some(package.clone()))
+			.find(|p| p.sku == Some(&sku) && p.package == Some(&package))
 			.and_then(|p| Some(p.clone()))
 	}
 
 	pub fn get_with_sku_and_variation_id(&self, sku: String, variation_id: ID) -> Option<Product> {
 		(&self.products).into_iter()
 			.find(|p| {
-                let matches_sku = p.sku == Some(sku.clone());
+                let matches_sku = p.sku == Some(&sku);
                 let matches_variation_id = match &p.variation {
                     Some(variation) => variation.id == variation_id,
                     None => false,

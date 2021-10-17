@@ -12,25 +12,25 @@ pub struct Query;
 
 #[Object(extends)]
 impl Query {
-    pub async fn product(&self, ctx: &Context<'_>, id: ID) -> Option<Product> {
+    pub async fn product<'a>(&self, ctx: &Context<'a>, id: ID) -> Option<Product<'a>> {
       let repo = ctx.data::<ProductRepository>().unwrap();
       repo.get(id)
     }
 
     #[graphql(entity)]
-    async fn find_product_by_id(&self, ctx: &Context<'_>, id: ID) -> Option<Product> {
+    async fn find_product_by_id<'a>(&self, ctx: &Context<'a>, id: ID) -> Option<Product<'a>> {
       let repo = ctx.data::<ProductRepository>().unwrap();
       repo.get(id)
     }
 
     #[graphql(entity)]
-    async fn find_product_by_sku_and_package(&self, ctx: &Context<'_>, sku: String, package: String) -> Option<Product> {
+    async fn find_product_by_sku_and_package<'a>(&self, ctx: &Context<'a>, sku: String, package: String) -> Option<Product<'a>> {
       let repo = ctx.data::<ProductRepository>().unwrap();
       repo.get_with_sku_and_package(sku, package)
     }
 
     #[graphql(entity)]
-    async fn find_product_by_sku_and_variation_id(&self, ctx: &Context<'_>, sku: String, variation: VariationIdKey) -> Option<Product> {
+    async fn find_product_by_sku_and_variation_id<'a>(&self, ctx: &Context<'a>, sku: String, variation: VariationIdKey) -> Option<Product<'a>> {
       let repo = ctx.data::<ProductRepository>().unwrap();
       repo.get_with_sku_and_variation_id(sku, variation.id)
     }
@@ -38,29 +38,29 @@ impl Query {
 }
 
 #[derive(Clone)]
-pub struct Product {
+pub struct Product<'a> {
     pub id: ID,
-    pub sku: Option<String>,
-    pub package: Option<String>,
+    pub sku: Option<&'a str>,
+    pub package: Option<&'a str>,
     pub variation: Option<ProductVariation>,
 }
 
 #[Object]
-impl Product {
+impl Product<'_> {
     pub async fn id(&self) -> &ID {
       &self.id
     }
-    pub async fn sku(&self) -> &Option<String> {
+    pub async fn sku(&self) -> &Option<&str> {
       &self.sku
     }
-    pub async fn package(&self) -> &Option<String> {
+    pub async fn package(&self) -> &Option<&str> {
       &self.package
     }
     pub async fn variation(&self) -> &Option<ProductVariation> {
       &self.variation
     }
-    pub async fn dimensions(&self) -> Option<ProductDimension> {
-      Some(ProductDimension { size: Some("1".to_string()), weight: Some(1f32) })
+    pub async fn dimensions(&self) -> Option<ProductDimension<'_>> {
+      Some(ProductDimension { size: Some("1"), weight: Some(1f32) })
     }
 
     #[graphql(provides="totalProductsCreated")]
@@ -75,8 +75,8 @@ pub struct ProductVariation {
 }
 
 #[derive(SimpleObject)]
-pub struct ProductDimension {
-	size: Option<String>,
+pub struct ProductDimension<'a> {
+	size: Option<&'a str>,
 	weight: Option<f32>,
 }
 
