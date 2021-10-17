@@ -75,3 +75,7 @@ secrets.yml
 
 tmp/*
 !tmp/.keep
+
+# .NET
+bin
+obj
