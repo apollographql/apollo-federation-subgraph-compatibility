@@ -8,13 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>
-		builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
 );
 
 
 // Add GraphQL builder.Services and configure options
 builder.Services
-	.AddSingleton<Query>()
+    .AddSingleton<Query>()
     .AddSingleton<AnyScalarGraphType>()
     .AddSingleton<ServiceGraphType>()
     .AddSingleton<ISchema>(provider =>
@@ -22,19 +22,19 @@ builder.Services
         return FederatedSchema.For(File.ReadAllText("products.graphql"), schemaBuilder =>
         {
             schemaBuilder.ServiceProvider = provider;
-			schemaBuilder.Types.Include<Query>();
+            schemaBuilder.Types.Include<Query>();
             // reference resolvers
             schemaBuilder.Types.For(nameof(Product))
-				.ResolveReferenceAsync<Product?>(ctx =>
-				{
-					var productId = ctx.Arguments["id"]?.ToString();
-					if (!string.IsNullOrEmpty(productId))
-					{
+                .ResolveReferenceAsync<Product?>(ctx =>
+                {
+                    var productId = ctx.Arguments["id"]?.ToString();
+                    if (!string.IsNullOrEmpty(productId))
+                    {
                         return Task.FromResult<Product?>(Data.Products.FirstOrDefault(p => p.Id == productId));
-					}
+                    }
 
                     return Task.FromResult<Product?>(null);
-				});
+                });
         });
     })
     .AddGraphQL((options, provider) =>
