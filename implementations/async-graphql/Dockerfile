@@ -1,10 +1,10 @@
-FROM rust:1.55 as build
+FROM rust:1.56 as build
 
 WORKDIR /usr/src/federation-async-graphql-compatibility
 
 COPY . .
 
-RUN cd federation-async-graphql-compatibility && cargo install --path .
+RUN cargo install --path .
 
 FROM gcr.io/distroless/cc-debian10
 
