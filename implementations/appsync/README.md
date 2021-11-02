@@ -1,5 +1,9 @@
 # Federated service hosted on AWS AppSync
 
+## Pre-requisite
+* An AWS Account to deploy the AppSync API
+* NodeJS
+
 ## Deploy
 
 To deploy your own version of this `products` service on AppSync you will need to 
