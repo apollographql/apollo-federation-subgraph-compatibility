@@ -49,14 +49,14 @@ export class ProductsServiceStack extends cdk.Stack {
       fieldName: 'createdBy'
     });
 
-    new cdk.CfnOutput(this, "APPSYNC_API_ENDPOINT", {
+    new cdk.CfnOutput(this, "AppSyncApiEndpoint", {
       value: api.graphqlUrl,
-      exportName: "APPSYNC_API_ENDPOINT"
+      exportName: "AppSyncApiEndpoint"
     });
 
-    new cdk.CfnOutput(this, "APPSYNC_API_KEY", {
+    new cdk.CfnOutput(this, "AppSyncApiKey", {
       value: api.apiKey!,
-      exportName: "APPSYNC_API_KEY"
+      exportName: "AppSyncApiKey"
     });
   }
 }
