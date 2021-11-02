@@ -4,6 +4,3 @@ services:
     build: ./proxy
     ports:
       - 4001:4001
-    environment:
-      - APPSYNC_API_KEY=da2-ecovck5p4bhnxbqifgzcij7nk4
-      - APPSYNC_API_ENDPOINT=https://fmbcmnnokfb6rd2bw2jyccef7i.appsync-api.eu-west-1.amazonaws.com/graphql
