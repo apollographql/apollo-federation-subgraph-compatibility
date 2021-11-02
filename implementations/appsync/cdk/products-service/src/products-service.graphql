@@ -1,0 +1,47 @@
+schema {query: Query}
+
+type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
+  id: ID!
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User @provides(fields: "totalProductsCreated")
+}
+
+type ProductDimension {
+  size: String
+  weight: Float
+}
+
+type _Service {
+  sdl: String
+}
+
+type ProductVariation {
+  id: ID!
+}
+input ProductVariationInput {
+  id: ID!
+}
+
+type Query @extends {
+  _service: _Service!
+  _entities(representations: [_Any!]!): [_Entity]!
+  product(id: ID!): Product
+}
+
+type User @key(fields: "email") @extends {
+  email: ID! @external
+  totalProductsCreated: Int @external
+}
+
+union _Entity = User | Product
+
+input _Any {
+    __typename: String!
+    id: String
+    sku: String
+    package: String
+    variation: ProductVariationInput
+}
