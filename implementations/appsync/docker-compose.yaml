@@ -1,6 +1,6 @@
 services:
   products:
     # must be relative to the root of the project
-    build: ./proxy
+    build: implementations/appsync/proxy
     ports:
       - 4001:4001
