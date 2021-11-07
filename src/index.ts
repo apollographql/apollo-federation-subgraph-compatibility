@@ -24,7 +24,7 @@ function getFolderNamesFromPath(path: string) {
     .map((dirent) => dirent.name);
 }
 
-async function runDockerCompose(libraryName: string, librariesPath: string) {
+async function runDockerComposeUp(libraryName: string, librariesPath: string) {
   console.log("Starting containers...");
   const proc = execa("docker-compose", [
     "-f",
@@ -44,11 +44,11 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   if (proc.exitCode !== 0) {
     throw new Error("docker-compose did not start successfully");
   }
+}
 
-  return async () => {
-    console.log("Stopping containers...");
-    await execa("docker-compose", ["down", "--remove-orphans"]);
-  };
+async function runDockerComposeDown() {
+  console.log("Stopping containers...");
+  await execa("docker-compose", ["down", "--remove-orphans"]);
 }
 
 (async () => {
@@ -60,6 +60,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   const implementationFolders = getFolderNamesFromPath(librariesPath);
   const libraryNames = libraries ? libraries.split(",") : implementationFolders;
 
+  let exitCode = 0;
   const results = new Map<string, TestResult>();
 
   for (const libraryName of libraryNames) {
@@ -74,12 +75,12 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
     const result: TestResult = { name: libraryName, started: false, tests: {} };
     results.set(libraryName, result);
 
-    const dockerComposeDown = await runDockerCompose(
-      libraryName,
-      librariesPath
-    );
-
     try {
+      await runDockerComposeUp(
+        libraryName,
+        librariesPath
+      );
+
       const startupSuccess = await ping();
 
       if (startupSuccess) {
@@ -97,16 +98,19 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
       } else {
         result.started = false;
         console.log(`Library ${libraryName} was not started successfully`);
+        exitCode = 1;
       }
     } catch (err) {
       console.log(`Library ${libraryName} encountered an error: ${err}`);
+      exitCode = 1;
     } finally {
-      await dockerComposeDown();
+      await runDockerComposeDown();
     }
   }
 
   generateMarkdown(results);
 
   console.log("complete");
-  process.exit();
+
+  process.exit(exitCode);
 })().catch(console.error);
