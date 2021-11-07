@@ -1,0 +1,70 @@
+name: Local
+
+on:
+  workflow_dispatch:
+    inputs:
+      implementation:
+        description: 'implementation name to test, empty for all'
+        required: false
+        default: "apollo-server"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      IMPLEMENTATION: ${{ github.event.inputs.implementation }}
+    steps:
+      - uses: actions/checkout@v2
+      -
+        name: update docker-compose
+        run: |
+          which docker-compose && exit 0 || true
+          echo ---------------------------------------------------------------
+          echo docker-compose - installing ...
+          echo ---------------------------------------------------------------
+          BIN_DIR=$HOME/.docker-compose/bin
+          FILE=$BIN_DIR/docker-compose
+          mkdir -p $BIN_DIR
+          set -x
+          curl -L --fail https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` -o $FILE
+          chmod +x $FILE
+          echo "downloaded $($FILE --version)"
+          echo "$BIN_DIR" >> ${GITHUB_PATH}
+          set +x
+          echo ---------------------------------------------------------------
+      - name: setup node
+        uses: actions/setup-node@master
+        with:
+          node-version: 14.x
+      -
+        name: dump info
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo ---------------------------------------------------------------
+          echo "$GITHUB_CONTEXT"
+          echo ---------------------------------------------------------------
+          echo "implementation: ${IMPLEMENTATION}"
+          echo ---------------------------------------------------------------
+          ( set -x; which docker )
+          echo "$(docker --version)"
+          echo ---------------------------------------------------------------
+          ( set -x; which docker-compose )
+          echo "$(docker-compose --version)"
+          echo ---------------------------------------------------------------
+          ( set -x; which node )
+          echo "$(node --version)"
+          echo ---------------------------------------------------------------
+          ( set -x; which npm )
+          echo "$(npm --version)"
+          echo ---------------------------------------------------------------
+      - run: npm install
+      - run: npm run setup
+      - run: npm run test ${IMPLEMENTATION}
+        env:
+          DEBUG: docker,test
+      - name: Done
+        run: |
+          echo ---------------------------------------------------------------
+          echo "implementation: ${IMPLEMENTATION}" complete
+          echo ---------------------------------------------------------------

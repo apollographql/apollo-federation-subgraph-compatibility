@@ -75,3 +75,5 @@ secrets.yml
 
 tmp/*
 !tmp/.keep
+
+act-test.run
