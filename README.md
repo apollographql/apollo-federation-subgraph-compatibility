@@ -25,14 +25,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 
 _*_ Implementation does not support multiple `@key` definitions, but all types of `@key` definitions are supported
 
-## "Supported" but full compatibility testing coming soon... 
-
 If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check our our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to see about submitting a PR for your library!
-
-> These are libraries that appear to be actively maintained. We audit this list every few months and remove libraries that are no longer active.
-
-| Language    | Framework     | Library                                                                          |
-| ----------- | ------------- | -------------------------------------------------------------------------------- |
 
 ## Testing Suite
 
