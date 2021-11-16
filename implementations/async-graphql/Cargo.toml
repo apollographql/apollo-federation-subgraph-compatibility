@@ -1,6 +1,9 @@
-[workspace]
+[package]
+name = "federation-async-graphql-compatibility"
+version = "0.2.0"
+edition = "2021"
 
-members = [
-	"product-graphql",
-	"federation-async-graphql-compatibility"
-]
+[dependencies]
+actix-web = "3"
+async-graphql = { version = "2", features = ["apollo_tracing"] }
+async-graphql-actix-web = "2"

@@ -3,7 +3,7 @@
   "type": "module",
   "dependencies": {
     "@apollo/federation": "^0.29.0",
-    "apollo-server": "^3.1.2",
+    "apollo-server": "^3.4.1",
     "graphql": "^15.5.0"
   },
   "devDependencies": {

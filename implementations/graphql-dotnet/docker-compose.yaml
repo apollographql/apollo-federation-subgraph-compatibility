@@ -1,0 +1,5 @@
+services:
+  products:
+    build: implementations/graphql-dotnet
+    ports:
+      - 4001:4001
