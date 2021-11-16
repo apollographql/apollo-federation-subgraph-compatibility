@@ -8,6 +8,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 
 | Language | Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides | ftv1 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| AppSync | [aws-appsync](https://aws.amazon.com/appsync/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
 | Dotnet | [graphql-dotnet](https://github.com/graphql-dotnet/graphql-dotnet) | ✔️ | ✔️ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Elixir | [absinthe_federation](https://github.com/DivvyPayHQ/absinthe_federation) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ ([coming soon](https://github.com/DivvyPayHQ/absinthe_federation/pull/25)) |
 | Go | [gqlgen](https://gqlgen.com/) | ✔️ | ✔️* | ✔️* | ❌ | ✔️ | ✔️ | ❌ |
