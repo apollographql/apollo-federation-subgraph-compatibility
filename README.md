@@ -10,6 +10,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Dotnet | [graphql-dotnet](https://github.com/graphql-dotnet/graphql-dotnet) | ✔️ | ✔️ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Elixir | [absinthe_federation](https://github.com/DivvyPayHQ/absinthe_federation) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ ([coming soon](https://github.com/DivvyPayHQ/absinthe_federation/pull/25)) |
+| Go | [gqlgen](https://gqlgen.com/) | ✔️ | ✔️* | ✔️* | ❌ | ✔️ | ✔️ | ❌ |
 | JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Java | [federation-jvm](https://github.com/apollographql/federation-jvm) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Java / Kotlin | [dgs](https://github.com/netflix/dgs-framework/) |  ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
@@ -24,15 +25,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 
 _*_ Implementation does not support multiple `@key` definitions, but all types of `@key` definitions are supported
 
-## "Supported" but full compatibility testing coming soon... 
-
 If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check our our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to see about submitting a PR for your library!
-
-> These are libraries that appear to be actively maintained. We audit this list every few months and remove libraries that are no longer active.
-
-| Language    | Framework     | Library                                                                          |
-| ----------- | ------------- | -------------------------------------------------------------------------------- |
-| Go            | [gqlgen](https://github.com/99designs/gqlgen/tree/master/plugin/federation)      | [GitHub Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues/17)
 
 ## Testing Suite
 
