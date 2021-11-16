@@ -10,6 +10,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Elixir | [absinthe_federation](https://github.com/DivvyPayHQ/absinthe_federation) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ ([coming soon](https://github.com/DivvyPayHQ/absinthe_federation/pull/25)) |
 | JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
+| JavaScript | [express-graphql](https://graphql.org/graphql-js/running-an-express-graphql-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌  |
 | Java | [federation-jvm](https://github.com/apollographql/federation-jvm) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Java / Kotlin | [dgs](https://github.com/netflix/dgs-framework/) |  ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Kotlin | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin) | ✔️ | ✔️* | ✔️* | ✔️* | ✔️ | ✔️ | ✔️  |
