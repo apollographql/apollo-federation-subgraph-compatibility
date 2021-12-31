@@ -16,11 +16,11 @@ type ProductVariation {
   id: ID!
 }
 
-extend type Query {
+type Query @extends {
   product(id: ID!): Product
 }
 
-extend type User @key(fields: "email") {
+type User @extends @key(fields: "email") {
   email: ID! @external
   totalProductsCreated: Int @external
 }
