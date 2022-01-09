@@ -1,5 +1,0 @@
-services:
-  products:
-    build: implementations/hotchocolate
-    ports:
-      - 4001:4001

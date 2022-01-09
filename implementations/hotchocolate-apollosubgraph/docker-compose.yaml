@@ -1,0 +1,5 @@
+services:
+  products:
+    build: implementations/hotchocolate-apollosubgraph
+    ports:
+      - 4001:4001
