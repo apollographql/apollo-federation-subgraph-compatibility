@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="HotChocolate.AspNetCore" Version="12.4.1" />
-    <PackageReference Include="HotChocolate.Extensions.ApolloSubgraph" Version="0.1.0-preview43" />
+    <PackageReference Include="HotChocolate.Extensions.ApolloSubgraph" Version="0.3.0" />
   </ItemGroup>
 
   <ItemGroup>
