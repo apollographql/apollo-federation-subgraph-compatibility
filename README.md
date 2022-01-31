@@ -1,6 +1,6 @@
 # Apollo Federation Subgraph Library Compatibility Testing Strategy
 
-The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph library's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). 
+The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph library's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/).
 
 ## Latest Results
 
@@ -9,7 +9,8 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | Language | Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides | ftv1 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | AppSync | [aws-appsync](https://aws.amazon.com/appsync/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
-| Dotnet | [graphql-dotnet](https://github.com/graphql-dotnet/graphql-dotnet) | ✔️ | ✔️ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| C# (.NET) | [graphql-dotnet](https://github.com/graphql-dotnet/graphql-dotnet) | ✔️ | ✔️ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| C# (.NET) | [hotchocolate](https://github.com/ChilliCream/hotchocolate) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
 | Elixir | [absinthe_federation](https://github.com/DivvyPayHQ/absinthe_federation) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ ([coming soon](https://github.com/DivvyPayHQ/absinthe_federation/pull/25)) |
 | Go | [gqlgen](https://gqlgen.com/) | ✔️ | ✔️* | ✔️* | ❌ | ✔️ | ✔️ | ❌ |
 | JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
