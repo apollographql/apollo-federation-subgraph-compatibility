@@ -2,7 +2,7 @@
 
 namespace Products;
 
-[ForeignServiceTypeExtension]
+[ExtendServiceType]
 public class Query
 {
     public Product? GetProduct([ID] string id, Data repository)

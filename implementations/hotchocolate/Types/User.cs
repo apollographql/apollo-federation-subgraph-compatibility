@@ -3,7 +3,7 @@ using HotChocolate.ApolloFederation;
 namespace Products;
 
 [Key("email")]
-[ForeignServiceTypeExtension]
+[ExtendServiceType]
 public class User
 {
     public User()
