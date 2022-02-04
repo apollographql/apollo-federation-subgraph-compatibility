@@ -1,13 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    apollo-federation (1.1.5)
-      google-protobuf (~> 3.7)
-      graphql (>= 1.9.8)
+    apollo-federation (2.2.0)
+      google-protobuf (~> 3.19)
+      graphql (>= 1.10.14)
     daemons (1.4.0)
     eventmachine (1.2.7)
     ffi (1.15.3)
-    google-protobuf (3.17.3)
+    google-protobuf (3.19.4)
     graphql (1.12.14)
     listen (3.6.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -41,7 +41,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  apollo-federation (~> 1.1)
+  apollo-federation (~> 2)
   graphql (~> 1.12)
   rack (~> 2.2)
   rake (~> 13.0)
@@ -51,4 +51,4 @@ DEPENDENCIES
   thin (~> 1.8)
 
 BUNDLED WITH
-   2.2.16
+   2.3.6
