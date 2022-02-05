@@ -6,7 +6,7 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 # gem "rails"
 
-gem "apollo-federation", "~> 1.1"
+gem "apollo-federation", "~> 2"
 gem "graphql", "~> 1.12"
 gem "rack", "~> 2.2"
 gem "rake", "~> 13.0"
