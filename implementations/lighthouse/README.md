@@ -6,8 +6,6 @@
 
 <div align="center">
 
-# Lighthouse Example
-
-**An example project using [nuwave/lighthouse](https://github.com/nuwave/lighthouse).**
+[nuwave/lighthouse](https://github.com/nuwave/lighthouse)
 
 </div>
