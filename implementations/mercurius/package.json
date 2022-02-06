@@ -1,0 +1,12 @@
+{
+  "name": "mercurius-fastify-implementations",
+  "description": "mercurius-fastify-implementations",
+  "main": "index.js",
+  "dependencies": {
+    "@apollo/subgraph": "^0.2.0",
+    "fastify": "^3.27.1",
+    "graphql": "^16.3.0",
+    "graphql-tag": "^2.12.6",
+    "mercurius": "^9.2.0"
+  }
+}
