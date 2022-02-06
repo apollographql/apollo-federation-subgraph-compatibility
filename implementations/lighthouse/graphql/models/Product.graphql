@@ -1,0 +1,21 @@
+type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
+    id: ID!
+    sku: String
+    package: String
+    variation: ProductVariation @method
+    dimensions: ProductDimension
+    createdBy: User @provides(fields: "totalProductsCreated")
+}
+
+type ProductDimension {
+    size: String
+    weight: Float
+}
+
+type ProductVariation {
+    id: ID!
+}
+
+extend type Query {
+    product(id: ID! @eq): Product @find
+}
