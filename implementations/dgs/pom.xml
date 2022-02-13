@@ -17,6 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <dgs.version>4.9.20</dgs.version>
+        <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
     </properties>
 
     <dependencyManagement>
