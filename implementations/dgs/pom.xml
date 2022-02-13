@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.0</version>
+        <version>2.6.3</version>
     </parent>
 
     <groupId>com.netflix.graphql.dgs</groupId>
@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <dgs.version>4.9.7</dgs.version>
+        <dgs.version>4.9.20</dgs.version>
     </properties>
 
     <dependencyManagement>
@@ -64,7 +64,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>${maven-jar-plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
