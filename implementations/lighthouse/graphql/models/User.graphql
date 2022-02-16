@@ -1,0 +1,4 @@
+type User @extends @key(fields: "email") {
+    email: ID! @external
+    totalProductsCreated: Int @external
+}

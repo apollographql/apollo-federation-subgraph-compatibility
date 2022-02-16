@@ -33,7 +33,7 @@ implement to be used in the testing suite:
    - We will send traffic to `http://products:4001`, if your server has
      `/graphql` required you'll need to change it
 4. You most likely don't need to modify the `docker-compose.yml` file, but it
-   will be use for `docker compose` to test your implementation. If you do need
+   will be used for `docker compose` to test your implementation. If you do need
    to edit the `docker-compose.yml` file, your edits should only affect the
    `products` service defined.
 5. Test only your library by running `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
@@ -42,8 +42,8 @@ implement to be used in the testing suite:
 ### Expected Data Sets
 
 Below is data that is used in this testing strategy and what you should be using
-in your server (it is okay to just hardcode this and return values directly from
-the array, this is what is done in `apollo-server` and `federation-jvm`).
+in your server (it is okay to return hardcoded results, this is what is done in
+`apollo-server` and `federation-jvm`).
 
 ```javascript
 const products = [
@@ -60,6 +60,7 @@ const products = [
     variation: "platform",
   },
 ];
+
 const users = [
   {
     email: "support@apollographql.com",

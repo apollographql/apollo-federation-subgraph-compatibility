@@ -1,0 +1,19 @@
+{
+    "require": {
+        "php": "^8",
+        "laravel/framework": "^8",
+        "nuwave/lighthouse": "^5"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ]
+    }
+}
