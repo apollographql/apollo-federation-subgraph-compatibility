@@ -46,24 +46,28 @@ in your server (it is okay to return hardcoded results, this is what is done in
 `apollo-server` and `federation-jvm`).
 
 ```javascript
-const user = {
-    email: "support@apollographql.com",
-    totalProductsCreated: 1337,
-};
-
-const product = {
+const products = [
+  {
     id: "apollo-federation",
     sku: "federation",
     package: "@apollo/federation",
-    variation: {
-        id: "OSS",
-    },
-    dimensions: {
-        size: "1",
-        weight: 1,
-    },
-    createdBy: user,
-};
+    variation: "OSS",
+  },
+  {
+    id: "apollo-studio",
+    sku: "studio",
+    package: "",
+    variation: "platform",
+  },
+];
+
+const users = [
+  {
+    email: "support@apollographql.com",
+    name: "Apollo Studio Support",
+    totalProductsCreated: 1337,
+  },
+];
 ```
 
 ## Debugging at the command line
