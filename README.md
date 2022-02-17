@@ -15,10 +15,12 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 | Go | [gqlgen](https://gqlgen.com/) | ✔️ | ✔️* | ✔️* | ❌ | ✔️ | ✔️ | ❌ |
 | JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | JavaScript | [express-graphql](https://graphql.org/graphql-js/running-an-express-graphql-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌  |
+| JavaScript | [Mercurius](https://mercurius.dev/#/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
 | Java | [federation-jvm](https://github.com/apollographql/federation-jvm) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Java / Kotlin | [dgs](https://github.com/netflix/dgs-framework/) |  ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
 | Kotlin | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin) | ✔️ | ✔️* | ✔️* | ✔️* | ✔️ | ✔️ | ✔️  |
 | PHP | [apollo-federation-php](https://github.com/Skillshare/apollo-federation-php) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌  |
+| PHP | [Lighthouse](https://lighthouse-php.com) (Laravel) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
 | Python | [graphene](https://github.com/preply/graphene-federation) | ✔️ | ✔️ | ✔️ | ❌ | ✔️ | ✔️ | ❌  |
 | Python | [ariadne](https://github.com/mirumee/ariadne) | ✔️ | ✔️* | ✔️* | ✔️*| ✔️ | ✔️ | ❌  |
 | Python | [strawberry-graphql](https://strawberry.rocks/docs) | ✔️ | ✔️ | ✔️ | ✔️| ✔️ | ✔️ | ❌  |
