@@ -13,13 +13,16 @@ const jestDebugStream = () =>
   });
 
 export const TESTS = [
-  { assertion: "introspection", column: "_service" },
-  { assertion: "@key single", column: "@key (single)" },
-  { assertion: "@key multiple", column: "@key (multi)" },
-  { assertion: "@key composite", column: "@key (composite)" },
-  { assertion: "@requires", column: "@requires" },
-  { assertion: "@provides", column: "@provides" },
-  { assertion: "ftv1", column: "@ftv1" },
+  { assertion: "introspection", column: "_service", fedVersion: 1 },
+  { assertion: "@key single", column: "@key (single)", fedVersion: 1 },
+  { assertion: "@key multiple", column: "@key (multi)", fedVersion: 1 },
+  { assertion: "@key composite", column: "@key (composite)", fedVersion: 1 },
+  { assertion: "@requires", column: "@requires", fedVersion: 1 },
+  { assertion: "@provides", column: "@provides", fedVersion: 1 },
+  { assertion: "ftv1", column: "@ftv1", fedVersion: 1 },
+  { assertion: "@link", column: "@link", fedVersion: 2 },
+  { assertion: "@shareable", column: "@shareable", fedVersion: 2 },
+  { assertion: "@tag", column: "@tag", fedVersion: 2 },
 ];
 
 export async function runJest(libraryName: string): Promise<JestResults> {
