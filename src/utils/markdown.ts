@@ -2,13 +2,19 @@ import { writeFileSync } from "fs";
 import { resolve } from "path";
 import { TestResult, TESTS } from "../testRunner";
 
-export function generateMarkdown(results: { [key: string]: TestResult }) {
+export function generateMarkdown(results: TestResult[]) {
   const markdownFile = new MarkdownFile(
     "Subgraph libraries that support Apollo Federation",
     "Supported subgraph libraries"
   );
 
-  Object.values(results).forEach((result) => {
+  const resultsSortedByLanguage = results.sort((a, b) => {
+    if (a.language > b.language) return 1;
+    if (a.language < b.language) return -1;
+    return 0;
+  });
+
+  resultsSortedByLanguage.forEach((result) => {
     markdownFile.addFrameworkResultToTable(result);
   });
 

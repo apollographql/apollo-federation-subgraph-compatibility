@@ -1,23 +1,26 @@
 import { readdirSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { resolve } from "path";
-import { ping } from "./utils/client";
-import { generateMarkdown } from "./utils/markdown";
 import execa from "execa";
 import debug from "debug";
 import { Writable } from "stream";
 import { load } from "js-yaml";
 import { defaultsDeep } from "lodash";
+
+import { ping } from "./utils/client";
+import { generateMarkdown } from "./utils/markdown";
 import { runJest, TestResult, TESTS } from "./testRunner";
 
 const dockerDebug = debug("docker");
-const dockerDebugStream = () =>
-  new Writable({
-    write(chunk, encoding, next) {
+
+function dockerDebugStream() {
+  return new Writable({
+    write(chunk, _encoding, next) {
       dockerDebug(chunk.toString());
       next();
     },
   });
+}
 
 function getFolderNamesFromPath(path: string) {
   return readdirSync(path, {
@@ -54,7 +57,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   };
 }
 
-(async () => {
+async function main() {
   // npm install will also setup project by building docker images along with supergraph sdl
   const libraries =
     process.argv.length > 2 ? (process.argv[2] as string) : undefined;
@@ -62,8 +65,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   const librariesPath = resolve(__dirname, "..", "implementations");
   const implementationFolders = getFolderNamesFromPath(librariesPath);
   const libraryNames = libraries ? libraries.split(",") : implementationFolders;
-
-  const results: { [key: string]: TestResult } = {};
+  const results: TestResult[] = [];
 
   for (const libraryName of libraryNames) {
     if (libraryName == "_template_") continue;
@@ -75,7 +77,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
     }
 
     const result: TestResult = { name: libraryName, started: false, tests: {} };
-    results[libraryName] = result;
+    results.push(result);
 
     const dockerComposeDown = await runDockerCompose(
       libraryName,
@@ -134,4 +136,6 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
 
   console.log("complete");
   process.exit();
-})().catch(console.error);
+}
+
+main().catch(console.error);
