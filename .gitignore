@@ -27,7 +27,7 @@ node_modules/
 # Intellij Configuration Files
 .idea/
 
-results.md
+results.*
 supergraph.graphql
 
 ## Java/SpringBoot gitignore

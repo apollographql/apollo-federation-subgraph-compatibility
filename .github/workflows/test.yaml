@@ -27,3 +27,4 @@ jobs:
       - run: npm run test ${{ matrix.name }}
         env:
           DEBUG: docker,test
+      - run: cat results.md
