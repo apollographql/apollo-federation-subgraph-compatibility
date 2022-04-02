@@ -1,5 +1,4 @@
 fullName: Ariadne
-version: 0.13.0
 language: Python
 documentation: https://ariadnegraphql.org/docs/apollo-federation
 tests:

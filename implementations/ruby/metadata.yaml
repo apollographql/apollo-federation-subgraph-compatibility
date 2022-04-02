@@ -1,8 +1,3 @@
-fullName: graphql-ruby
-dependencies:
-  - name: apollo-federation-ruby
-    url: https://github.com/Gusto/apollo-federation-ruby
-    version: 1.1
-version: 1.12
+fullName: GraphQL Ruby
 language: Ruby
 documentation: https://graphql-ruby.org/
