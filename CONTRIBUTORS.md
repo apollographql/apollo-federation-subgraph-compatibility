@@ -1,6 +1,6 @@
 # Apollo Federation Library Maintainers Implementation Guide
 
-This doc is mean to provide Apollo Federation Library Maintainers with the
+This document provides Apollo Federation Library Maintainers with the
 necessary information to test their library against The Apollo Federation Spec.
 
 ## Why should I even do this?
@@ -24,19 +24,20 @@ implement to be used in the testing suite:
 
 1. Copy the `implementations/_template_` folder and rename it to the name of
    your library
-   - You'll find 3 files that you need in the template folder:
-     `docker-compose.yml`, `Dockerfile` and `products.graphql`
-2. You'll need to implement the `products.graphql` file in your server, this is
+   - You'll find 4 files that you need in the template folder:
+     `metadata.yaml`, `docker-compose.yml`, `Dockerfile` and `products.graphql`
+2. Update the `metadata.yaml` file with your project details. These details are used in the main results table in the `README.md` of this repo, and in our [subgraph-compatible libraries](https://www.apollographql.com/docs/federation/other-servers) documentation.
+3. You'll need to implement the `products.graphql` file in your server, this is
    the reference implementation
-3. Once you have the schema implemented, you'll need to modify the `Dockerfile`
+4. Once you have the schema implemented, you'll need to modify the `Dockerfile`
    to make your server a Docker image and expose it on port 4001
    - We will send traffic to `http://products:4001`, if your server has
      `/graphql` required you'll need to change it
-4. You most likely don't need to modify the `docker-compose.yml` file, but it
+5. You most likely don't need to modify the `docker-compose.yml` file, but it
    will be used for `docker compose` to test your implementation. If you do need
    to edit the `docker-compose.yml` file, your edits should only affect the
    `products` service defined.
-5. Test only your library by running `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
+6. Test only your library by running `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`
 
 ### Expected Data Sets
