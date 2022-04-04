@@ -23,8 +23,8 @@ const resolvers = {
     /** @type {(product: import('./typings').ProductReference, args: any, context: any) => any} */
     delivery: (product, args, context) => {
       // Validate Product has external information as per @requires
-      if (product.id != "federation")
-        throw new ApolloError("product.id was not 'federation'");
+      if (product.id != "apollo-federation")
+        throw new ApolloError("product.id was not 'apollo-federation'");
       if (product.dimensions.size != "1")
         throw new ApolloError("product.dimensions.size was not '1'");
       if (product.dimensions.weight != 1)
