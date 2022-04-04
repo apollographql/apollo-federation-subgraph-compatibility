@@ -1,12 +1,12 @@
 services:
   router:
-    image: ghcr.io/apollosolutions/gateway
+    image: ghcr.io/apollographql/router:v0.1.0-preview.2-debug
     volumes:
-      - ./supergraph.graphql:/etc/config/supergraph.graphql
-    environment:
-      - APOLLO_SCHEMA_CONFIG_EMBEDDED=/etc/config/supergraph.graphql
+      - ./router.yaml:/dist/config/router.yaml
+      - ./supergraph.graphql:/dist/config/supergraph.graphql
     ports:
       - 4000:4000
+    command: -c config/router.yaml -s config/supergraph.graphql
   inventory:
     image: apollo-federation-implementations/inventory
     ports:
