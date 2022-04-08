@@ -1,12 +1,14 @@
 package graph
 
+//go:generate go run github.com/99designs/gqlgen generate
+
+import (
+	"subgraph/graph/model"
+)
+
 // This file will not be regenerated automatically.
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
-
-import (
-	"server/graph/model"
-)
 
 var federationSku = "federation"
 var federationPackage = "@apollo/federation"
@@ -17,7 +19,7 @@ var productSize = "1"
 var productWeight = 1.0
 
 var products = []*model.Product{
-	&model.Product{
+	{
 		ID:        "apollo-federation",
 		Sku:       &federationSku,
 		Package:   &federationPackage,
@@ -27,7 +29,7 @@ var products = []*model.Product{
 			Weight: &productWeight,
 		},
 	},
-	&model.Product{
+	{
 		ID:        "apollo-studio",
 		Sku:       &studioSku,
 		Package:   nil,
@@ -42,7 +44,7 @@ var products = []*model.Product{
 var totalProductsCreated = 1337
 
 var users = []*model.User{
-	&model.User{
+	{
 		Email:                "support@apollographql.com",
 		TotalProductsCreated: &totalProductsCreated,
 	},
@@ -50,7 +52,7 @@ var users = []*model.User{
 
 type Resolver struct {
 	products []*model.Product
-	users []*model.User
+	users    []*model.User
 }
 
 func NewRootResolver() *Resolver {
