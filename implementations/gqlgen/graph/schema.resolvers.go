@@ -5,8 +5,8 @@ package graph
 
 import (
 	"context"
-	"server/graph/generated"
-	"server/graph/model"
+	"subgraph/graph/generated"
+	"subgraph/graph/model"
 )
 
 func (r *productResolver) CreatedBy(ctx context.Context, obj *model.Product) (*model.User, error) {

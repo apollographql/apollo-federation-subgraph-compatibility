@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"server/graph"
-	"server/graph/generated"
+	"subgraph/graph"
+	"subgraph/graph/generated"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -21,7 +21,7 @@ func main() {
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewRootResolver()}))
 
-	http.Handle("/graphiql", playground.Handler("GraphQL playground", "/"))
+	http.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
