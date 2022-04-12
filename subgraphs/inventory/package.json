@@ -5,8 +5,8 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@apollo/federation": "^0.28.0",
-    "apollo-server": "^3.4.1",
-    "graphql": "^15.5.1"
+    "@apollo/subgraph": "^2.0.0-preview.12",
+    "apollo-server": "^3.6.7",
+    "graphql": "^16.3.0"
   }
 }

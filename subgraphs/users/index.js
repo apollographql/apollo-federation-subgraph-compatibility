@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 import { ApolloServer, gql } from "apollo-server";
-import { buildFederatedSchema } from "@apollo/federation";
+import { buildSubgraphSchema } from "@apollo/subgraph";
 
 const port = process.env.USERS_PORT || 4002;
 const users = [
@@ -22,7 +22,7 @@ const resolvers = {
   },
 };
 const server = new ApolloServer({
-  schema: buildFederatedSchema({ typeDefs, resolvers }),
+  schema: buildSubgraphSchema({ typeDefs, resolvers }),
 });
 server
   .listen({ port })
