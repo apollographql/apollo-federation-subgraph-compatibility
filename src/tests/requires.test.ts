@@ -13,7 +13,7 @@ test("@requires", async () => {
     data: {
       product: {
         dimensions: {
-          size: "1",
+          size: "small",
           weight: 1,
         },
       },

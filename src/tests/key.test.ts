@@ -1,6 +1,6 @@
 import { productsRequest } from "../utils/client";
 
-describe("@key", () => {
+describe("@key single", () => {
   test("single", async () => {
     const resp = await productsRequest({
       query: `#graphql
@@ -25,7 +25,9 @@ describe("@key", () => {
       },
     });
   });
+});
 
+describe("@key multiple", () => {
   test("multiple", async () => {
     const resp = await productsRequest({
       query: `#graphql
@@ -46,6 +48,8 @@ describe("@key", () => {
       },
     });
 
+    console.log(resp);
+
     expect(resp).toMatchObject({
       data: {
         _entities: [
@@ -56,7 +60,9 @@ describe("@key", () => {
       },
     });
   });
+});
 
+describe("@key composite", () => {
   test("composite", async () => {
     const resp = await productsRequest({
       query: `#graphql
