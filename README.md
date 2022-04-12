@@ -58,7 +58,7 @@ extend type Product @key(fields: "id") {
     @requires(fields: "dimensions { size weight }")
 }
 
-type ProductDimension {
+type ProductDimension @shareable {
   size: String
   weight: Float
 }
@@ -72,6 +72,21 @@ type DeliveryEstimates {
 ### Products (schema to be implemented by library maintainers)
 
 ```graphql
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.0",
+    import: [
+      "@key",
+      "@shareable",
+      "@provides",
+      "@external",
+      "@tag",
+      "@extends",
+      "@override",
+      "@inaccessible"
+    ]
+  )
+
 type Product
   @key(fields: "id")
   @key(fields: "sku package")
@@ -81,17 +96,18 @@ type Product
   package: String
   variation: ProductVariation
   dimensions: ProductDimension
-
   createdBy: User @provides(fields: "totalProductsCreated")
+  notes: String @tag(name: "internal")
 }
 
 type ProductVariation {
   id: ID!
 }
 
-type ProductDimension {
+type ProductDimension @shareable {
   size: String
   weight: Float
+  unit: String @inaccessible
 }
 
 extend type Query {
@@ -100,6 +116,7 @@ extend type Query {
 
 extend type User @key(fields: "email") {
   email: ID! @external
+  name: String @override(from: "users")
   totalProductsCreated: Int @external
 }
 ```
@@ -108,7 +125,7 @@ extend type User @key(fields: "email") {
 
 - `_service` - support a `rover subgraph introspect` command (this is the Apollo Federation equivalent of Introspection for subgraphs)
   - `query { _service { sdl } }`
-- `@key` and `_entities` - support defining a single `@key`, multiple `@key` definitionss, multiple-fields `@key` and a complex fields `@key`. Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
+- `@key` and `_entities` - support defining a single `@key`, multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
 
 ```graphql
 query ($representations: [_Any!]!) {
@@ -119,7 +136,7 @@ query ($representations: [_Any!]!) {
 }
 ```
 
-- @requires - support defining complex fields
+- `@requires` - support defining complex fields
   - This will be tested through a query covering [Product.delivery](http://product.delivery) where the library implementors dimensions { size weight } will need to be an expected { size: "1", weight: 1 } to pass. Example query that will be sent directly to `products` subgraph.
 
 ```graphql
@@ -133,7 +150,7 @@ query ($id: ID!) {
 }
 ```
 
-- @provides - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
+- `@provides` - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
 
 ```graphql
 query ($id: ID!) {
@@ -146,10 +163,20 @@ query ($id: ID!) {
 }
 ```
 
-- @external - This is covered in the tests above.
+- `@external` - This is covered in the tests above.
 - `extends` or `@extends` - This is covered in the `products` subgraph extension of the `User`
 - `ftv1` (Federated Traces version 1) - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
   - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
+- `@link`
+  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+- `@tag`
+  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+- `@shareable`
+  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+- `@override`
+  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+- `@inaccessible`
+  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
 
 ## Setting up the testing suite
 
