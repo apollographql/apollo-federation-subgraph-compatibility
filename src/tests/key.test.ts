@@ -48,8 +48,6 @@ describe("@key multiple", () => {
       },
     });
 
-    console.log(resp);
-
     expect(resp).toMatchObject({
       data: {
         _entities: [

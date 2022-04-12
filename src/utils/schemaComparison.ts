@@ -1,33 +1,33 @@
-import { readFileSync } from 'fs';
-import { visit, parse, BREAK } from 'graphql';
-import { resolve } from 'path';
+import { readFileSync } from "fs";
+import { visit, parse, BREAK } from "graphql";
+import { resolve } from "path";
 
 const productsRaw = readFileSync(
   resolve(
     __dirname,
-    '..',
-    '..',
-    'implementations',
-    '_template_',
-    'products.graphql'
+    "..",
+    "..",
+    "implementations",
+    "_template_",
+    "products.graphql"
   ),
-  'utf-8'
+  "utf-8"
 );
 const productsReferenceSchema = parse(productsRaw);
 const productDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == 'ObjectTypeDefinition' && d.name.value == 'Product'
+  (d) => d.kind == "ObjectTypeDefinition" && d.name.value == "Product"
 ) as any;
 const productDimensionDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == 'ObjectTypeDefinition' && d.name.value == 'ProductDimension'
+  (d) => d.kind == "ObjectTypeDefinition" && d.name.value == "ProductDimension"
 ) as any;
 const productVariationDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == 'ObjectTypeDefinition' && d.name.value == 'ProductVariation'
+  (d) => d.kind == "ObjectTypeDefinition" && d.name.value == "ProductVariation"
 ) as any;
 const queryDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == 'ObjectTypeExtension' && d.name.value == 'Query'
+  (d) => d.kind == "ObjectTypeExtension" && d.name.value == "Query"
 ) as any;
 const userDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == 'ObjectTypeExtension' && d.name.value == 'User'
+  (d) => d.kind == "ObjectTypeExtension" && d.name.value == "User"
 ) as any;
 
 function matchFields(field: any, fieldToCompareTo: any) {
@@ -44,7 +44,7 @@ export function compareSchemas(schemaToCompare: string) {
   visit(parse(schemaToCompare), {
     ObjectTypeExtension(node) {
       switch (node.name.value) {
-        case 'User':
+        case "User":
           node.fields.forEach((field) => {
             const matchedField = userDefinition.fields.find(
               (f) => f.name.value == field.name.value
@@ -57,7 +57,7 @@ export function compareSchemas(schemaToCompare: string) {
     },
     ObjectTypeDefinition(node) {
       switch (node.name.value) {
-        case 'Product':
+        case "Product":
           node.fields.forEach((field) => {
             const matchedField = productDefinition.fields.find(
               (f) => f.name.value == field.name.value
@@ -66,7 +66,7 @@ export function compareSchemas(schemaToCompare: string) {
             areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
-        case 'ProductDimension':
+        case "ProductDimension":
           node.fields.forEach((field) => {
             const matchedField = productDimensionDefinition.fields.find(
               (f) => f.name.value == field.name.value
@@ -75,7 +75,7 @@ export function compareSchemas(schemaToCompare: string) {
             areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
-        case 'ProductVariation':
+        case "ProductVariation":
           node.fields.forEach((field) => {
             const matchedField = productVariationDefinition.fields.find(
               (f) => f.name.value == field.name.value
@@ -84,16 +84,18 @@ export function compareSchemas(schemaToCompare: string) {
             areSchemasTheSame = matchFields(matchedField, field);
           });
           break;
-        case 'Query':
+        case "Query":
           node.fields.forEach((field) => {
-            const matchedField = queryDefinition.fields.find(
-              (f) => f.name.value == field.name.value
-            ) as any;
+            if (!["_service", "_entities"].includes(field.name.value)) {
+              const matchedField = queryDefinition.fields.find(
+                (f) => f.name.value == field.name.value
+              ) as any;
 
-            areSchemasTheSame = matchFields(matchedField, field);
+              areSchemasTheSame = matchFields(matchedField, field);
+            }
           });
           break;
-        case 'User':
+        case "User":
           node.fields.forEach((field) => {
             const matchedField = userDefinition.fields.find(
               (f) => f.name.value == field.name.value
