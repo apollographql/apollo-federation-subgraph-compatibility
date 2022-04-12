@@ -166,15 +166,15 @@ query ($id: ID!) {
 - `ftv1` (Federated Traces version 1) - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
   - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
 - `@link`
-  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
 - `@tag`
-  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
 - `@shareable`
-  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query shareable types.
 - `@override`
-  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to return the value of an overridden field.
 - `@inaccessible`
-  - Must be seen as a valid schema directive in subgraph library schemas. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
 
 ## Setting up the testing suite
 
