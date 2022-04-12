@@ -8,7 +8,7 @@
     "start:users": "node dist/subgraphs/users.js",
     "start:inventory": "node dist/subgraphs/inventory.js",
     "build:compile": "tsc",
-    "build:supergraph": "rover supergraph compose --config supergraph.yaml > supergraph.graphql",
+    "build:supergraph": "APOLLO_ELV2_LICENSE=accept npx rover supergraph compose --config supergraph.yaml > supergraph.graphql",
     "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
     "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",
     "setup": "npm run build && npm run docker",
@@ -28,7 +28,7 @@
     "ts-jest": "^27.0.5"
   },
   "devDependencies": {
-    "@apollo/rover": "^0.3.0",
+    "@apollo/rover": "^0.5.0",
     "@types/debug": "^4.1.7",
     "@types/jest": "^27.0.1",
     "@types/js-yaml": "^4.0.3",
