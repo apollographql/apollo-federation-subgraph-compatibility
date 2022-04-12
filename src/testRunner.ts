@@ -23,6 +23,8 @@ export const TESTS = [
   { assertion: "@link", column: "@link", fedVersion: 2 },
   { assertion: "@shareable", column: "@shareable", fedVersion: 2 },
   { assertion: "@tag", column: "@tag", fedVersion: 2 },
+  { assertion: "@override", column: "@override", fedVersion: 2 },
+  { assertion: "@inaccessible", column: "@inaccessible", fedVersion: 2 },
 ];
 
 export async function runJest(libraryName: string): Promise<JestResults> {
@@ -45,8 +47,15 @@ export async function runJest(libraryName: string): Promise<JestResults> {
   }
 
   const assertions = results.testResults.flatMap((x) => x.assertionResults);
-  const assertionPassed = (name: string) =>
-    assertions.find((a) => a.fullName === name)?.status === "passed";
+  const assertionPassed = (name: string) => {
+    return (
+      assertions.find((a: any) => {
+        const assertionName =
+          a.ancestorTitles.length === 0 ? a.fullName : a.ancestorTitles[0];
+        return assertionName === name;
+      })?.status === "passed"
+    );
+  };
 
   return {
     rawResults: results,

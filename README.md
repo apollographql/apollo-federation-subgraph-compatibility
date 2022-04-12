@@ -6,29 +6,27 @@ The purpose of this repository is to provide a centralized strategy focused on u
 
 The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite.
 
-| Language | Framework | _service | @key (single) | @key (multi) | @key (composite) | @requires | @provides | ftv1 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| AppSync | [aws-appsync](https://aws.amazon.com/appsync/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
-| C# (.NET) | [graphql-dotnet](https://github.com/graphql-dotnet/graphql-dotnet) | ✔️ | ✔️ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| C# (.NET) | [hotchocolate](https://github.com/ChilliCream/hotchocolate) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
-| Elixir | [absinthe_federation](https://github.com/DivvyPayHQ/absinthe_federation) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ ([coming soon](https://github.com/DivvyPayHQ/absinthe_federation/pull/25)) |
-| Go | [gqlgen](https://gqlgen.com/) | ✔️ | ✔️* | ✔️* | ❌ | ✔️ | ✔️ | ❌ |
-| JavaScript | [apollo-server](https://github.com/apollographql/apollo-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
-| JavaScript | [express-graphql](https://graphql.org/graphql-js/running-an-express-graphql-server/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌  |
-| JavaScript | [Mercurius](https://mercurius.dev/#/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
-| Java | [federation-jvm](https://github.com/apollographql/federation-jvm) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
-| Java / Kotlin | [dgs](https://github.com/netflix/dgs-framework/) |  ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
-| Kotlin | [graphql-kotlin](https://github.com/ExpediaGroup/graphql-kotlin) | ✔️ | ✔️* | ✔️* | ✔️* | ✔️ | ✔️ | ✔️  |
-| PHP | [apollo-federation-php](https://github.com/Skillshare/apollo-federation-php) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌  |
-| PHP | [Lighthouse](https://lighthouse-php.com) (Laravel) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌ |
-| Python | [graphene](https://github.com/preply/graphene-federation) | ✔️ | ✔️ | ✔️ | ❌ | ✔️ | ✔️ | ❌  |
-| Python | [ariadne](https://github.com/mirumee/ariadne) | ✔️ | ✔️* | ✔️* | ✔️*| ✔️ | ✔️ | ❌  |
-| Python | [strawberry-graphql](https://strawberry.rocks/docs) | ✔️ | ✔️ | ✔️ | ✔️| ✔️ | ✔️ | ❌  |
-| Ruby | [apollo-federation-ruby](https://github.com/Gusto/apollo-federation-ruby) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
-| Rust | [async-graphql](https://async-graphql.github.io/async-graphql/) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ❌  |
-| Scala | [caliban](https://ghostdogpr.github.io/caliban/docs/federation.html) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | ✔️  |
-
-_*_ Implementation does not support multiple `@key` definitions, but all types of `@key` definitions are supported
+| Language | Library | Federation 1 Support | Federation 2 Support |
+| --- | --- | --- | --- |
+| C# (.NET) | [GraphQL for .NET](https://graphql-dotnet.github.io) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>❌</td></tr><tr><th>@key (composite)</th><td>❌</td></tr><tr><th>@requires</th><td>❌</td></tr><tr><th>@provides</th><td>❌</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| C# (.NET) | [Hot Chocolate](https://chillicream.com/docs/hotchocolate) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Elixir (Absinthe) | [Absinthe.Federation](https://github.com/DivvyPayHQ/absinthe_federation) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Go | [gqlgen](https://gqlgen.com) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Java / Kotlin | [dgs-framework](https://github.com/netflix/dgs-framework/) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>✅</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Java / Kotlin | [Federation JVM](https://github.com/apollographql/federation-jvm) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>✅</td></tr></table> | <table><tr><th>@link</th><td>✅</td></tr><tr><th>@shareable</th><td>✅</td></tr><tr><th>@tag</th><td>✅</td></tr><tr><th>@override</th><td>✅</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Java / Kotlin | [GraphQL Kotlin](https://github.com/ExpediaGroup/graphql-kotlin) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>✅</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| JavaScript / TypeScript | [Apollo Server](https://www.apollographql.com/docs/federation/) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>✅</td></tr></table> | <table><tr><th>@link</th><td>✅</td></tr><tr><th>@shareable</th><td>✅</td></tr><tr><th>@tag</th><td>✅</td></tr><tr><th>@override</th><td>✅</td></tr><tr><th>@inaccessible</th><td>✅</td></tr></table> |
+| JavaScript / TypeScript | [express-graphql](https://github.com/graphql/express-graphql) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>✅</td></tr><tr><th>@shareable</th><td>✅</td></tr><tr><th>@tag</th><td>✅</td></tr><tr><th>@override</th><td>✅</td></tr><tr><th>@inaccessible</th><td>✅</td></tr></table> |
+| JavaScript / TypeScript | [Mercurius](https://mercurius.dev/#/) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Multiple | [AWS AppSync](https://aws.amazon.com/appsync/) | <table><tr><th>_service</th><td>❌</td></tr><tr><th>@key (single)</th><td>❌</td></tr><tr><th>@key (multi)</th><td>❌</td></tr><tr><th>@key (composite)</th><td>❌</td></tr><tr><th>@requires</th><td>❌</td></tr><tr><th>@provides</th><td>❌</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| PHP | [Apollo Federation PHP](https://github.com/Skillshare/apollo-federation-php) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| PHP (Laravel) | [Lighthouse](https://lighthouse-php.com/) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Python | [Ariadne](https://ariadnegraphql.org/docs/apollo-federation) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>❌</td></tr><tr><th>@key (composite)</th><td>❌</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Python | [Graphene](https://graphene-python.org/) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>❌</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>❌</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Python | [Strawberry](https://strawberry.rocks) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Ruby | [GraphQL Ruby](https://graphql-ruby.org/) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>✅</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Rust | [Async-graphql](https://async-graphql.github.io/async-graphql/en/index.html) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
+| Scala | [Caliban](https://ghostdogpr.github.io/caliban/docs/federation.html) | <table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>✅</td></tr></table> | <table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table> |
 
 If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check our our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to see about submitting a PR for your library!
 
@@ -58,7 +56,7 @@ extend type Product @key(fields: "id") {
     @requires(fields: "dimensions { size weight }")
 }
 
-type ProductDimension {
+type ProductDimension @shareable {
   size: String
   weight: Float
 }
@@ -72,6 +70,21 @@ type DeliveryEstimates {
 ### Products (schema to be implemented by library maintainers)
 
 ```graphql
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.0",
+    import: [
+      "@key",
+      "@shareable",
+      "@provides",
+      "@external",
+      "@tag",
+      "@extends",
+      "@override",
+      "@inaccessible"
+    ]
+  )
+
 type Product
   @key(fields: "id")
   @key(fields: "sku package")
@@ -81,17 +94,18 @@ type Product
   package: String
   variation: ProductVariation
   dimensions: ProductDimension
-
   createdBy: User @provides(fields: "totalProductsCreated")
+  notes: String @tag(name: "internal")
 }
 
 type ProductVariation {
   id: ID!
 }
 
-type ProductDimension {
+type ProductDimension @shareable {
   size: String
   weight: Float
+  unit: String @inaccessible
 }
 
 extend type Query {
@@ -100,6 +114,7 @@ extend type Query {
 
 extend type User @key(fields: "email") {
   email: ID! @external
+  name: String @override(from: "users")
   totalProductsCreated: Int @external
 }
 ```
@@ -108,7 +123,7 @@ extend type User @key(fields: "email") {
 
 - `_service` - support a `rover subgraph introspect` command (this is the Apollo Federation equivalent of Introspection for subgraphs)
   - `query { _service { sdl } }`
-- `@key` and `_entities` - support defining a single `@key`, multiple `@key` definitionss, multiple-fields `@key` and a complex fields `@key`. Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
+- `@key` and `_entities` - support defining a single `@key`, multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
 
 ```graphql
 query ($representations: [_Any!]!) {
@@ -119,7 +134,7 @@ query ($representations: [_Any!]!) {
 }
 ```
 
-- @requires - support defining complex fields
+- `@requires` - support defining complex fields
   - This will be tested through a query covering [Product.delivery](http://product.delivery) where the library implementors dimensions { size weight } will need to be an expected { size: "1", weight: 1 } to pass. Example query that will be sent directly to `products` subgraph.
 
 ```graphql
@@ -133,7 +148,7 @@ query ($id: ID!) {
 }
 ```
 
-- @provides - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
+- `@provides` - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
 
 ```graphql
 query ($id: ID!) {
@@ -146,10 +161,20 @@ query ($id: ID!) {
 }
 ```
 
-- @external - This is covered in the tests above.
+- `@external` - This is covered in the tests above.
 - `extends` or `@extends` - This is covered in the `products` subgraph extension of the `User`
 - `ftv1` (Federated Traces version 1) - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
   - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
+- `@link`
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+- `@tag`
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+- `@shareable`
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query shareable types.
+- `@override`
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to return the value of an overridden field.
+- `@inaccessible`
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
 
 ## Setting up the testing suite
 

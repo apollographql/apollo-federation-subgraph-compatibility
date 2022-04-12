@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { ApolloServer, gql } from 'apollo-server';
-import { buildSubgraphSchema } from '@apollo/federation';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 
 const port = process.env.PRODUCTS_PORT || 4001;
 const products = [
@@ -36,7 +36,7 @@ const resolvers = {
       return { id: products.find((p) => p.id == reference.id)?.variation };
     },
     dimensions: () => {
-      return { size: '1', weight: 1 };
+      return { size: "small", weight: 1, unit: "kg" };
     },
     createdBy: () => {
       return { email: 'support@apollographql.com', totalProductsCreated: 1337 };
@@ -54,6 +54,11 @@ const resolvers = {
         );
     },
   },
+  User: {
+    name() {
+      return "Jane Smith";
+    }
+  }
 };
 
 const server = new ApolloServer({

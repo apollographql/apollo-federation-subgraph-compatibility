@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 import { ApolloServer, gql, ApolloError } from "apollo-server";
-import { buildFederatedSchema } from "@apollo/federation";
+import { buildSubgraphSchema } from "@apollo/subgraph";
 
 const port = process.env.INVENTORY_PORT || 4003;
 
@@ -25,12 +25,12 @@ const resolvers = {
       // Validate Product has external information as per @requires
       if (product.id != "apollo-federation")
         throw new ApolloError("product.id was not 'apollo-federation'");
-      if (product.dimensions.size != "1")
-        throw new ApolloError("product.dimensions.size was not '1'");
+      if (product.dimensions.size != "small")
+        throw new ApolloError("product.dimensions.size was not 'small'");
       if (product.dimensions.weight != 1)
         throw new ApolloError("product.dimensions.weight was not '1'");
       if (args.zip != "94111")
-        throw new ApolloError("Prodct.delivery input zip was not '94111'");
+        throw new ApolloError("product.delivery input zip was not '94111'");
 
       return new DeliveryEstimates();
     },
@@ -38,7 +38,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  schema: buildFederatedSchema({ typeDefs, resolvers }),
+  schema: buildSubgraphSchema({ typeDefs, resolvers }),
 });
 
 server

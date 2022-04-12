@@ -65,7 +65,7 @@ def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional["Pro
 
 
 def get_product_dimensions() -> Optional["ProductDimension"]:
-    return ProductDimension(size="1", weight="1")
+    return ProductDimension(size="small", weight="1")
 
 
 def get_product_created_by() -> Optional["User"]:

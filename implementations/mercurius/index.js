@@ -38,7 +38,7 @@ const products = [
         return { id: products.find((p) => p.id == reference.id)?.variation };
       },
       dimensions: () => {
-        return { size: '1', weight: 1 };
+        return { size: 'small', weight: 1 };
       },
       createdBy: () => {
         return { email: 'support@apollographql.com', totalProductsCreated: 1337 };

@@ -52,7 +52,7 @@ def resolve_product_variation(obj, *_):
 
 @product.field('dimensions')
 def resolve_product_dimensions(*_):
-    return {'size': '1', 'weight': 1}
+    return {'size': 'small', 'weight': 1}
 
 
 @product.field('createdBy')

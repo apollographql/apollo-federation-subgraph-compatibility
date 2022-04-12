@@ -99,7 +99,7 @@ PRODUCTS = [
     sku: "federation",
     package: "@apollo/federation",
     variation: { id: "OSS" },
-    dimensions: { size: "1", weight: 1 },
+    dimensions: { size: "small", weight: 1 },
     created_by: { email: "support@apollographql.com", total_products_created: 1337 }
   },
   {
@@ -107,7 +107,7 @@ PRODUCTS = [
     sku: "studio",
     package: "",
     variation: { id: "platform" },
-    dimensions: { size: "1", weight: 1 },
+    dimensions: { size: "small", weight: 1 },
     created_by: { email: "support@apollographql.com", total_products_created: 1337 }
   },
 ].freeze

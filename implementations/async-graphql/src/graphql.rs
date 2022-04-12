@@ -87,7 +87,7 @@ impl Product {
     }
     pub async fn dimensions(&self) -> Option<ProductDimension<'_>> {
         Some(ProductDimension {
-            size: Some("1"),
+            size: Some("small"),
             weight: Some(1f32),
         })
     }

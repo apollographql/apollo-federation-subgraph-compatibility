@@ -20,7 +20,7 @@ class ProductType extends EntityObjectType {
                 'id'        => [ 'type' => Types::nonNull(Types::id()) ],
                 'sku'       => [ 'type' => Types::string() ],
                 'package'   => [ 'type' => Types::string() ],
-                'variation' => [ 
+                'variation' => [
                     'type'    => Types::productVariation(),
                     'resolve' => static function ($ref): array {
                         if ($ref->variation !== null) {
@@ -30,10 +30,10 @@ class ProductType extends EntityObjectType {
                         return self::getVariation(DataSource::findProduct($ref->id)->variation);
                     }
                 ],
-                'dimensions' => [ 
+                'dimensions' => [
                     'type'    => Types::productDimension(),
                     'resolve' => static fn (): array => [
-                        'size'   => '1',
+                        'size'   => 'small',
                         'weight' => 1,
                     ]
                 ],

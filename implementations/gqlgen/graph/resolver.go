@@ -15,7 +15,7 @@ var federationPackage = "@apollo/federation"
 
 var studioSku = "studio"
 
-var productSize = "1"
+var productSize = "small"
 var productWeight = 1.0
 
 var products = []*model.Product{

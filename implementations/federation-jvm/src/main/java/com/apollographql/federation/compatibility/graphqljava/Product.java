@@ -23,7 +23,7 @@ public class Product {
         this.sku = "";
         this.productPackage = "";
         this.variation = new ProductVariation("");
-        this.dimensions = new ProductDimension("1", 1);
+        this.dimensions = new ProductDimension("small", 1);
 
         this.createdBy = new User("support@apollographql.com");
     }
@@ -33,7 +33,7 @@ public class Product {
         this.sku = sku;
         this.productPackage = productPackage;
         this.variation = new ProductVariation(variationId);
-        this.dimensions = new ProductDimension("1", 1);
+        this.dimensions = new ProductDimension("small", 1);
         this.createdBy = new User("support@apollographql.com");
     }
 
@@ -42,7 +42,7 @@ public class Product {
         this.sku = sku;
         this.productPackage = productPackage;
         this.variation = new ProductVariation("");
-        this.dimensions = new ProductDimension("1", 1);
+        this.dimensions = new ProductDimension("small", 1);
         this.createdBy = new User("support@apollographql.com");
     }
 
@@ -51,7 +51,7 @@ public class Product {
         this.productPackage = "";
         this.sku = sku;
         this.variation = variation;
-        this.dimensions = new ProductDimension("1", 1);
+        this.dimensions = new ProductDimension("small", 1);
         this.createdBy = new User("support@apollographql.com");
     }
 
