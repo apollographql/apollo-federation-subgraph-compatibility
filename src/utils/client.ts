@@ -1,13 +1,13 @@
 import fetch from "make-fetch-happen";
 
+export const ROUTER_URL = "http://localhost:4000/";
 const PING_QUERY = "query { __typename }";
 
 const routerHealthCheck =
   "http://localhost:4000/.well-known/apollo/server-health";
-
 const productsUrl = "http://localhost:4001/";
 
-async function graphqlRequest(
+export async function graphqlRequest(
   url: string,
   req: {
     query: string;
