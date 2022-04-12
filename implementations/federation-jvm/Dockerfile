@@ -7,4 +7,4 @@ RUN mvn install -Dgpg.skip
 RUN mvn package
 RUN mvn dependency:copy-dependencies
 EXPOSE 4001
-CMD java -cp target/dependency/*:target/federation-jvm-compatibility-0.6.4.jar com.apollographql.federation.compatibility.App
+CMD java -cp target/dependency/*:target/federation-jvm-compatibility-2.0.0-alpha.4.jar org.springframework.boot.loader.JarLauncher

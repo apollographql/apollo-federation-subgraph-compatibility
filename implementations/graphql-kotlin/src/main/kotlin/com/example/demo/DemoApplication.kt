@@ -56,7 +56,7 @@ val PRODUCTS = listOf(
         "federation",
         "@apollo/federation",
         ProductVariation(ID("OSS")),
-        ProductDimension("1", 1.0f),
+        ProductDimension("small", 1.0f),
         User("support@apollographql.com", totalProductsCreated = 1337)
     ),
     Product(
@@ -64,7 +64,7 @@ val PRODUCTS = listOf(
         "studio",
         "",
         ProductVariation(ID("platform")),
-        ProductDimension("1", 1.0f),
+        ProductDimension("small", 1.0f),
         User("support@apollographql.com", totalProductsCreated = 1337)
     )
 )

@@ -39,7 +39,7 @@ class Product(ObjectType):
         return get_product_variation(self)
 
     def resolve_dimensions(self, info, **kwargs):
-        return {'size': '1', 'weight': 1.0}
+        return {'size': 'small', 'weight': 1.0}
 
     def resolve_created_by(self, info, **kwargs):
         {'email': 'support@apollographql.com', 'totalProductsCreated': 1337}

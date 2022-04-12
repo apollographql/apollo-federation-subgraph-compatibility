@@ -24,7 +24,7 @@ public class Product
 
     public ProductVariation? Variation { get; }
 
-    public ProductDimension? Dimensions { get; } = new("1", 1);
+    public ProductDimension? Dimensions { get; } = new("small", 1);
 
     [Provides("totalProductsCreated")]
     public User? CreatedBy { get; } = new("support@apollographql.com", 1337);

@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $product1->package = '@apollo/federation';
         $product1->variation = 'OSS';
         $product1->dimensions = [
-            'size' => '1',
+            'size' => 'small',
             'weight' => 1,
         ];
         $product1->createdBy()->associate($user);

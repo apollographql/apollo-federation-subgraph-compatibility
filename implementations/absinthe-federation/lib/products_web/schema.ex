@@ -107,7 +107,7 @@ defmodule ProductsWeb.Schema do
   end
 
   defp resolve_product_dimensions(_product, _, _ctx) do
-    {:ok, %{size: 1, weight: 1}}
+    {:ok, %{size: "small", weight: 1}}
   end
 
   defp resolve_product_reference(%{id: id}, _ctx) do

@@ -7,7 +7,7 @@ public record Product(string Id, string? Sku, string? Package, ProductVariation?
 
 public static class Data
 {
-	public static ProductDimension Dimension = new ProductDimension("1", 1);
+	public static ProductDimension Dimension = new ProductDimension("small", 1);
 	public static User CreatedBy = new User("support@apollographql.com", 1337);
 	public static IReadOnlyList<Product> Products = new List<Product>
 	{

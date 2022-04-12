@@ -50,7 +50,7 @@ const resolvers = {
     },
 
     dimensions() {
-      return { size: "1", weight: 1 };
+      return { size: "small", weight: 1, unit: "kg" };
     },
 
     createdBy() {
@@ -72,6 +72,11 @@ const resolvers = {
       }
     },
   },
+  User: {
+    name() {
+      return "Jane Smith";
+    }
+  }
 };
 
 const schema = buildSubgraphSchema([{ typeDefs, resolvers }]);
