@@ -37,7 +37,7 @@ implement to be used in the testing suite:
    will be used for `docker compose` to test your implementation. If you do need
    to edit the `docker-compose.yml` file, your edits should only affect the
    `products` service defined.
-6. Test only your library by running `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
+6. Test only your library by running `yarn setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`
 
 ### Expected Data Sets
