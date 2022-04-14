@@ -1,0 +1,25 @@
+{
+  "name": "graphql-yoga-federation-service",
+  "version": "1.0.0",
+  "description": "Federation Service implemented with GraphQL Yoga 2.x",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "graphql-codegen",
+    "build": "npx tsc",
+    "start": "node ./dist/index.js"
+  },
+  "author": "Charly POLY",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/subgraph": "^2.0.1",
+    "@graphql-yoga/node": "^2.2.1",
+    "graphql": "^16.3.0",
+    "graphql-tag": "^2.12.6"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.4.8",
+    "@graphql-codegen/typescript-resolvers": "^2.6.1",
+    "@types/node": "^17.0.23"
+  }
+}
