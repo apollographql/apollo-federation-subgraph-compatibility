@@ -18,6 +18,7 @@ type Product
 type ProductDimension @shareable {
   size: String
   weight: Float
+  unit: String @inaccessible
 }
 
 type ProductVariation {
