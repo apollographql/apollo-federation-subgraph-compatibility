@@ -1,9 +1,6 @@
- directive @external on FIELD_DEFINITION
- directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
- directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
- directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
- directive @extends on OBJECT | INTERFACE
- scalar _FieldSet
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.0",
+        import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override"])
 
 type Product
   @key(fields: "id")
@@ -15,11 +12,13 @@ type Product
   variation: ProductVariation
   dimensions: ProductDimension
   createdBy: User @provides(fields: "totalProductsCreated")
+  notes: String @tag(name: "internal")
 }
 
-type ProductDimension {
+type ProductDimension @shareable {
   size: String
   weight: Float
+  unit: String @inaccessible
 }
 
 type ProductVariation {
@@ -32,5 +31,6 @@ type Query {
 
 type User @key(fields: "email") @extends {
   email: ID! @external
+  name: String @override(from: "users")
   totalProductsCreated: Int @external
 }
