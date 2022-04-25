@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"subgraph/graph/generated"
 	"subgraph/graph/model"
 )
@@ -35,6 +36,10 @@ func (r *entityResolver) FindProductBySkuAndVariationID(ctx context.Context, sku
 		}
 	}
 	return nil, nil
+}
+
+func (r *entityResolver) FindUserByEmail(ctx context.Context, email string) (*model.User, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Entity returns generated.EntityResolver implementation.
