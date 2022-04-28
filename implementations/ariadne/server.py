@@ -1,3 +1,5 @@
+from typing import Optional
+
 import uvicorn
 
 from ariadne import QueryType
@@ -6,9 +8,7 @@ from ariadne.contrib.federation import FederatedObjectType, make_federated_schem
 
 
 type_defs = '''
-    # Ariadne doesn't support multiple directives per location
-    # type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
-    type Product @key(fields: "id") {
+    type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
         id: ID!
         sku: String
         package: String
@@ -63,6 +63,10 @@ def resolve_product_created_by(*_):
 
 @product.reference_resolver
 def resolve_product_reference(_, _info, representation):
+    if "sku" in representation and "package" in representation:
+        return get_product_by_sku_and_package(representation['sku'], representation['package'])
+    if "sku" in representation and "variation" in representation:
+        return get_product_by_sku_and_variation(representation['sku'], representation['variation'])
     return get_product_by_id(representation['id'])
 
 
@@ -96,6 +100,38 @@ def get_product_variation(reference):
 def get_product_by_id(id):
     return next((product for product in products if product['id']
                 == id), None)
+
+
+def get_product_by_sku_and_package(sku: str, package: str) -> Optional[dict]:
+    data = next(
+        (
+            product
+            for product in products
+            if product["sku"] == sku and product["package"] == package
+        ),
+        None,
+    )
+
+    if not data:
+        return None
+
+    return data
+
+
+def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional[dict]:
+    data = next(
+        (
+            product
+            for product in products
+            if product["sku"] == sku and product["variation"] == variation["id"]
+        ),
+        None,
+    )
+
+    if not data:
+        return None
+
+    return data
 
 
 if __name__ == "__main__":
