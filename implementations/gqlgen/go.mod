@@ -3,7 +3,7 @@ module subgraph
 go 1.18
 
 require (
-	github.com/99designs/gqlgen v0.17.4
+	github.com/99designs/gqlgen v0.17.5
 	github.com/vektah/gqlparser/v2 v2.4.2
 )
 
@@ -23,5 +23,3 @@ require (
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/99designs/gqlgen => github.com/99designs/gqlgen v0.17.5-0.20220428154617-9250f9ac1f90
