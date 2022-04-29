@@ -7,6 +7,8 @@ import (
 	"subgraph/graph"
 	"subgraph/graph/generated"
 
+	"github.com/99designs/gqlgen/graphql/handler/apollofederatedtracingv1"
+
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 )
@@ -20,6 +22,7 @@ func main() {
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewRootResolver()}))
+	srv.Use(&apollofederatedtracingv1.Tracer{})
 
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/", srv)
