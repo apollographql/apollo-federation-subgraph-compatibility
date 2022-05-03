@@ -1,7 +1,6 @@
 from typing import Optional
 
 import strawberry
-from strawberry.arguments import UNSET
 
 products = [
     {
@@ -20,7 +19,7 @@ products = [
 
 
 def get_product_variation(root) -> Optional["ProductVariation"]:
-   return root.id
+    return root.id
 
 
 def get_product_by_id(id: strawberry.ID) -> Optional["Product"]:
@@ -65,23 +64,25 @@ def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional["Pro
 
 
 def get_product_dimensions() -> Optional["ProductDimension"]:
-    return ProductDimension(size="small", weight="1")
+    return ProductDimension(size="small", weight="1", unit="kg")
 
 
 def get_product_created_by() -> Optional["User"]:
-    return User(email="support@apollographql.com", total_products_created="1991")
+    return User(email="support@apollographql.com", total_products_created="1991", name="Jane Smith")
 
 
 @strawberry.federation.type(extend=True, keys=["email"])
 class User:
     email: strawberry.ID = strawberry.federation.field(external=True)
+    name: Optional[str] = strawberry.federation.field(override="users")
     total_products_created: Optional[int] = strawberry.federation.field(external=True)
 
 
-@strawberry.type
+@strawberry.federation.type(shareable=True)
 class ProductDimension:
     size: Optional[str]
     weight: Optional[float]
+    unit: Optional[str] = strawberry.federation.field(inaccessible=True)
 
 
 @strawberry.type
@@ -104,6 +105,7 @@ class Product:
     created_by: Optional[User] = strawberry.federation.field(
         provides=["total_products_created"], resolver=get_product_created_by
     )
+    notes: Optional[str] = strawberry.federation.field(tags=["internal"])
 
     @classmethod
     def from_data(cls, data: dict):
@@ -112,6 +114,7 @@ class Product:
             sku=data["sku"],
             package=data["package"],
             variation_id=data["variation"],
+            notes="hello",
         )
 
     @classmethod
