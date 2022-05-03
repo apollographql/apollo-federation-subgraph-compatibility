@@ -11,7 +11,7 @@ gem "graphql", "~> 1.12"
 gem "rack", "~> 2.2"
 gem "rake", "~> 13.0"
 gem "rerun", "~> 0.13.1"
-gem "sinatra", "~> 2.1"
+gem "sinatra", "~> 2.2"
 gem "thin", "~> 1.8"
 
 gem "rb-kqueue", "~> 0.2.6"
