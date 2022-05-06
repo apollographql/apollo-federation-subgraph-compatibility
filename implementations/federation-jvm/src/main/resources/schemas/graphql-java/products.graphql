@@ -1,6 +1,6 @@
 extend schema
   @link(url: "https://specs.apollo.dev/federation/v2.0",
-        import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override"])
+        import: ["@key", "@shareable", "@provides", "@external", { name: "@tag", as: "@apollo_tag" }, "@extends", "@override", "@inaccessible"])
 
 type Product
   @key(fields: "id")
@@ -12,7 +12,7 @@ type Product
   variation: ProductVariation
   dimensions: ProductDimension
   createdBy: User @provides(fields: "totalProductsCreated")
-  notes: String @tag(name: "internal")
+  notes: String @apollo_tag(name: "internal")
 }
 
 type ProductDimension @shareable {
