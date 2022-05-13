@@ -11,7 +11,7 @@ To deploy your own version of this `products` service on AppSync you will need t
 
 1. deploy the cdk stack:
     ```sh
-    cd implementations/appsync/cdk
+    cd implementations/appsync/cdk/product-service
     npm install
     npm run build && npm run cdk deploy
 
