@@ -12,7 +12,7 @@ object Main extends zio.App {
       _           <- Server
                        .start(
                          4001,
-                         Http.route { case _ -> Root =>
+                         Http.route { case _ -> !! =>
                            ZHttpAdapter.makeHttpService(interpreter)
                          }
                        )
