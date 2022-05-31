@@ -16,16 +16,18 @@ object ProductService {
             sku = Some("federation"),
             `package` = Some("@apollo/federation"),
             variation = Some(ProductVariation(ID("OSS"))),
-            dimensions = Some(ProductDimension(Some("small"), Some(1.0f))),
-            createdBy = Some(User(ID("support@apollographql.com"), Some(1337)))
+            dimensions = Some(ProductDimension(Some("small"), Some(1.0f), Some("kg"))),
+            createdBy = Some(User(ID("support@apollographql.com"), Some(1337), Some("Jane Smith"))),
+            notes = Some("This is a test product")
           ),
           Product(
             id = ID("apollo-studio"),
             sku = Some("studio"),
             `package` = Some(""),
             variation = Some(ProductVariation(ID("platform"))),
-            dimensions = Some(ProductDimension(Some("small"), Some(1.0f))),
-            createdBy = Some(User(ID("support@apollographql.com"), Some(1337)))
+            dimensions = Some(ProductDimension(Some("small"), Some(1.0f), Some("kg"))),
+            createdBy = Some(User(ID("support@apollographql.com"), Some(1337), Some("Jane Smith"))),
+            notes = Some("This is a note")
           )
         )
       )

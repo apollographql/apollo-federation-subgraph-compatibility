@@ -1,7 +1,7 @@
 import caliban.Value.StringValue
-import caliban.federation._
+import caliban.federation.EntityResolver
+import caliban.federation.v2._
 import caliban.federation.tracing.ApolloFederatedTracing
-import caliban.schema.Annotations.GQLDirective
 import caliban.schema.Schema.scalarSchema
 import caliban.schema.{ ArgBuilder, GenericSchema, Schema }
 import caliban.{ CalibanError, GraphQL, GraphQLInterpreter, InputValue, RootResolver }
@@ -12,28 +12,32 @@ import zio.{ Has, IO, URIO, ZIO }
 case class ID(id: String) extends AnyVal
 
 object ID {
-  implicit val schema: Schema[Any, ID] = scalarSchema[ID]("ID", None, id => StringValue(id.id))
+  implicit val schema: Schema[Any, ID] = scalarSchema[ID]("ID", None, None, id => StringValue(id.id))
 }
 
-@GQLDirective(Key(fields = "email"))
-@GQLDirective(Extend)
+@GQLKey(fields = "email")
+@GQLExtend
 case class User(
-  @GQLDirective(External) email: ID,
-  @GQLDirective(External) totalProductsCreated: Option[Int]
+  @GQLExternal email: ID,
+  @GQLExternal totalProductsCreated: Option[Int],
+  @GQLOverride("users") name: Option[String]
 )
 
-@GQLDirective(Key(fields = "id"))
-@GQLDirective(Key(fields = "sku package"))
-@GQLDirective(Key(fields = "sku variation { id }"))
+@GQLKey(fields = "id")
+@GQLKey(fields = "sku package")
+@GQLKey(fields = "sku variation { id }")
 case class Product(
   id: ID,
   sku: Option[String],
   `package`: Option[String],
   variation: Option[ProductVariation],
   dimensions: Option[ProductDimension],
-  @GQLDirective(Provides(fields = "totalProductsCreated")) createdBy: Option[User]
+  @GQLProvides(fields = "totalProductsCreated") createdBy: Option[User],
+  @GQLTag("internal") notes: Option[String]
 )
-case class ProductDimension(size: Option[String], weight: Option[Float])
+
+@GQLShareable
+case class ProductDimension(size: Option[String], weight: Option[Float], @GQLInaccessible unit: Option[String])
 case class ProductVariation(id: ID)
 
 object ProductApi extends GenericSchema[Has[ProductService]] {
@@ -74,14 +78,12 @@ object ProductApi extends GenericSchema[Has[ProductService]] {
     product: IDArgs => URIO[Has[ProductService], Option[Product]]
   )
 
-  val graphql: GraphQL[Clock with Has[ProductService]] = federate(
+  val graphql: GraphQL[Clock with Has[ProductService]] =
     GraphQL.graphQL(
       RootResolver(
         Query(args => ZIO.serviceWith[ProductService](_.getProductById(args.id.id)))
       )
-    ),
-    productResolver
-  ) @@ ApolloFederatedTracing.wrapper
+    ) @@ federated(productResolver) @@ ApolloFederatedTracing.wrapper
 
   val interpreter: IO[CalibanError.ValidationError, GraphQLInterpreter[Clock with Has[ProductService], CalibanError]] =
     graphql.interpreter
