@@ -6,7 +6,7 @@ const products = [
     sku: 'federation',
     package: '@apollo/federation',
     variation: { id: 'OSS' },
-    dimensions: { size: 1, weight: 1 },
+    dimensions: { size: 'small', weight: 1 },
   },
   {
     id: 'apollo-studio',
