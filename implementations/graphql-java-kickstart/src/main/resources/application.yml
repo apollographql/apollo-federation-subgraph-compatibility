@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: graphql-java-kickstart-compatibility
+server:
+  port: 4001
+graphql:
+  servlet:
+    mapping: /
+  # graphiql:
+  #   enabled: true
+  tools:
+    schema-location-pattern: "**/*.graphql"
