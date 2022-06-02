@@ -1,11 +1,10 @@
 graphql:
   servlet:
-    mapping: 
+    mapping: /
 spring:
   application:
-    name: federation-jvm-compatibility  
+    name: federation-jvm-compatibility
   profiles:
     default: graphql-java
 server:
   port: 4001
- 
