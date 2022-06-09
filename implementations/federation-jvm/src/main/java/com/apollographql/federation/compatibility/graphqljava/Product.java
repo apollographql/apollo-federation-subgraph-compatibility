@@ -1,10 +1,9 @@
 package com.apollographql.federation.compatibility.graphqljava;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class Product {
     private final String id;
@@ -67,7 +66,7 @@ public class Product {
         return dimensions;
     }
 
-    public String getPackage() {
+    public String getProductPackage() {
         return productPackage;
     }
 
@@ -93,7 +92,7 @@ public class Product {
             if (reference.get("package") instanceof String) {
                 String productPackage = (String) reference.get("package");
                 for (Product product : products) {
-                    if (product.getSku().equals(productSku) && product.getPackage().equals(productPackage)) {
+                    if (product.getSku().equals(productSku) && product.getProductPackage().equals(productPackage)) {
                         return product;
                     }
                 }

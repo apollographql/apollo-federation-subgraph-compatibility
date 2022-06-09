@@ -4,7 +4,5 @@ graphql:
 spring:
   application:
     name: federation-jvm-compatibility
-  profiles:
-    default: graphql-java
 server:
   port: 4001
