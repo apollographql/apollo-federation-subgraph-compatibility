@@ -3,6 +3,7 @@ package com.apollographql.federation.compatibility.graphqljava;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class Product {
     private final String id;
@@ -77,7 +78,7 @@ public class Product {
         return createdBy;
     }
 
-    public static Product resolveReference(Map<String, Object> reference) {
+    public static Product resolveReference(@NotNull Map<String, Object> reference) {
         if (reference.get("id") instanceof String) {
             String productId = (String) reference.get("id");
             for (Product product : products) {

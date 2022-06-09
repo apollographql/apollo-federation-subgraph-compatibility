@@ -19,6 +19,7 @@
 
         <federation-graphql-java-support.version>2.0.1</federation-graphql-java-support.version>
 
+        <jetbrains-annotations>23.0.0</jetbrains-annotations>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
     </properties>
 
@@ -31,6 +32,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains-annotations}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

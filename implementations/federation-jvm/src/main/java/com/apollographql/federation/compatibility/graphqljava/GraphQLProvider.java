@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
@@ -29,14 +28,11 @@ public class GraphQLProvider {
     @Autowired
     GraphQLDataFetchers graphQLDataFetchers;
 
-    GraphQLSchema graphQLSchema;
-    private GraphQL graphQL;
-
-    @PostConstruct
-    public void init() throws IOException {
+    @Bean
+    public GraphQL graphql() throws IOException {
         String sdl = getSDL();
         GraphQLSchema graphQLSchema = buildSchema(sdl);
-        this.graphQL = GraphQL.newGraphQL(graphQLSchema)
+        return GraphQL.newGraphQL(graphQLSchema)
             .instrumentation(federatedTracing()).build();
     }
 
@@ -79,10 +75,5 @@ public class GraphQLProvider {
             .type(newTypeWiring("Query")
                 .dataFetcher("product", graphQLDataFetchers.getProductDataFetcher())
             ).build();
-    }
-
-    @Bean
-    public GraphQL graphQL() {
-        return graphQL;
     }
 }
