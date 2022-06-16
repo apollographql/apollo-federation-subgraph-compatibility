@@ -14,7 +14,12 @@ export function generateMarkdown(results: TestResult[]) {
     return 0;
   });
 
+  var currentLanguage = null;
   resultsSortedByLanguage.forEach((result) => {
+    if (currentLanguage !== result.language) {
+      markdownFile.addTable(result)
+      currentLanguage = result.language
+    }
     markdownFile.addFrameworkResultToTable(result);
   });
 
@@ -38,10 +43,10 @@ class MarkdownFile {
       "The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite.",
       ""
     );
-    this.addTable();
   }
 
-  addTable() {
+  addTable(result: TestResult) {
+    this.content.push(`## ${result.language}`)
     const columns = [
       "Language",
       "Library",
