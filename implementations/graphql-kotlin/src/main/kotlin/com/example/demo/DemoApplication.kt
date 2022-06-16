@@ -15,6 +15,8 @@ import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 
 @KeyDirective(fields = FieldSet("id"))
+@KeyDirective(fields = FieldSet("sku package"))
+@KeyDirective(fields = FieldSet("sku variation { id }"))
 data class Product(
     val id: ID,
     val sku: String? = null,
@@ -23,7 +25,9 @@ data class Product(
     val variation: ProductVariation? = null,
     val dimensions: ProductDimension? = null,
     @ProvidesDirective(FieldSet("totalProductsCreated"))
-    val createdBy: User? = null
+    val createdBy: User? = null,
+    @TagDirective("internal")
+    val notes: String? = null
 ) {
     companion object {
         fun byID(id: ID) = PRODUCTS.find { it.id.value == id.value }
@@ -57,7 +61,7 @@ val PRODUCTS = listOf(
         "@apollo/federation",
         ProductVariation(ID("OSS")),
         ProductDimension("small", 1.0f),
-        User("support@apollographql.com", totalProductsCreated = 1337)
+        User(email = "support@apollographql.com", name = "support", totalProductsCreated = 1337)
     ),
     Product(
         ID("apollo-studio"),
@@ -65,13 +69,16 @@ val PRODUCTS = listOf(
         "",
         ProductVariation(ID("platform")),
         ProductDimension("small", 1.0f),
-        User("support@apollographql.com", totalProductsCreated = 1337)
+        User(email ="support@apollographql.com", name = "support", totalProductsCreated = 1337)
     )
 )
 
+@ShareableDirective
 data class ProductDimension(
     val size: String? = null,
-    val weight: Float? = null
+    val weight: Float? = null,
+    @InaccessibleDirective
+    val unit: String? = null
 )
 
 data class ProductVariation(
@@ -83,6 +90,8 @@ data class ProductVariation(
 data class User(
     @ExternalDirective
     val email: String,
+    @OverrideDirective(from = "users")
+    val name: String,
     @ExternalDirective
     val totalProductsCreated: Int? = null
 )
@@ -109,8 +118,8 @@ class UserResolver : FederatedTypeResolver<User> {
         representations: List<Map<String, Any>>
     ): List<User?> {
         return representations.map {
-            val email = it["email"].toString() ?: throw RuntimeException("invalid entity reference")
-            User(email, totalProductsCreated = 1337)
+            val email = it["email"]?.toString() ?: throw RuntimeException("invalid entity reference")
+            User(email = email, name = "default", totalProductsCreated = 1337)
         }
     }
 }
