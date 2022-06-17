@@ -48,7 +48,6 @@ class MarkdownFile {
   addTable(result: TestResult) {
     this.content.push(`## ${result.language}`)
     const columns = [
-      "Language",
       "Library",
       "Federation 1 Support",
       "Federation 2 Support",
@@ -65,7 +64,6 @@ class MarkdownFile {
   addFrameworkResultToTable(result: TestResult) {
     const name = result.fullName || result.name;
     const rows = [
-      result.language,
       result.documentation ? `[${name}](${result.documentation})` : name,
       this.renderTestResultsCell({ fedVersion: 1, result }),
       this.renderTestResultsCell({ fedVersion: 2, result }),
