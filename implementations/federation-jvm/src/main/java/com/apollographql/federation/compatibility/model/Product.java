@@ -1,21 +1,24 @@
-package com.apollographql.federation.compatibility.graphqljava;
+package com.apollographql.federation.compatibility.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 public class Product {
+
+    private static final Map<String, Product> PRODUCTS = Stream.of(
+            new Product("apollo-federation", "federation", "@apollo/federation", "OSS"),
+            new Product("apollo-studio", "studio", "", "platform")
+    ).collect(Collectors.toMap(Product::getId, product -> product));
+
     private final String id;
     private final String sku;
     private final String productPackage;
     private final ProductVariation variation;
     private final ProductDimension dimensions;
     private final User createdBy;
-
-    public static List<Product> products = List.of(
-            new Product("apollo-federation", "federation", "@apollo/federation", "OSS"),
-            new Product("apollo-studio", "studio", "", "platform"));
 
     public Product(String id) {
         this.id = id;
@@ -78,27 +81,23 @@ public class Product {
         return createdBy;
     }
 
+    public static Product resolveById(String id) {
+        return PRODUCTS.get(id);
+    }
+
     public static Product resolveReference(@NotNull Map<String, Object> reference) {
-        if (reference.get("id") instanceof String) {
-            String productId = (String) reference.get("id");
-            for (Product product : products) {
-                if (product.getId().equals(productId)) {
-                    return product;
-                }
-            }
+        if (reference.get("id") instanceof String productId) {
+            return PRODUCTS.get(productId);
         } else {
             String productSku = (String) reference.get("sku");
-
-            if (reference.get("package") instanceof String) {
-                String productPackage = (String) reference.get("package");
-                for (Product product : products) {
+            if (reference.get("package") instanceof String productPackage) {
+                for (Product product : PRODUCTS.values()) {
                     if (product.getSku().equals(productSku) && product.getProductPackage().equals(productPackage)) {
                         return product;
                     }
                 }
-            } else if (reference.get("variation") instanceof HashMap) {
-                var productVariation = (HashMap) reference.get("variation");
-                for (Product product : products) {
+            } else if (reference.get("variation") instanceof HashMap productVariation) {
+                for (Product product : PRODUCTS.values()) {
                     if (product.getSku().equals(productSku) && product.getVariation().getId().equals(productVariation.get("id"))) {
                         return product;
                     }
