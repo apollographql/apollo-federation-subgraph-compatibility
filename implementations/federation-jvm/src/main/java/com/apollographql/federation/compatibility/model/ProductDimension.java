@@ -1,4 +1,4 @@
-package com.apollographql.federation.compatibility.graphqljava;
+package com.apollographql.federation.compatibility.model;
 
 public class ProductDimension {
     private final String size;

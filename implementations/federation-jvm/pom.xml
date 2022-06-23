@@ -17,7 +17,7 @@
     <properties>
         <java.version>17</java.version>
 
-        <federation-graphql-java-support.version>2.0.1</federation-graphql-java-support.version>
+        <federation-graphql-java-support.version>2.0.3</federation-graphql-java-support.version>
 
         <jetbrains-annotations>23.0.0</jetbrains-annotations>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
@@ -28,6 +28,10 @@
             <groupId>com.apollographql.federation</groupId>
             <artifactId>federation-graphql-java-support</artifactId>
             <version>${federation-graphql-java-support.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-graphql</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

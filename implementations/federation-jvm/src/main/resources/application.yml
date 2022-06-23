@@ -1,8 +1,7 @@
-graphql:
-  servlet:
-    mapping: /
 spring:
   application:
     name: federation-jvm-compatibility
+  graphql:
+    path: /
 server:
   port: 4001
