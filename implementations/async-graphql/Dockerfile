@@ -1,4 +1,4 @@
-FROM rust:1.56 as build
+FROM rust:1.61 as build
 
 WORKDIR /usr/src/federation-async-graphql-compatibility
 

@@ -17,6 +17,7 @@ jobs:
   build:
     needs: build-matrix
     strategy:
+      fail-fast: false
       matrix:
         name: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
