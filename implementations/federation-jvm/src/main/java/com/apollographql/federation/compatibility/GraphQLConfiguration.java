@@ -3,6 +3,7 @@ package com.apollographql.federation.compatibility;
 import com.apollographql.federation.compatibility.model.Product;
 import com.apollographql.federation.graphqljava.Federation;
 import com.apollographql.federation.graphqljava._Entity;
+import com.apollographql.federation.graphqljava.tracing.FederatedTracingInstrumentation;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,6 +13,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GraphQLConfiguration {
+
+    @Bean
+    public FederatedTracingInstrumentation federatedTracingInstrumentation() {
+      return new FederatedTracingInstrumentation();
+    }
 
     @Bean
     public GraphQlSourceBuilderCustomizer federationTransform() {
