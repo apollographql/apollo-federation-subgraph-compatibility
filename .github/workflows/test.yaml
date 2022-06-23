@@ -29,3 +29,5 @@ jobs:
         env:
           DEBUG: docker,test
       - run: cat results.md
+      - name: results summary
+        run: cat results.md >> $GITHUB_STEP_SUMMARY
