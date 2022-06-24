@@ -17,11 +17,16 @@ export function generateMarkdown(results: TestResult[]) {
   var currentLanguage = null;
   resultsSortedByLanguage.forEach((result) => {
     if (currentLanguage !== result.language) {
-      markdownFile.addTable(result)
-      currentLanguage = result.language
+      if (currentLanguage !== null) {
+        markdownFile.endLanguageTable();
+      }
+
+      markdownFile.startLanguageTable(result);
+      currentLanguage = result.language;
     }
     markdownFile.addFrameworkResultToTable(result);
   });
+  markdownFile.endLanguageTable();
 
   writeFileSync(
     resolve(__dirname, "..", "..", "results.md"),
@@ -45,30 +50,33 @@ class MarkdownFile {
     );
   }
 
-  addTable(result: TestResult) {
-    this.content.push(`## ${result.language}`)
-    const columns = [
-      "Library",
-      "Federation 1 Support",
-      "Federation 2 Support",
-    ];
-    this.content.push(`| ${columns.join(" | ")} |`);
-    this.content.push(
-      `| ${new Array(columns.length)
-        .fill(1)
-        .map(() => "---")
-        .join(" | ")} |`
+  startLanguageTable(result: TestResult) {
+    this.content.push("", `## ${result.language}`, "");
+    this.content.push("<table>", 
+      "<thead>", 
+      "<tr><th width=\"300\">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>", 
+      "</thead>",
+      "<tbody>"
     );
+  }
+
+  endLanguageTable() {
+    this.content.push("</tbody>", "</table>");
   }
 
   addFrameworkResultToTable(result: TestResult) {
     const name = result.fullName || result.name;
     const rows = [
-      result.documentation ? `[${name}](${result.documentation})` : name,
+      result.documentation ? `<a href="${result.documentation}">${name}</a>` : name,
       this.renderTestResultsCell({ fedVersion: 1, result }),
       this.renderTestResultsCell({ fedVersion: 2, result }),
     ];
-    this.content.push(`| ${rows.join(" | ")} |`);
+    let tableRow = "<tr>";
+    rows.forEach((row) => {
+      tableRow += `<td>${row}</td>`;
+    });
+    tableRow += "</tr>"
+    this.content.push(tableRow);
   }
 
   renderTestResultsCell({
