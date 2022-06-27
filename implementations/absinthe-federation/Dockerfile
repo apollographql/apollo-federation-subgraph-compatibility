@@ -1,7 +1,9 @@
-FROM elixir:1.12.3-alpine AS build
+FROM elixir:1.13.4-alpine AS build
 
 # prepare build dir
 WORKDIR /app
+
+RUN apk add git
 
 # install hex + rebar
 RUN mix local.hex --force && \
@@ -21,7 +23,7 @@ COPY lib lib
 RUN mix do compile, release
 
 # prepare release image
-FROM alpine:3.9 AS app
+FROM alpine:3.16 AS app
 RUN apk add --no-cache openssl libgcc libstdc++ ncurses-libs
 
 WORKDIR /app
