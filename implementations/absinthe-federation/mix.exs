@@ -5,7 +5,7 @@ defmodule Products.MixProject do
     [
       app: :products,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.13",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -34,12 +34,12 @@ defmodule Products.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:absinthe, "~> 1.6.5"},
-      {:absinthe_federation, "~> 0.1.2"},
+      {:absinthe, "~> 1.7.0"},
+      {:absinthe_federation, "~> 0.2.51"},
       {:absinthe_plug, "~> 1.5"},
-      {:phoenix, "~> 1.5.7"},
-      {:gettext, "~> 0.11"},
-      {:jason, "~> 1.0"},
+      {:phoenix, "~> 1.6.10"},
+      {:gettext, "~> 0.19"},
+      {:jason, "~> 1.3"},
       {:plug_cowboy, "~> 2.0"}
     ]
   end

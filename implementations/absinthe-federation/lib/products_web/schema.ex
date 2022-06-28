@@ -118,8 +118,7 @@ defmodule ProductsWeb.Schema do
     {:ok, Enum.find(products(), &(&1.sku == sku and &1.package == package))}
   end
 
-  # TODO: Fix this nested string -> atom conversion
-  defp resolve_product_reference(%{sku: sku, variation: %{"id" => variation_id}}, _ctx) do
+  defp resolve_product_reference(%{sku: sku, variation: %{id: variation_id}}, _ctx) do
     {:ok, Enum.find(products(), &(&1.sku == sku and &1.variation.id == variation_id))}
   end
 
