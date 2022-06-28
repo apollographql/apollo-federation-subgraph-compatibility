@@ -9,9 +9,13 @@ export function generateMarkdown(results: TestResult[]) {
   );
 
   const resultsSortedByLanguage = results.sort((a, b) => {
-    if (a.language > b.language) return 1;
-    if (a.language < b.language) return -1;
-    return 0;
+    if (a.language === b.language) return 0;
+
+    // push hosted solutions to the end
+    if (a.language === "Hosted Solutions") return 1;
+    if (b.language === "Hosted Solutions") return -1;
+
+    return a.language > b.language ? 1 : -1;
   });
 
   var currentLanguage = null;

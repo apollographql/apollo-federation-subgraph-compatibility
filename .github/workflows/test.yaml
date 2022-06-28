@@ -28,6 +28,7 @@ jobs:
       - run: npm run test ${{ matrix.name }}
         env:
           DEBUG: docker,test
+          API_KEY_APPSYNC: ${{ secrets.API_KEY_APPSYNC }}
       - run: cat results.md
       - name: results summary
         run: cat results.md >> $GITHUB_STEP_SUMMARY

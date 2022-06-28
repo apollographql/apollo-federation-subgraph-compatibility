@@ -32,7 +32,8 @@ function getFolderNamesFromPath(path: string) {
 
 async function runDockerCompose(libraryName: string, librariesPath: string) {
   console.log("Starting containers...");
-  const proc = execa("docker-compose", [
+  const proc = execa("docker", [
+    "compose",
     "-f",
     "docker-compose.yaml",
     "-f",
