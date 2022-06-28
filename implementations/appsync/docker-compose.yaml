@@ -1,6 +1,9 @@
 services:
   products:
     # must be relative to the root of the project
-    build: implementations/appsync/proxy
+    build:
+      context: implementations/appsync
+      args:
+        API_KEY: ${API_KEY_APPSYNC}
     ports:
       - 4001:4001
