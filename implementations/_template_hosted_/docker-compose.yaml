@@ -1,0 +1,9 @@
+services:
+  products:
+    # must be relative to the root of the project
+    build:
+      context: implementations/_template_hosted_
+      args:
+        API_KEY: ${API_KEY_<YOUR_IMPLEMENTATION_FOLDER_NAME>}
+    ports:
+      - 4001:4001

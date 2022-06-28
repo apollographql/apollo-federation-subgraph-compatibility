@@ -69,7 +69,7 @@ async function main() {
   const results: TestResult[] = [];
 
   for (const libraryName of libraryNames) {
-    if (libraryName == "_template_") continue;
+    if (libraryName === "_template_hosted_" || libraryName === "_template_library_") continue;
     if (!implementationFolders.includes(libraryName)) {
       console.log(
         `Library ${libraryName} was not found in the implementations folder`

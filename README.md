@@ -2,8 +2,6 @@
 
 The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph library's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/).
 
-# Latest Results
-
 The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite.
 
 * [C# / .NET](#c--net)
@@ -11,12 +9,12 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 * [Go](#go)
 * [Java / Kotlin](#java--kotlin)
 * [JavaScript / TypeScript](#javascript--typescript)
-* [Multi-language](#multi-language)
 * [PHP](#php)
 * [Python](#python)
 * [Ruby](#ruby)
 * [Rust](#rust)
 * [Scala](#scala)
+* [Hosted Solutions](#hosted-solutions)
 
 ## C# / .NET
 
@@ -80,17 +78,6 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 </tbody>
 </table>
 
-## Multi-language
-
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://aws.amazon.com/appsync/">AWS AppSync</a></td><td><table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table></td></tr>
-</tbody>
-</table>
-
 ## PHP
 
 <table>
@@ -149,16 +136,27 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 </tbody>
 </table>
 
+## Hosted Solutions
 
-If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check our our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to see about submitting a PR for your library!
+<table>
+<thead>
+<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://aws.amazon.com/appsync/">AWS AppSync</a></td><td><table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table></td></tr>
+</tbody>
+</table>
+
+
+If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check out our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to find information how to submit a PR for your library!
 
 ## Testing Suite
 
-This repository contains a structured testing suite based on a federated schema that covers the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). The federated schema is constructued of 3 subgraphs (`users`, `inventory` and `products`) that will be started and used to test various libraries that support Apollo Federation. The `users` and `inventory` subgraphs are provided by this repository in addition to the graph router instance. Library implementors will each implement the `products` schema and provide a docker file that can be used with `docker compose`; templates for these files are provided along with examples.
+This repository contains a structured testing suite based on a federated schema that covers the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). The federated schema is constructued of 3 subgraphs (`users`, `inventory` and `products`) that will be started and used to test various libraries that support Apollo Federation. The `users` and `inventory` subgraphs are provided by this repository in addition to the graph router instance. Library implementors will each implement the `products` schema and provide a docker file that can be used with `docker compose`. Templates for these files are provided along with examples.
 
-## Subgraph Schemas
+### Subgraph Schemas
 
-### Users
+#### Users
 
 ```graphql
 type User @key(fields: "email") {
@@ -168,7 +166,7 @@ type User @key(fields: "email") {
 }
 ```
 
-### Inventory
+#### Inventory
 
 ```graphql
 extend type Product @key(fields: "id") {
@@ -189,7 +187,7 @@ type DeliveryEstimates {
 }
 ```
 
-### Products (schema to be implemented by library maintainers)
+#### Products (schema to be implemented by library maintainers)
 
 ```graphql
 extend schema
@@ -241,10 +239,12 @@ extend type User @key(fields: "email") {
 }
 ```
 
-## Testing Spec Compliance
+### Testing Spec Compliance
+
+Following tests are run to verify Federation Spec compliance.
 
 - `_service` - support a `rover subgraph introspect` command (this is the Apollo Federation equivalent of Introspection for subgraphs)
-  - `query { _service { sdl } }`
+  - executes `query { _service { sdl } }` and verifies the contents of the SDL
 - `@key` and `_entities` - support defining a single `@key`, multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
 
 ```graphql
@@ -298,20 +298,20 @@ query ($id: ID!) {
 - `@inaccessible`
   - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
 
-## Setting up the testing suite
+### Setting up the testing suite
 
 1. `npm install`
 2. `npm run setup`
    - `npm run build` - compiles typescript code and composes supergraph SDL
    - `npm run docker` - build docker images for `graph-router`, `users` and `inventory`
 
-## Running the Test
+### Running the Test
 
 `npm run test` will test all folders in the `implementations` folder. You can provide a comma separated string as an additional argument to test only specific libraries.
 
-## Test Results
+### Test Results
 
-A `results.md` file will be created that displays the testing results
+A `results.md` file will be created that contains the testing results.
 
 ## Contributing a new library to this test suite
 
