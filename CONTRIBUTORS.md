@@ -22,55 +22,59 @@ any regressions.
 It's actually pretty easy! We have a `products` schema that you will need to
 implement to be used in the testing suite:
 
-1. Copy the `implementations/_template_library_` folder and rename it to the name of
-   your library
+1. Copy the `implementations/_template_library_` folder and rename it to the 
+   name of your library
    - You'll find 4 files that you need in the template folder: `metadata.yaml`,
      `docker-compose.yml`, `Dockerfile` and `products.graphql`
    - Creation of library `README.md` file is optional but highly encouraged. It
      should include some basic information about the library as well as the steps
      that describe how to build the example app and how to run it locally.
-2. Update the `metadata.yaml` file with your project details. These details are
+1. Update the `metadata.yaml` file with your project details. These details are
    used in the main results table in the `README.md` of this repo, and in our
    [subgraph-compatible libraries](https://www.apollographql.com/docs/federation/other-servers)
    documentation.
-3. You'll need to implement the `products.graphql` file in your server, this is
+2. You'll need to implement the `products.graphql` file in your server, this is
    the reference implementation that will be tested.
-4. Once you have the schema implemented, you'll need to modify the `Dockerfile`
+3. Once you have the schema implemented, you'll need to modify the `Dockerfile`
    to make your server a Docker image and expose it on port 4001
    - We will send traffic to `http://products:4001`, if your server has
      `/graphql` required you'll need to change it
-5. Modify the `docker-compose.yml` file and update the project name. If you do
+4. Modify the `docker-compose.yml` file and update the project name. If you do
    need to make additional edits to the `docker-compose.yml` file, your edits
    should only affect the `products` service defined.
-6. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
+5. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`
 
 ## How can I have my hosted solution included in this?
 
 Implement `products` schema and deploy it to your hosted environment.
 
-1. Copy the `implementations/_template_hosted_` folder and rename it to the name
-   of your solution.
+1. Copy the `implementations/_template_hosted_` folder and rename it to the
+   name of your solution.
    - You'll find 4 files that you need in the template folder: `metadata.yaml`,
      `docker-compose.yml`, `Dockerfile`, `proxy.conf.template` and `products.graphql`
-   - Creation of project `README.md` file is optional but highly encouraged. It
-     should include some basic information about the solution.
+   - Creation of project `README.md` file is optional but highly encouraged.
+     It should include some basic information about the solution.
 2. Update `metadata.yaml` file with the project details. These details are
    used in the main results table in the `README.md` of this repo, and in our
    [subgraph-compatible libraries](https://www.apollographql.com/docs/federation/other-servers)
    documentation.
-3. You'll need to implement the `products.graphql` file in your server and deploy
-   it to your hosted environment, this is the reference implementation that will be tested.
+3. You'll need to implement the `products.graphql` file in your server and
+   deploy it to your hosted environment, this is the reference implementation
+   that will be tested.
 4. Once you have the schema implemented, you'll need to modify the `proxy.conf.template`
-   to point to your hosted application. Calls should be authenticated with basic API KEY
-   header.
-   - When you are ready to integrate, reach out to us at <TODO> and we'll configure your
-     API KEY as Github Secret that will be used by Github Actions to communicate with your
-     server.
-5. Modify the `docker-compose.yml` file and update project name as well API KEY secret name.
+   to point to your hosted application. Calls should be authenticated with
+   basic API KEY header.
+   - When you are ready to integrate, reach out to us at [Apollo Community Forums](https://community.apollographql.com/).
+     Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem) 
+     and we'll help you configure your API KEY as a Github Secret. API KEY
+     secret will be used by Github Actions to communicate with your server.
+5. Modify the `docker-compose.yml` file and update project name as well API KEY
+   secret name.
 6. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
-   and the results will be outputted to `results.md`. Since NGINX proxy will require API KEY,
-   you will need to set it as environment variable prior running tests.
+   and the results will be outputted to `results.md`. Since NGINX proxy will 
+   require API KEY, you will need to set it as environment variable prior 
+   running tests.
 
    ```bash
    export API_KEY_FOO=bar
