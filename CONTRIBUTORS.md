@@ -69,7 +69,13 @@ Implement `products` schema and deploy it to your hosted environment.
      server.
 5. Modify the `docker-compose.yml` file and update project name as well API KEY secret name.
 6. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
-   and the results will be outputted to `results.md`
+   and the results will be outputted to `results.md`. Since NGINX proxy will require API KEY,
+   you will need to set it as environment variable prior running tests.
+
+   ```bash
+   export API_KEY_FOO=bar
+   npm run test foo
+   ```
 
 ### Expected Data Sets
 
