@@ -1,8 +1,11 @@
 # Apollo Federation Subgraph Library Compatibility Testing Strategy
 
+[![Latest Results](https://github.com/apollographql/apollo-federation-subgraph-compatibility/workflows/Latest%20Results/badge.svg)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/actions?query=workflow%3A%22Latest+Results%22)
+[![Join the community forum](https://img.shields.io/badge/join%20the%20community-forum-blueviolet)](https://community.apollographql.com)
+
 The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph library's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/).
 
-The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite.
+The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite. If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check out our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to find information on how to submit a PR for your library!
 
 * [C# / .NET](#c--net)
 * [Elixir](#elixir)
@@ -146,9 +149,6 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 <tr><td><a href="https://aws.amazon.com/appsync/">AWS AppSync</a></td><td><table><tr><th>_service</th><td>✅</td></tr><tr><th>@key (single)</th><td>✅</td></tr><tr><th>@key (multi)</th><td>✅</td></tr><tr><th>@key (composite)</th><td>✅</td></tr><tr><th>@requires</th><td>✅</td></tr><tr><th>@provides</th><td>✅</td></tr><tr><th>@ftv1</th><td>❌</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>❌</td></tr><tr><th>@tag</th><td>❌</td></tr><tr><th>@override</th><td>❌</td></tr><tr><th>@inaccessible</th><td>❌</td></tr></table></td></tr>
 </tbody>
 </table>
-
-
-If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check out our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to find information how to submit a PR for your library!
 
 ## Testing Suite
 
