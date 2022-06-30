@@ -1,4 +1,4 @@
-name: Latest Results
+name: Release
 
 on:
   push:

@@ -1,6 +1,6 @@
 # Apollo Federation Subgraph Library Compatibility Testing Strategy
 
-[![Latest Results](https://github.com/apollographql/apollo-federation-subgraph-compatibility/workflows/Latest%20Results/badge.svg)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/actions?query=workflow%3A%22Latest+Results%22)
+[![Latest Results](https://github.com/apollographql/apollo-federation-subgraph-compatibility/workflows/Release/badge.svg)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/actions?query=workflow%3ARelease)
 [![Join the community forum](https://img.shields.io/badge/join%20the%20community-forum-blueviolet)](https://community.apollographql.com)
 
 The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph library's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/).
