@@ -8,7 +8,7 @@ const productsRaw = readFileSync(
     "..",
     "..",
     "implementations",
-    "_template_",
+    "_template_library_",
     "products.graphql"
   ),
   "utf-8"
