@@ -3,7 +3,7 @@ server {
     server_name products;
     location / {
         proxy_ssl_server_name on;
-        proxy_set_header <API KEY HEADER> "X-SUBGRAPH-API-KEY";
-        proxy_pass <URL TO YOUR HOSTED APPLICATION>;
+        proxy_set_header x-api-key "X-SUBGRAPH-API-KEY";
+        proxy_pass X-SUBGRAPH-URL;
     }
 }

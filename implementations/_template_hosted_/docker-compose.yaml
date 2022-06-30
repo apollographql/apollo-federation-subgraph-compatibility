@@ -4,6 +4,7 @@ services:
     build:
       context: implementations/_template_hosted_
       args:
-        API_KEY: ${API_KEY_<YOUR_IMPLEMENTATION_FOLDER_NAME>}
+        SUBGRAPH_API_KEY: ${API_KEY_<YOUR_IMPLEMENTATION_FOLDER_NAME>}
+        SUBGRAPH_URL: ${URL_<YOUR_IMPLEMENTATION_FOLDER_NAME>}
     ports:
       - 4001:4001

@@ -47,7 +47,10 @@ implement to be used in the testing suite:
 
 ## How can I have my hosted solution included in this?
 
-Implement `products` schema and deploy it to your hosted environment.
+Implement `products` schema and deploy it to your hosted environment. **Since the
+builds can trigger at any time and the tests are executed against your deployed 
+GraphQL service, your service should be generally available as otherwise 
+compatibility tests will fail.**
 
 1. Copy the `implementations/_template_hosted_` folder and rename it to the
    name of your solution.
@@ -61,23 +64,22 @@ Implement `products` schema and deploy it to your hosted environment.
    documentation.
 3. You'll need to implement the `products.graphql` file in your server and
    deploy it to your hosted environment, this is the reference implementation
-   that will be tested.
-4. Once you have the schema implemented, you'll need to modify the `proxy.conf.template`
-   to point to your hosted application. Calls should be authenticated with
-   basic API KEY header.
+   that will be tested. Calls should be authenticated with basic `x-api-key` header.
+   - You can modify the `proxy.conf.template` to specify different authentication header.
+4. Modify the `docker-compose.yml` file and update project name as well API KEY
+   and target URL secret names.
    - When you are ready to integrate, reach out to us at [Apollo Community Forums](https://community.apollographql.com/).
      Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem) 
-     and we'll help you configure your API KEY as a Github Secret. API KEY
-     secret will be used by Github Actions to communicate with your server.
-5. Modify the `docker-compose.yml` file and update project name as well API KEY
-   secret name.
-6. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
-   and the results will be outputted to `results.md`. Since NGINX proxy will 
-   require API KEY, you will need to set it as environment variable prior 
+     and we'll help you configure your API KEY and URL as a Github Secret. Those
+     secrets will be used by Github Actions to communicate with your server.
+5. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
+   and the results will be outputted to `results.md`. Since NGINX proxy will
+   require API KEY and URL, you will need to set it as environment variable prior
    running tests.
 
    ```bash
    export API_KEY_FOO=bar
+   export URL_FOO=http://example.com
    npm run test foo
    ```
 
