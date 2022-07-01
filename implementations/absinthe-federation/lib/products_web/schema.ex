@@ -10,9 +10,27 @@ defmodule ProductsWeb.Schema do
     defstruct [:email, :name, :total_products_created]
   end
 
+  import_sdl """
+    schema @link(url: "https://specs.apollo.dev/federation/v2.0",
+                import: [
+                  "@key",
+                  "@shareable",
+                  "@provides",
+                  "@external",
+                  "@tag",
+                  "@extends",
+                  "@override",
+                  "@inaccessible"
+                ]) {
+      query: Query
+      mutation: Mutation
+    }
+  """
+
   @desc """
   extend type User @key(fields: "email") {
     email: ID! @external
+    name: String @shareable @override(from: "users")
     totalProductsCreated: Int @external
   }
   """
@@ -22,6 +40,11 @@ defmodule ProductsWeb.Schema do
 
     field(:email, non_null(:id)) do
       external()
+    end
+
+    field(:name, :string) do
+      shareable()
+      override_from("users")
     end
 
     field :total_products_created, :integer do
@@ -34,14 +57,19 @@ defmodule ProductsWeb.Schema do
   end
 
   @desc """
-  type ProductDimension {
+  type ProductDimension @shareable {
     size: String
     weight: Float
+    unit: String @inaccessible
   }
   """
   object :product_dimension do
+    shareable()
     field(:size, :string)
     field(:weight, :float)
+    field(:unit, :string) do
+      inaccessible()
+    end
   end
 
   @desc """
@@ -61,6 +89,7 @@ defmodule ProductsWeb.Schema do
     variation: ProductVariation
     dimensions: ProductDimension
     createdBy: User @provides(fields: "totalProductsCreated")
+    notes: String @tag(name: "internal")
   }
   """
   object :product do
@@ -77,6 +106,10 @@ defmodule ProductsWeb.Schema do
     field :created_by, :user do
       provides_fields("totalProductsCreated")
       resolve(&resolve_product_created_by/3)
+    end
+
+    field(:notes, :string) do
+      tag("internal")
     end
 
     field :_resolve_reference, :product do
@@ -107,7 +140,7 @@ defmodule ProductsWeb.Schema do
   end
 
   defp resolve_product_dimensions(_product, _, _ctx) do
-    {:ok, %{size: "small", weight: 1}}
+    {:ok, %{size: "small", weight: 1, unit: "kg"}}
   end
 
   defp resolve_product_reference(%{id: id}, _ctx) do
@@ -146,7 +179,7 @@ defmodule ProductsWeb.Schema do
     do: [
       %User{
         email: "support@apollographql.com",
-        name: "Apollo Studio Support",
+        name: "Jane Smith",
         total_products_created: 1337
       }
     ]
