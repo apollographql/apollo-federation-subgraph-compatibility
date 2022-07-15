@@ -11,7 +11,7 @@ To deploy your own version of this `products` service on AppSync you will need t
 
 1. deploy the cdk stack:
     ```sh
-    cd implementations/appsync/cdk/product-service
+    cd implementations/appsync/cdk/products-service
     npm install
     npm run build && npm run cdk deploy
 
@@ -21,23 +21,15 @@ To deploy your own version of this `products` service on AppSync you will need t
     ProductsServiceStack.AppSyncApiEndpoint = https://xxxxxxxxxxxxxxxxxxxx.appsync-api.eu-west-1.amazonaws.com/graphql
     ProductsServiceStack.AppSyncApiKey = da2-yyyyyyyyyyyyyyyyy
     ```
-1. Update nginx proxy conf `implementations/appsync/proxy/proxy.conf` with proper API_KEY and APPSYNC ENDPOINT:
-    ```nginx
-    server { 
-    listen 4001;
-    server_name products;
-    location / {
-        proxy_ssl_server_name on;
-        proxy_set_header x-api-key "<YOUR API_KEY>";
-        proxy_pass <YOUR APPSYNC ENDPOINT>;
-
-        }
-    }
+1. Add appsync details to env to be injected in docker image :
+    ```
+    export URL_APPSYNC=https://xxxxxxxxxxxxxxxxxxxx.appsync-api.eu-west-1.amazonaws.com/graphql
+    export API_KEY_APPSYNC=da2-yyyyyyyyyyyyyyyyy
     ```
 1. Launch nginx proxy container
     ```
     cd ../../../../
-    docker compose -f implementations/appsync/docker-compose.yaml up --build
+    docker compose -f docker-compose.yaml -f implementations/appsync/docker-compose.yaml up --build
     ```
 1. Launch the test
     ```sh

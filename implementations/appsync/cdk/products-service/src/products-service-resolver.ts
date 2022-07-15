@@ -6,7 +6,7 @@ const products = [
     sku: 'federation',
     package: '@apollo/federation',
     variation: { id: 'OSS' },
-    dimensions: { size: 'small', weight: 1 },
+    dimensions: { size: 'small', weight: 1, unit: "kg" },
   },
   {
     id: 'apollo-studio',
@@ -26,7 +26,7 @@ export const handler = async (event: AppSyncResolverEvent<any>) => {
       console.log(`dealing with product and field ${event.info.fieldName}`);
       switch (event.info.fieldName) {
         case 'createdBy':
-          result = { email: 'support@apollographql.com', name: 'Apollo Studio Support', totalProductsCreated: 1337 };
+          result = { email: 'support@apollographql.com', name: 'Jane Smith', totalProductsCreated: 1337 };
           break;
       }
       break;
