@@ -13,18 +13,18 @@ const jestDebugStream = () =>
   });
 
 export const TESTS = [
-  { assertion: "introspection", column: "_service", fedVersion: 1 },
-  { assertion: "@key single", column: "@key (single)", fedVersion: 1 },
-  { assertion: "@key multiple", column: "@key (multi)", fedVersion: 1 },
-  { assertion: "@key composite", column: "@key (composite)", fedVersion: 1 },
-  { assertion: "@requires", column: "@requires", fedVersion: 1 },
-  { assertion: "@provides", column: "@provides", fedVersion: 1 },
-  { assertion: "ftv1", column: "@ftv1", fedVersion: 1 },
-  { assertion: "@link", column: "@link", fedVersion: 2 },
-  { assertion: "@shareable", column: "@shareable", fedVersion: 2 },
-  { assertion: "@tag", column: "@tag", fedVersion: 2 },
-  { assertion: "@override", column: "@override", fedVersion: 2 },
-  { assertion: "@inaccessible", column: "@inaccessible", fedVersion: 2 },
+  { assertion: "introspection", column: "_service", fedVersion: 1, required: true },
+  { assertion: "@key single", column: "@key (single)", fedVersion: 1, required: true },
+  { assertion: "@key multiple", column: "@key (multi)", fedVersion: 1, required: false },
+  { assertion: "@key composite", column: "@key (composite)", fedVersion: 1, required: false },
+  { assertion: "@requires", column: "@requires", fedVersion: 1, required: false },
+  { assertion: "@provides", column: "@provides", fedVersion: 1, required: false },
+  { assertion: "ftv1", column: "@ftv1", fedVersion: 1, required: false },
+  { assertion: "@link", column: "@link", fedVersion: 2, required: true },
+  { assertion: "@shareable", column: "@shareable", fedVersion: 2, required: false },
+  { assertion: "@tag", column: "@tag", fedVersion: 2, required: false },
+  { assertion: "@override", column: "@override", fedVersion: 2, required: false },
+  { assertion: "@inaccessible", column: "@inaccessible", fedVersion: 2, required: false },
 ];
 
 export async function runJest(libraryName: string): Promise<JestResults> {

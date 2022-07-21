@@ -94,7 +94,7 @@ class MarkdownFile {
     TESTS.forEach((test) => {
       if (test.fedVersion === fedVersion) {
         cell += `<tr><th>${test.column}</th><td>${
-          result.tests[test.assertion]?.success ? "✅" : "❌"
+          result.tests[test.assertion]?.success ? "🟩" : test.required ? "🟥" : "🔲"
         }</td></tr>`;
       }
     });
