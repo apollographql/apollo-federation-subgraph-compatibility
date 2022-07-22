@@ -252,9 +252,14 @@ extend type User @key(fields: "email") {
 
 Following tests are run to verify Federation Spec compliance.
 
+#### Minimum functionality to support Apollo Federation
+
+This is a minimum set of functionality to allow for API-side joins and use of entities in other subgraphs.
+
 - `_service` - support a `rover subgraph introspect` command (this is the Apollo Federation equivalent of Introspection for subgraphs)
   - executes `query { _service { sdl } }` and verifies the contents of the SDL
-- `@key` and `_entities` - support defining a single `@key`, multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
+- `@key` and `_entities` - support defining a single `@key`
+  - Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
 
 ```graphql
 query ($representations: [_Any!]!) {
@@ -265,7 +270,13 @@ query ($representations: [_Any!]!) {
 }
 ```
 
-- `@requires` - support defining complex fields
+- `@link` (required for Federation v2)
+  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+
+#### Additional functionality to fully support Apollo Federation
+
+- `@key` and `_entities` - multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. 
+- `@requires` - directive used to provide additional non-key information from one subgraph to the computed fields in another subgraph, should support defining complex fields
   - This will be tested through a query covering [Product.delivery](http://product.delivery) where the library implementors dimensions { size weight } will need to be an expected { size: "1", weight: 1 } to pass. Example query that will be sent directly to `products` subgraph.
 
 ```graphql
@@ -279,7 +290,8 @@ query ($id: ID!) {
 }
 ```
 
-- `@provides` - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
+- `@provides` - directive used for path denormalization
+  - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
 
 ```graphql
 query ($id: ID!) {
@@ -292,19 +304,19 @@ query ($id: ID!) {
 }
 ```
 
-- `@external` - This is covered in the tests above.
-- `extends` or `@extends` - This is covered in the `products` subgraph extension of the `User`
-- `ftv1` (Federated Traces version 1) - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
+- `@external` - directive used to mark fields as external (defined in other subgraph). This is covered in the tests above.
+- `extends` or `@extends` - ability to extend the type that is defined in other subgraph
+  - This is covered in the `products` subgraph extension of the `User`
+- `ftv1` (Federated Traces version 1) 
+  - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
   - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
-- `@link`
+- `@tag` - directive used to add arbitrary metadata information to the schema elements. Used by [Apollo Contracts](https://www.apollographql.com/docs/studio/contracts/) to expose different variants of the schema.
   - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
-- `@tag`
-  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
-- `@shareable`
+- `@shareable` - directive that provides ability to relax single source of truth for entity fields
   - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query shareable types.
-- `@override`
+- `@override` - directive used for migrating fields between subgraphs
   - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to return the value of an overridden field.
-- `@inaccessible`
+- `@inaccessible` - directive used to hide fields from the supergraph
   - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
 
 ### Setting up the testing suite
