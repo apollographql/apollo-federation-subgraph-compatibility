@@ -19,6 +19,14 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 * [Scala](#scala)
 * [Hosted Solutions](#hosted-solutions)
 
+## Table Legend
+
+| Icon | Description |
+| ---- | ----------- |
+| 🟩 | Functionality is supported |
+| 🟥 | Critical functionality is not supported |
+| 🔲 | Additional Federation functionality is not supported |
+
 ## C# / .NET
 
 <table>
