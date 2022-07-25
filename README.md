@@ -1,11 +1,11 @@
-# Apollo Federation Subgraph Library Compatibility Testing Strategy
+# Apollo Federation Subgraph Compatibility Testing Strategy
 
 [![Latest Results](https://github.com/apollographql/apollo-federation-subgraph-compatibility/workflows/Release/badge.svg)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/actions?query=workflow%3ARelease)
 [![Join the community forum](https://img.shields.io/badge/join%20the%20community-forum-blueviolet)](https://community.apollographql.com)
 
-The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph library's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/).
+The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/).
 
-The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite. If you want to see a library added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check out our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to find information on how to submit a PR for your library!
+The following open-source GraphQL server libraries and hosted subgraphs provide support for Apollo Federation and are included in our test suite. If you want to see additional implementations added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check out our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to find information on how to submit a PR for your implementation!
 
 * [C# / .NET](#c--net)
 * [Elixir](#elixir)
@@ -17,7 +17,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 * [Ruby](#ruby)
 * [Rust](#rust)
 * [Scala](#scala)
-* [Hosted Solutions](#hosted-solutions)
+* [Hosted Subgraphs](#hosted-subgraphs)
 
 ## Table Legend
 
@@ -148,7 +148,7 @@ The following open-source GraphQL server libraries provide support for Apollo Fe
 </tbody>
 </table>
 
-## Hosted Solutions
+## Hosted Subgraphs
 
 <table>
 <thead>
@@ -271,13 +271,13 @@ query ($representations: [_Any!]!) {
 ```
 
 - `@link` (required for Federation v2)
-  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
 
 #### Additional functionality to fully support Apollo Federation
 
 - `@key` and `_entities` - multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. 
 - `@requires` - directive used to provide additional non-key information from one subgraph to the computed fields in another subgraph, should support defining complex fields
-  - This will be tested through a query covering [Product.delivery](http://product.delivery) where the library implementors dimensions { size weight } will need to be an expected { size: "1", weight: 1 } to pass. Example query that will be sent directly to `products` subgraph.
+  - This will be tested through a query covering [Product.delivery](http://product.delivery) where the library implementors `dimensions { size weight }` will need to be an expected `{ size: "1", weight: 1 }` to pass. Example query that will be sent directly to `products` subgraph.
 
 ```graphql
 query ($id: ID!) {
@@ -291,7 +291,7 @@ query ($id: ID!) {
 ```
 
 - `@provides` - directive used for path denormalization
-  - This will be covered by the library implementors at Product.createdBy where they will be expected to provide the User.totalProductsCreated to be _anything_ _other than 4_
+  - This will be covered by the subgraph implementors at `Product.createdBy` where they will be expected to provide the `User.totalProductsCreated` to be _anything_ _other than 4_
 
 ```graphql
 query ($id: ID!) {
@@ -311,13 +311,13 @@ query ($id: ID!) {
   - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
   - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
 - `@tag` - directive used to add arbitrary metadata information to the schema elements. Used by [Apollo Contracts](https://www.apollographql.com/docs/studio/contracts/) to expose different variants of the schema.
-  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
 - `@shareable` - directive that provides ability to relax single source of truth for entity fields
-  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query shareable types.
+  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query shareable types.
 - `@override` - directive used for migrating fields between subgraphs
-  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to return the value of an overridden field.
+  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to return the value of an overridden field.
 - `@inaccessible` - directive used to hide fields from the supergraph
-  - Must be seen as a valid schema directive in the subgraph library service sdl. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
+  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
 
 ### Setting up the testing suite
 
@@ -328,7 +328,7 @@ query ($id: ID!) {
 
 ### Running the Test
 
-`npm run test` will test all folders in the `implementations` folder. You can provide a comma separated string as an additional argument to test only specific libraries.
+`npm run test` will test all folders in the `implementations` folder. You can provide a comma separated string as an additional argument to test only specific implementations.
 
 ### Test Results
 
@@ -336,4 +336,4 @@ A `results.md` file will be created that contains the testing results.
 
 ## Contributing a new library to this test suite
 
-Fork this repository and navigate to the [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) for implementation instructions. Once you've completed the implementations instructions, feel free to create a PR and we'll review it. If you have any questions please open a GitHub issue on this repository.
+Fork this repository and navigate to the [Apollo Federation Subgraph Maintainers Implementation Guide](./CONTRIBUTORS.md) for implementation instructions. Once you've completed the implementations instructions, feel free to create a PR and we'll review it. If you have any questions please open a GitHub issue on this repository.

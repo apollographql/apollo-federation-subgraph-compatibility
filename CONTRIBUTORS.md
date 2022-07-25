@@ -1,7 +1,7 @@
-# Apollo Federation Library Maintainers Implementation Guide
+# Apollo Federation Subgraph Maintainers Implementation Guide
 
-This document provides Apollo Federation Library Maintainers with the
-necessary information to test their library against The Apollo Federation Spec.
+This document provides Apollo Federation Subgraph Maintainers with the
+necessary information to test their implementation against The Apollo Federation Spec.
 
 ## Why should I even do this?
 
@@ -45,7 +45,7 @@ implement to be used in the testing suite:
 5. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`
 
-## How can I have my hosted solution included in this?
+## How can I have my hosted subgraph included in this?
 
 Implement `products` schema and deploy it to your hosted environment. **Since the
 builds can trigger at any time and the tests are executed against your deployed 
