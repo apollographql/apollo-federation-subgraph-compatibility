@@ -1,0 +1,9 @@
+server { 
+    listen 4001;
+    server_name products;
+    location / {
+        proxy_ssl_server_name on;
+        proxy_pass X-SUBGRAPH-URL;
+    }
+}
+

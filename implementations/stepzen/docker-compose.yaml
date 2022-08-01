@@ -1,0 +1,9 @@
+services:
+  products:
+    # must be relative to the root of the project
+    build:
+      context: implementations/stepzen
+      args:
+        SUBGRAPH_URL: ${URL_STEPZEN}
+    ports:
+      - 4001:4001
