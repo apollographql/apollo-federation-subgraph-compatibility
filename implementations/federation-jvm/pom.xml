@@ -17,7 +17,7 @@
     <properties>
         <java.version>17</java.version>
 
-        <federation-graphql-java-support.version>2.0.3</federation-graphql-java-support.version>
+        <federation-graphql-java-support.version>2.0.5</federation-graphql-java-support.version>
 
         <jetbrains-annotations>23.0.0</jetbrains-annotations>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>

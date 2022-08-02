@@ -16,7 +16,7 @@
     <version>2.0.0</version>
 
     <properties>
-        <federation-graphql-java-support.version>2.0.1</federation-graphql-java-support.version>
+        <federation-graphql-java-support.version>2.0.5</federation-graphql-java-support.version>
         <graphql-spring-boot-starter.version>12.0.0</graphql-spring-boot-starter.version>
 
         <!-- FIXME: Remove temporary downgrade -->
