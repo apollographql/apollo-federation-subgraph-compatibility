@@ -311,12 +311,14 @@ query ($id: ID!) {
   - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
   - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
 - `@tag` - directive used to add arbitrary metadata information to the schema elements. Used by [Apollo Contracts](https://www.apollographql.com/docs/studio/contracts/) to expose different variants of the schema.
+  - **Cannot be `@federation__` namespaced** - this directive has to be named consistently as `@tag` across all the subgraphs
   - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
 - `@shareable` - directive that provides ability to relax single source of truth for entity fields
   - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query shareable types.
 - `@override` - directive used for migrating fields between subgraphs
   - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to return the value of an overridden field.
 - `@inaccessible` - directive used to hide fields from the supergraph
+  - **Cannot be `@federation__` namespaced** - this directive has to be named consistently as `@inacessible` across all the subgraphs
   - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
 
 ### Setting up the testing suite

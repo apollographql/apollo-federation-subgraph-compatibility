@@ -8,8 +8,11 @@ describe("@inaccessible", () => {
       query: "query { _service { sdl } }",
     });
 
+    
     const { sdl } = response.data._service;
-    expect(stripIgnoredCharacters(sdl)).toContain("unit:String@inaccessible");
+    const normalizedSDL = stripIgnoredCharacters(sdl); 
+    expect(normalizedSDL).not.toContain("@federation__inaccessible");
+    expect(normalizedSDL).toContain("unit:String@inaccessible");
 
     expect(compareSchemas(response.data?._service?.sdl)).toBe(true);
   });
