@@ -1,6 +1,11 @@
 name: Test
 
-on: pull_request
+on: 
+  pull_request_target:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
 
 jobs:
   build-matrix:
@@ -23,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - run: npm install
       - run: npm run setup
       - run: npm run test ${{ matrix.name }}
@@ -30,6 +37,7 @@ jobs:
           DEBUG: docker,test
           API_KEY_APPSYNC: ${{ secrets.API_KEY_APPSYNC }}
           URL_APPSYNC: ${{ secrets.URL_APPSYNC }}
+          URL_STEPZEN: ${{ secrets.URL_STEPZEN }}
       - run: cat results.md
       - name: results summary
         run: cat results.md >> $GITHUB_STEP_SUMMARY
