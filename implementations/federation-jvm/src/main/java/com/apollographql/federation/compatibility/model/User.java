@@ -1,14 +1,25 @@
 package com.apollographql.federation.compatibility.model;
 
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+
 public class User {
     private final String email;
-    private final Integer totalProductsCreated;
     private final String name;
+    private final Integer totalProductsCreated;
+
+    private int yearsOfEmployment;
 
     public User(String email) {
         this.email = email;
         this.totalProductsCreated = 1337;
         this.name = "Jane Smith";
+    }
+
+    public User(String email, String name, Integer totalProductsCreated) {
+        this.email = email;
+        this.name = name;
+        this.totalProductsCreated = totalProductsCreated;
     }
 
     public String getEmail() {
@@ -21,5 +32,24 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public int getYearsOfEmployment() {
+        return yearsOfEmployment;
+    }
+
+    public void setYearsOfEmployment(int yearsOfEmployment) {
+        this.yearsOfEmployment = yearsOfEmployment;
+    }
+
+    public static User resolveReference(@NotNull Map<String, Object> reference) {
+        if (reference.get("email") instanceof String email) {
+            final User user = new User(email, "Jane Smith", 6);
+            if (reference.get("yearsOfEmployment") instanceof Integer yearsOfEmployment) {
+                user.setYearsOfEmployment(yearsOfEmployment);
+            }
+            return user;
+        }
+        return null;
     }
 }
