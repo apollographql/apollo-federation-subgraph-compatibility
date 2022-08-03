@@ -1,0 +1,7 @@
+# Open endpoint
+access:
+  policies:
+    - type: Query
+      rules:
+        - condition: true
+          fields: [product, _service, _entities, __schema, __type, __typename]

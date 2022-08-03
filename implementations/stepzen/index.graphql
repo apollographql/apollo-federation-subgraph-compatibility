@@ -1,0 +1,11 @@
+"""
+StepZen schema for products subgraph for Apollo Federation subgraph compatibility testing.
+
+https://github.com/apollographql/apollo-federation-subgraph-compatibility
+"""
+schema
+  @sdl(
+    files: ["products.graphql"]
+  ) {
+  query: Query
+}
