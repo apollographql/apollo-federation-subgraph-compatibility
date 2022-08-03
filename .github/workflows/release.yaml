@@ -23,6 +23,7 @@ jobs:
           DEBUG: docker,test
           API_KEY_APPSYNC: ${{ secrets.API_KEY_APPSYNC }}
           URL_APPSYNC: ${{ secrets.URL_APPSYNC }}
+          URL_STEPZEN: ${{ secrets.URL_STEPZEN }}
 
       - name: results summary
         run: cat results.md > $GITHUB_STEP_SUMMARY
