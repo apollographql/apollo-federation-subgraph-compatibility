@@ -157,6 +157,7 @@ The following open-source GraphQL server libraries and hosted subgraphs provide 
 </thead>
 <tbody>
 <tr><td><a href="https://aws.amazon.com/appsync/">AWS AppSync</a></td><td><table><tr><th>_service</th><td>🟩</td></tr><tr><th>@key (single)</th><td>🟩</td></tr><tr><th>@key (multi)</th><td>🟩</td></tr><tr><th>@key (composite)</th><td>🟩</td></tr><tr><th>@requires</th><td>🟩</td></tr><tr><th>@provides</th><td>🟩</td></tr><tr><th>@ftv1</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟩</td></tr><tr><th>@shareable</th><td>🟩</td></tr><tr><th>@tag</th><td>🟩</td></tr><tr><th>@override</th><td>🟩</td></tr><tr><th>@inaccessible</th><td>🟩</td></tr></table></td></tr>
+<tr><td><a href="https://stepzen.com/apollo-stepzen">StepZen</a></td><td><table><tr><th>_service</th><td>🟩</td></tr><tr><th>@key (single)</th><td>🟩</td></tr><tr><th>@key (multi)</th><td>🟩</td></tr><tr><th>@key (composite)</th><td>🔲</td></tr><tr><th>@requires</th><td>🟩</td></tr><tr><th>@provides</th><td>🟩</td></tr><tr><th>@ftv1</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟩</td></tr><tr><th>@shareable</th><td>🟩</td></tr><tr><th>@tag</th><td>🟩</td></tr><tr><th>@override</th><td>🟩</td></tr><tr><th>@inaccessible</th><td>🟩</td></tr></table></td></tr>
 </tbody>
 </table>
 
