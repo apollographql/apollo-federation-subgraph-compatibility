@@ -174,6 +174,7 @@ type User @key(fields: "email") {
   email: ID!
   name: String
   totalProductsCreated: Int
+  yearsOfEmployment: Int!
 }
 ```
 
@@ -244,9 +245,11 @@ extend type Query {
 }
 
 extend type User @key(fields: "email") {
+  averageProductsCreatedPerYear: Int @requires(fields: "yearsOfEmployment")
   email: ID! @external
   name: String @override(from: "users")
   totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
 }
 ```
 
@@ -279,14 +282,14 @@ query ($representations: [_Any!]!) {
 
 - `@key` and `_entities` - multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. 
 - `@requires` - directive used to provide additional non-key information from one subgraph to the computed fields in another subgraph, should support defining complex fields
-  - This will be tested through a query covering [Product.delivery](http://product.delivery) where the library implementors `dimensions { size weight }` will need to be an expected `{ size: "1", weight: 1 }` to pass. Example query that will be sent directly to `products` subgraph.
+- - This will be covered by the subgraph implementors at `Product.createdBy` where they will be expected to provide the `User.averageProductsCreatedPerYear` using `yearsOfEmployment` value provided by the `user` graph and the `totalProductsCreated` value from the implementing `products` subgraph. Example query that will be sent directly to `products` subgraph.
 
 ```graphql
 query ($id: ID!) {
   product(id: $id) {
-    dimensions {
-      size
-      weight
+    createdBy {
+      averageProductsCreatedPerYear
+      email
     }
   }
 }
