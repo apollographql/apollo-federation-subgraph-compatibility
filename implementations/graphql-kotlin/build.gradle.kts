@@ -17,7 +17,7 @@ repositories {
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("com.expediagroup:graphql-kotlin-spring-server:6.0.0-alpha.5")
+	implementation("com.expediagroup:graphql-kotlin-spring-server:6.1.0")
 }
 
 tasks.withType<KotlinCompile> {
