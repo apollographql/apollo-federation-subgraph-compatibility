@@ -1,5 +1,7 @@
 # Federated service hosted on AWS AppSync
 
+TESTING PR SECRETS FROM FORKS
+
 ## Pre-requisite
 * An AWS Account to deploy the AppSync API
 * NodeJS
