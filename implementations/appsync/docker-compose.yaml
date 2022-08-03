@@ -1,5 +1,6 @@
 services:
   products:
+    # testing secrets
     # must be relative to the root of the project
     build:
       context: implementations/appsync
