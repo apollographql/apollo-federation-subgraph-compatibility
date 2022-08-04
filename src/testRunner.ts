@@ -49,11 +49,11 @@ export async function runJest(libraryName: string): Promise<JestResults> {
   const assertions = results.testResults.flatMap((x) => x.assertionResults);
   const assertionPassed = (name: string) => {
     return (
-      assertions.find((a: any) => {
+      !assertions.some((a: any) => {
         const assertionName =
           a.ancestorTitles.length === 0 ? a.fullName : a.ancestorTitles[0];
-        return assertionName === name;
-      })?.status === "passed"
+        return assertionName === name && a.status === "failed";
+      })
     );
   };
 
