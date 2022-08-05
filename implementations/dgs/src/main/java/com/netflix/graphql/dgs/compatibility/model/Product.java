@@ -21,7 +21,7 @@ public class Product {
         this.sku = sku;
         this.productPackage = productPackage;
         this.variation = new ProductVariation(variationId);
-        this.dimensions = new ProductDimension("small", 1);
+        this.dimensions = new ProductDimension("small", 1, "kg");
 
         this.createdBy = new User("support@apollographql.com");
     }

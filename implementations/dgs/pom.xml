@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <dgs.version>5.0.1</dgs.version>
+        <dgs.version>5.0.5</dgs.version>
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
     </properties>
 
