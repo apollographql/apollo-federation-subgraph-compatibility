@@ -16,12 +16,6 @@ public class User {
         this.name = "Jane Smith";
     }
 
-    public User(String email, String name, Integer totalProductsCreated) {
-        this.email = email;
-        this.name = name;
-        this.totalProductsCreated = totalProductsCreated;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -44,7 +38,7 @@ public class User {
 
     public static User resolveReference(@NotNull Map<String, Object> reference) {
         if (reference.get("email") instanceof String email) {
-            final User user = new User(email, "Jane Smith", 6);
+            final User user = new User(email);
             if (reference.get("yearsOfEmployment") instanceof Integer yearsOfEmployment) {
                 user.setYearsOfEmployment(yearsOfEmployment);
             }
