@@ -17,7 +17,7 @@ val PRODUCTS = listOf(
         "@apollo/federation",
         ProductVariation(ID("OSS")),
         ProductDimension("small", 1.0f, "kg"),
-        User(email = "support@apollographql.com", name = "Jane Smith", totalProductsCreated = 1337)
+        User(email = ID("support@apollographql.com"), name = "Jane Smith", totalProductsCreated = 1337)
     ),
     Product(
         ID("apollo-studio"),
@@ -25,7 +25,7 @@ val PRODUCTS = listOf(
         "",
         ProductVariation(ID("platform")),
         ProductDimension("small", 1.0f, "kg"),
-        User(email ="support@apollographql.com", name = "Jane Smith", totalProductsCreated = 1337)
+        User(email = ID("support@apollographql.com"), name = "Jane Smith", totalProductsCreated = 1337)
     )
 )
 

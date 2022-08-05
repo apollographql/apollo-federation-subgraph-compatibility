@@ -2,6 +2,7 @@ package com.example.demo.model
 
 import com.expediagroup.graphql.generator.federation.directives.*
 import com.expediagroup.graphql.generator.federation.execution.FederatedTypeResolver
+import com.expediagroup.graphql.generator.scalars.ID
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
@@ -20,9 +21,9 @@ extend type User @key(fields: "email") {
 @ExtendsDirective
 data class User(
     @ExternalDirective
-    val email: String,
+    val email: ID,
     @OverrideDirective(from = "users")
-    val name: String,
+    val name: String?,
     @ExternalDirective
     val totalProductsCreated: Int? = null
 ) {
@@ -47,7 +48,7 @@ class UserResolver : FederatedTypeResolver<User> {
     ): List<User?> {
         return representations.map {
             val email = it["email"]?.toString() ?: throw RuntimeException("invalid entity reference")
-            val user = User(email = email, name = "Jane Smith", totalProductsCreated = 1337)
+            val user = User(email = ID(email), name = "Jane Smith", totalProductsCreated = 1337)
 
             it["yearsOfEmployment"]?.toString()?.toIntOrNull()?.let { yearsOfEmployment ->
                 user.yearsOfEmployment = yearsOfEmployment
