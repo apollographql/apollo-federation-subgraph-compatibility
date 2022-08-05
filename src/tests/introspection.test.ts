@@ -2,17 +2,16 @@ import { productsRequest } from "../utils/client";
 import { compareSchemas } from "../utils/schemaComparison";
 
 test("introspection", async () => {
-  const productsPing = await productsRequest({
+  const serviceSDLQuery = await productsRequest({
     query: "query { _service { sdl } }",
   });
 
-  expect(productsPing.data).toMatchObject({
+  expect(serviceSDLQuery.data).toMatchObject({
     _service: {
       sdl: expect.stringContaining("type Query"),
     },
   });
 
-  const basicallyTheSame = compareSchemas(productsPing.data?._service?.sdl);
-
+  const basicallyTheSame = compareSchemas(serviceSDLQuery.data?._service?.sdl);
   expect(basicallyTheSame).toBe(true);
 });
