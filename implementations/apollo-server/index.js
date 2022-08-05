@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer, ApolloError, gql } from 'apollo-server';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
 const port = process.env.PRODUCTS_PORT || 4001;
@@ -57,6 +57,26 @@ const resolvers = {
   User: {
     name() {
       return "Jane Smith";
+    },
+    /** @type {(user: { email: String, totalProductsCreated: Number, yearsOfEmployment: Number }, args: any, context: any) => any} */
+    averageProductsCreatedPerYear: (user, args, context) => {
+      if (user.email != "support@apollographql.com") {
+        throw new ApolloError("user.email was not 'support@apollographql.com'")
+      }
+      return Math.round(user.totalProductsCreated / user.yearsOfEmployment);
+    },
+    /** @type {(reference: any) => any} */
+    __resolveReference: (reference) => {
+      if (reference.email) {
+        const user = { email: reference.email, name: "Jane Smith", totalProductsCreated: 1337 };
+        if (reference.yearsOfEmployment) {
+          // @ts-ignore
+          user.yearsOfEmployment = reference.yearsOfEmployment;
+        }
+        return user;
+      } else {
+        return null;
+      }
     }
   }
 };
@@ -68,4 +88,3 @@ const server = new ApolloServer({
 server
   .listen({ port })
   .then(({ url }) => console.log(`Products subgraph ready at ${url}`));
-  

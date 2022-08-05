@@ -1,6 +1,6 @@
 extend schema
   @link(url: "https://specs.apollo.dev/federation/v2.0",
-        import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override", "@inaccessible"])
+        import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override", "@inaccessible", "@requires"])
 
 type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
   id: ID!
@@ -27,7 +27,9 @@ type Query {
 }
 
 type User @key(fields: "email") @extends {
+  averageProductsCreatedPerYear: Int @requires(fields: "yearsOfEmployment")
   email: ID! @external
   name: String @override(from: "users")
   totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
 }
