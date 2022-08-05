@@ -1,6 +1,7 @@
 package com.apollographql.federation.compatibility;
 
 import com.apollographql.federation.compatibility.model.Product;
+import com.apollographql.federation.compatibility.model.User;
 import com.apollographql.federation.graphqljava.Federation;
 import com.apollographql.federation.graphqljava._Entity;
 import com.apollographql.federation.graphqljava.tracing.FederatedTracingInstrumentation;
@@ -21,26 +22,30 @@ public class GraphQLConfiguration {
 
     @Bean
     public GraphQlSourceBuilderCustomizer federationTransform() {
-        return builder -> {
-            builder.schemaFactory((registry, wiring) ->
-                    Federation.transform(registry, wiring)
-                            .fetchEntities(env ->
-                                env.<List<Map<String, Object>>>getArgument(_Entity.argumentName).stream().map(reference -> {
-                                    if ("Product".equals(reference.get("__typename"))) {
-                                        return Product.resolveReference(reference);
-                                    }
+        return builder -> builder.schemaFactory((registry, wiring) ->
+                Federation.transform(registry, wiring)
+                        .fetchEntities(env ->
+                            env.<List<Map<String, Object>>>getArgument(_Entity.argumentName).stream().map(reference -> {
+                                if ("Product".equals(reference.get("__typename"))) {
+                                    return Product.resolveReference(reference);
+                                } else if ("User".equals(reference.get("__typename"))) {
+                                    return User.resolveReference(reference);
+                                } else {
                                     return null;
-                                }).collect(Collectors.toList())
-                            )
-                            .resolveEntityType(env -> {
-                                final Object src = env.getObject();
-                                if (src instanceof Product) {
-                                    return env.getSchema().getObjectType("Product");
                                 }
+                            }).collect(Collectors.toList())
+                        )
+                        .resolveEntityType(env -> {
+                            final Object src = env.getObject();
+                            if (src instanceof Product) {
+                                return env.getSchema().getObjectType("Product");
+                            } else if (src instanceof User) {
+                                return env.getSchema().getObjectType("User");
+                            } else {
                                 return null;
-                            })
-                            .build()
-            );
-        };
+                            }
+                        })
+                        .build()
+        );
     }
 }

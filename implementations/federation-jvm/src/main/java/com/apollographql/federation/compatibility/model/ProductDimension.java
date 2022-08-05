@@ -18,4 +18,8 @@ public class ProductDimension {
     public float getWeight() {
         return weight;
     }
+
+    public String getUnit() {
+        return unit;
+    }
 }
