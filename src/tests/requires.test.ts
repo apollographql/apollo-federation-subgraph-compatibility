@@ -1,10 +1,10 @@
-import { productsRequest } from "../utils/client";
+import { routerRequest } from "../utils/client";
 
 test("@requires", async () => {
-  const resp = await productsRequest({
+  const resp = await routerRequest({
     query: `#graphql
       query ($id: ID!) {
-        product(id: $id) { dimensions { size weight } }
+        product(id: $id) { createdBy { averageProductsCreatedPerYear email } }
       }`,
     variables: { id: "apollo-federation" },
   });
@@ -12,9 +12,9 @@ test("@requires", async () => {
   expect(resp).toMatchObject({
     data: {
       product: {
-        dimensions: {
-          size: "small",
-          weight: 1,
+        createdBy: {
+          averageProductsCreatedPerYear: expect.any(Number),
+          email: "support@apollographql.com",
         },
       },
     },

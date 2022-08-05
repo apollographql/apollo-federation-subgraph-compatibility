@@ -1,6 +1,6 @@
 extend schema
   @link(url: "https://specs.apollo.dev/federation/v2.0",
-        import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override", "@inaccessible"])
+        import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override", "@inaccessible", "@requires"])
 
 directive @override(from: String!) on FIELD_DEFINITION
 
@@ -29,7 +29,9 @@ extend type Query {
 }
 
 extend type User @key(fields: "email") {
+  averageProductsCreatedPerYear: Int @requires(fields: "yearsOfEmployment")
   email: ID! @external
-  name: String @shareable @override(from: "users")
+  name: String @override(from: "users")
   totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
 }

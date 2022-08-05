@@ -7,7 +7,8 @@ const users = [
   {
     email: "support@apollographql.com",
     name: "Apollo Studio Support",
-    totalProductsCreated: 4,
+    totalProductsCreated: 10,
+    yearsOfEmployment: 10
   },
 ];
 

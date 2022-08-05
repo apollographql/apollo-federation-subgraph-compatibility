@@ -68,3 +68,4 @@ const server = new ApolloServer({
 server
   .listen({ port })
   .then(({ url }) => console.log(`Products subgraph ready at ${url}`));
+  

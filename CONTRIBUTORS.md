@@ -100,9 +100,11 @@ const dimensions = [
 
 const users = [
   {
+    averageProductsCreatedPerYear: 134,
     email: "support@apollographql.com",
     name: "Jane Smith",
     totalProductsCreated: 1337,
+    yearsOfEmployment: 10
   },
 ];
 
