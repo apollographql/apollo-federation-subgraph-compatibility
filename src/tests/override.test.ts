@@ -1,5 +1,4 @@
-import { productsRequest, graphqlRequest, ROUTER_URL } from "../utils/client";
-import { compareSchemas } from "../utils/schemaComparison";
+import { productsRequest, routerRequest } from "../utils/client";
 import { stripIgnoredCharacters } from "graphql";
 
 describe("@override", () => {
@@ -10,12 +9,10 @@ describe("@override", () => {
 
     const { sdl } = response.data._service;
     expect(stripIgnoredCharacters(sdl)).toContain('@override(from:"users")');
-
-    expect(compareSchemas(response.data?._service?.sdl)).toBe(true);
   });
 
   it("should return overridden user name", async () => {
-    const resp = await graphqlRequest(ROUTER_URL, {
+    const resp = await routerRequest({
       query: `
         query GetProduct($id: ID!) {
           product(id: $id) {

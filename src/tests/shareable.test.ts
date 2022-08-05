@@ -1,5 +1,4 @@
-import { productsRequest, graphqlRequest, ROUTER_URL } from "../utils/client";
-import { compareSchemas } from "../utils/schemaComparison";
+import { productsRequest, routerRequest } from "../utils/client";
 import { stripIgnoredCharacters } from "graphql";
 
 describe("@shareable", () => {
@@ -12,12 +11,10 @@ describe("@shareable", () => {
     expect(stripIgnoredCharacters(sdl)).toContain(
       "type ProductDimension@shareable"
     );
-
-    expect(compareSchemas(response.data?._service?.sdl)).toBe(true);
   });
 
   it("should be able to resolve @shareable ProductDimension types", async () => {
-    const resp = await graphqlRequest(ROUTER_URL, {
+    const resp = await routerRequest({
       query: `
         query GetProduct($id: ID!) {
           product(id: $id) {

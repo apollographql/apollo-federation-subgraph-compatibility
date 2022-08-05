@@ -1,5 +1,4 @@
 import { productsRequest } from "../utils/client";
-import { compareSchemas } from "../utils/schemaComparison";
 
 test("@link", async () => {
   const response = await productsRequest({
@@ -11,6 +10,4 @@ test("@link", async () => {
       sdl: expect.stringContaining("@link"),
     },
   });
-
-  expect(compareSchemas(response.data?._service?.sdl)).toBe(true);
 });

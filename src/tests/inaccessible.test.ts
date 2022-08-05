@@ -1,5 +1,4 @@
 import { productsRequest, graphqlRequest, ROUTER_URL } from "../utils/client";
-import { compareSchemas } from "../utils/schemaComparison";
 import { stripIgnoredCharacters } from "graphql";
 
 describe("@inaccessible", () => {
@@ -13,8 +12,6 @@ describe("@inaccessible", () => {
     const normalizedSDL = stripIgnoredCharacters(sdl); 
     expect(normalizedSDL).not.toContain("@federation__inaccessible");
     expect(normalizedSDL).toContain("unit:String@inaccessible");
-
-    expect(compareSchemas(response.data?._service?.sdl)).toBe(true);
   });
 
   it("should be able to query @inaccessible fields via the products schema directly", async () => {

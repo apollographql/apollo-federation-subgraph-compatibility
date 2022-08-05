@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { visit, parse, BREAK } from "graphql";
+import { visit, parse, FieldDefinitionNode, NamedTypeNode, isNonNullType, NonNullTypeNode, TypeNode, InputValueDefinitionNode } from "graphql";
 import { resolve } from "path";
 
 const productsRaw = readFileSync(
@@ -30,85 +30,101 @@ const userDefinition = productsReferenceSchema.definitions.find(
   (d) => d.kind == "ObjectTypeExtension" && d.name.value == "User"
 ) as any;
 
-function matchFields(field: any, fieldToCompareTo: any) {
-  if (!field ?? !fieldToCompareTo) return false;
-  if (field?.type?.name?.value != fieldToCompareTo?.type?.name?.value)
-    return false;
+function isNonNullReturnType(type: TypeNode) {
+  return type.kind === "NonNullType"
+}
 
-  return true;
+function getReturnTypeName(type: TypeNode) {
+  if (isNonNullReturnType(type)) {
+    return getReturnTypeName((type as NonNullTypeNode).type);
+  } else {
+    return (type as NamedTypeNode).name.value;
+  }
+}
+
+function compareType(typeName: String, fields: ReadonlyArray<FieldDefinitionNode>, expectedFields: ReadonlyArray<FieldDefinitionNode>) {
+  let errors: string = ""
+  if (expectedFields.length !== fields.length) {
+    errors += `\n * ${typeName} does not declare the same number of fields`;
+  };
+  expectedFields.forEach((expectedField) => {
+    const matchedField = fields.find(
+      (f) => f.name.value == expectedField.name.value
+    ) as FieldDefinitionNode;
+
+    if (matchedField === null || matchedField === undefined) {
+      errors += `\n * ${typeName} type does not declare ${expectedField.name.value} field`;
+    } else {
+      errors += compareNode(typeName, expectedField.name.value, matchedField.type, expectedField.type);
+      if (expectedField.arguments) {
+        if (!matchedField.arguments) {
+          errors += `\n * ${typeName} does not define arguments on ${expectedField.name.value}`;
+        }
+        errors += compareArguments(expectedField.name.value, matchedField.arguments, expectedField.arguments);
+      }
+    }
+  });
+  expect(errors).toBe("");
+}
+
+function compareNode(parentType: String, fieldName: String, type: TypeNode, expected: TypeNode) {
+  let errors: string = "";
+  if (isNonNullReturnType(type) !== isNonNullReturnType(expected)) {
+    errors += `\n * ${parentType} defines different nullability for ${fieldName}, expected ${isNonNullType(expected) ? "nullable but was non-nullable" : "non-nullable but was nullable"}`;
+  }
+  if (getReturnTypeName(type) !== getReturnTypeName(expected)) {
+    errors += `\n * ${parentType} defines different return type for ${fieldName}, expected ${getReturnTypeName(expected)} but was ${getReturnTypeName(type)}`;
+  }
+  return errors;
+}
+
+function compareArguments(fieldName: String, actual: ReadonlyArray<InputValueDefinitionNode>, expected: ReadonlyArray<InputValueDefinitionNode>) {
+  let errors: string = "";
+  expected.forEach((expectedArg) => {
+    const matchedArg = actual.find(
+      (arg) => arg.name.value == expectedArg.name.value
+    ) as InputValueDefinitionNode;
+
+    if (matchedArg === null || matchedArg === undefined) {
+      errors += `\n * ${fieldName} type does not declare ${expectedArg.name.value} argument`;
+    } else {
+      errors += compareNode(fieldName, expectedArg.name.value, matchedArg.type, expectedArg.type);
+    }
+  });
+  return errors;
 }
 
 export function compareSchemas(schemaToCompare: string) {
-  let areSchemasTheSame = true;
-
   visit(parse(schemaToCompare), {
     ObjectTypeExtension(node) {
       switch (node.name.value) {
         case "User":
-          node.fields.forEach((field) => {
-            const matchedField = userDefinition.fields.find(
-              (f) => f.name.value == field.name.value
-            ) as any;
-
-            areSchemasTheSame = matchFields(matchedField, field);
-          });
+          compareType(node.name.value, node.fields, userDefinition.fields);
           break;
       }
     },
     ObjectTypeDefinition(node) {
       switch (node.name.value) {
         case "Product":
-          node.fields.forEach((field) => {
-            const matchedField = productDefinition.fields.find(
-              (f) => f.name.value == field.name.value
-            ) as any;
-
-            areSchemasTheSame = matchFields(matchedField, field);
-          });
+          compareType(node.name.value, node.fields, productDefinition.fields);
           break;
         case "ProductDimension":
-          node.fields.forEach((field) => {
-            const matchedField = productDimensionDefinition.fields.find(
-              (f) => f.name.value == field.name.value
-            ) as any;
-
-            areSchemasTheSame = matchFields(matchedField, field);
-          });
+          compareType(node.name.value, node.fields, productDimensionDefinition.fields);
           break;
         case "ProductVariation":
-          node.fields.forEach((field) => {
-            const matchedField = productVariationDefinition.fields.find(
-              (f) => f.name.value == field.name.value
-            ) as any;
-
-            areSchemasTheSame = matchFields(matchedField, field);
-          });
+          compareType(node.name.value, node.fields, productVariationDefinition.fields);
           break;
         case "Query":
-          node.fields.forEach((field) => {
-            if (!["_service", "_entities"].includes(field.name.value)) {
-              const matchedField = queryDefinition.fields.find(
-                (f) => f.name.value == field.name.value
-              ) as any;
-
-              areSchemasTheSame = matchFields(matchedField, field);
-            }
+          const queryFields = node.fields.filter((field) => {
+            return !["_service", "_entities"].includes(field.name.value)
           });
+          compareType(node.name.value, queryFields, queryDefinition.fields);
           break;
         case "User":
-          node.fields.forEach((field) => {
-            const matchedField = userDefinition.fields.find(
-              (f) => f.name.value == field.name.value
-            ) as any;
-
-            areSchemasTheSame = matchFields(matchedField, field);
-          });
+          compareType(node.name.value, node.fields, userDefinition.fields);
           break;
       }
-
-      if (!areSchemasTheSame) return BREAK;
     },
   });
-
-  return areSchemasTheSame;
+  return true;
 }

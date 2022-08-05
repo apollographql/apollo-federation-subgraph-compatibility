@@ -43,6 +43,17 @@ export function productsRequest(
   return graphqlRequest(productsUrl, req, headers);
 }
 
+export function routerRequest(
+  req: {
+    query: string;
+    variables?: { [key: string]: any };
+    operationName?: string;
+  },
+  headers?: { [key: string]: any }
+) {
+  return graphqlRequest(ROUTER_URL, req, headers);
+}
+
 export async function ping(): Promise<boolean> {
   const routerPing = await fetch(routerHealthCheck, { retry: 10 });
 
