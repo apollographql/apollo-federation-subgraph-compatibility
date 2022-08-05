@@ -11,19 +11,15 @@ import org.springframework.stereotype.Component;
 public class ProductReferenceResolver {
 
     public static Product resolveReference(@NotNull Map<String, Object> reference) {
-        if (reference.get("id") instanceof String) {
-            String productId = (String) reference.get("id");
+        if (reference.get("id") instanceof String productId) {
             for (Product product : ProductService.products) {
                 if (product.getId()
                     .equals(productId)) {
                     return product;
                 }
             }
-        } else {
-            String productSku = (String) reference.get("sku");
-
-            if (reference.get("package") instanceof String) {
-                String productPackage = (String) reference.get("package");
+        } else if (reference.get("sku") instanceof String productSku) {
+            if (reference.get("package") instanceof String productPackage) {
                 for (Product product : ProductService.products) {
                     if (product.getSku()
                         .equals(productSku) && product.getProductPackage()
@@ -31,8 +27,7 @@ public class ProductReferenceResolver {
                         return product;
                     }
                 }
-            } else if (reference.get("variation") instanceof HashMap) {
-                var productVariation = (HashMap) reference.get("variation");
+            } else if (reference.get("variation") instanceof HashMap productVariation) {
                 for (Product product : ProductService.products) {
                     if (product.getSku()
                         .equals(productSku) && product.getVariation()
