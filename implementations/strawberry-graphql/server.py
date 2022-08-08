@@ -19,7 +19,7 @@ products = [
 
 
 def get_product_variation(root) -> Optional["ProductVariation"]:
-    return root.id
+    return ProductVariation(root.id)
 
 
 def get_product_by_id(id: strawberry.ID) -> Optional["Product"]:
@@ -68,14 +68,38 @@ def get_product_dimensions() -> Optional["ProductDimension"]:
 
 
 def get_product_created_by() -> Optional["User"]:
-    return User(email="support@apollographql.com", total_products_created="1991", name="Jane Smith")
+    return User(
+        email="support@apollographql.com",
+        name="Jane Smith",
+        total_products_created="1337",
+        years_of_employment="10",
+    )
 
 
 @strawberry.federation.type(extend=True, keys=["email"])
 class User:
-    email: strawberry.ID = strawberry.federation.field(external=True)
+    email: strawberry.ID = strawberry.federation.field(external=True, override="users")
     name: Optional[str] = strawberry.federation.field(override="users")
     total_products_created: Optional[int] = strawberry.federation.field(external=True)
+    # TODO: the camel casing will be fixed in the next release of Strawberry
+    years_of_employment: int = strawberry.federation.field(external=True)
+    average_products_created_per_year: Optional[int] = strawberry.federation.field(
+        requires=["yearsOfEmployment"], default=134
+    )
+
+    @classmethod
+    def resolve_reference(cls, **data) -> Optional["User"]:
+        if email := data.get("email"):
+            years_of_employment = data.get("yearsOfEmployment", 10)
+
+            return User(
+                email=email,
+                name="Jane Smith",
+                total_products_created=1337,
+                years_of_employment=years_of_employment,
+            )
+
+        return None
 
 
 @strawberry.federation.type(shareable=True)
