@@ -137,4 +137,4 @@ class Query:
     product: Optional[Product] = strawberry.field(resolver=get_product_by_id)
 
 
-schema = strawberry.federation.Schema(query=Query)
+schema = strawberry.federation.Schema(query=Query, enable_federation_2=True)
