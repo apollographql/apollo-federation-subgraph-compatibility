@@ -100,7 +100,7 @@ const dimensions = [
 
 const users = [
   {
-    averageProductsCreatedPerYear: 134,
+    averageProductsCreatedPerYear: Math.round(totalProductsCreated / yearsOfEmployment),
     email: "support@apollographql.com",
     name: "Jane Smith",
     totalProductsCreated: 1337,
