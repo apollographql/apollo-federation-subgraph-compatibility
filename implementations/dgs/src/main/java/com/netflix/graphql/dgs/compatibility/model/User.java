@@ -3,7 +3,7 @@ package com.netflix.graphql.dgs.compatibility.model;
 public class User {
     private final String email;
     private final String name;
-    private final Integer totalProductsCreated;
+    private Integer totalProductsCreated;
 
     private int yearsOfEmployment = -1;
 
@@ -23,6 +23,10 @@ public class User {
 
     public Integer getTotalProductsCreated() {
         return totalProductsCreated;
+    }
+
+    public void setTotalProductsCreated(Integer totalProductsCreated) {
+        this.totalProductsCreated = totalProductsCreated;
     }
 
     public int getYearsOfEmployment() {

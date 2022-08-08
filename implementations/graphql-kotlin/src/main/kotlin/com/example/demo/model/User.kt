@@ -10,7 +10,7 @@ import kotlin.properties.Delegates
 
 /*
 extend type User @key(fields: "email") {
-  averageProductsCreatedPerYear: Int @requires(fields: "yearsOfEmployment")
+  averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
   email: ID! @external
   name: String @override(from: "users")
   totalProductsCreated: Int @external
@@ -25,16 +25,14 @@ data class User(
     @OverrideDirective(from = "users")
     val name: String?,
     @ExternalDirective
-    val totalProductsCreated: Int? = null
+    var totalProductsCreated: Int? = null
 ) {
     @ExternalDirective
     var yearsOfEmployment: Int by Delegates.notNull()
 
-    @RequiresDirective(fields = FieldSet("yearsOfEmployment"))
-    fun averageProductsCreatedPerYear(): Int? = if (totalProductsCreated != null) {
-        (1.0f * totalProductsCreated / yearsOfEmployment).roundToInt()
-    } else {
-        null
+    @RequiresDirective(fields = FieldSet("totalProductsCreated yearsOfEmployment"))
+    fun averageProductsCreatedPerYear(): Int? = totalProductsCreated?.let { totalCount ->
+        (1.0f * totalCount / yearsOfEmployment).roundToInt()
     }
 }
 
@@ -49,7 +47,9 @@ class UserResolver : FederatedTypeResolver<User> {
         return representations.map {
             val email = it["email"]?.toString() ?: throw RuntimeException("invalid entity reference")
             val user = User(email = ID(email), name = "Jane Smith", totalProductsCreated = 1337)
-
+            it["totalProductsCreated"]?.toString()?.toIntOrNull()?.let { totalProductsCreated ->
+                user.totalProductsCreated = totalProductsCreated
+            }
             it["yearsOfEmployment"]?.toString()?.toIntOrNull()?.let { yearsOfEmployment ->
                 user.yearsOfEmployment = yearsOfEmployment
             }

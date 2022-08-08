@@ -69,6 +69,9 @@ const resolvers = {
     __resolveReference: (reference) => {
       if (reference.email) {
         const user = { email: reference.email, name: "Jane Smith", totalProductsCreated: 1337 };
+        if (reference.totalProductsCreated) {
+          user.totalProductsCreated = reference.totalProductsCreated;
+        }
         if (reference.yearsOfEmployment) {
           // @ts-ignore
           user.yearsOfEmployment = reference.yearsOfEmployment;
