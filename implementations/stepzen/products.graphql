@@ -32,9 +32,12 @@ type Query {
 }
 
 type User @key(fields: "email") {
+  averageProductsCreatedPerYear: Int
+    @materializer(query: "_averageProductsCreatedPerYear")
   email: ID! @external
   name: String @materializer(query: "nameFromEmail") @override(from: "users")
   totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
 }
 
 extend type Query {
@@ -45,7 +48,17 @@ extend type Query {
       function transformREST() {
       	var email = get('email');
       	if (email == 'support@apollographql.com')
-      		return JSON.stringify('Apollo Studio Support');
+      		return JSON.stringify('Jane Smith');
+      }
+      """
+    )
+
+  _averageProductsCreatedPerYear(yearsOfEmployment: Int!): Int
+    @rest(
+      endpoint: "stepzen:empty"
+      ecmascript: """
+      function transformREST() {
+        return JSON.stringify(get('yearsOfEmployment')+24);
       }
       """
     )
