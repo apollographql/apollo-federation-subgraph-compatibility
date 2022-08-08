@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 public class User {
     private final String email;
     private final String name;
-    private final Integer totalProductsCreated;
+    private Integer totalProductsCreated;
 
     private int yearsOfEmployment;
 
@@ -20,12 +20,16 @@ public class User {
         return email;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Integer getTotalProductsCreated() {
         return totalProductsCreated;
     }
 
-    public String getName() {
-        return name;
+    public void setTotalProductsCreated(Integer totalProductsCreated) {
+        this.totalProductsCreated = totalProductsCreated;
     }
 
     public int getYearsOfEmployment() {
@@ -39,6 +43,9 @@ public class User {
     public static User resolveReference(@NotNull Map<String, Object> reference) {
         if (reference.get("email") instanceof String email) {
             final User user = new User(email);
+            if (reference.get("totalProductsCreated") instanceof Integer totalProductsCreated) {
+                user.setTotalProductsCreated(totalProductsCreated);
+            }
             if (reference.get("yearsOfEmployment") instanceof Integer yearsOfEmployment) {
                 user.setYearsOfEmployment(yearsOfEmployment);
             }

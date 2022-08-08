@@ -11,6 +11,9 @@ public class UserReferenceResolver {
     public static User resolveReference(@NotNull Map<String, Object> reference) {
         if (reference.get("email") instanceof String email) {
             final User user = new User(email);
+            if (reference.get("totalProductsCreated") instanceof Integer totalProductsCreated) {
+                user.setTotalProductsCreated(totalProductsCreated);
+            }
             if (reference.get("yearsOfEmployment") instanceof Integer yearsOfEmployment) {
                 user.setYearsOfEmployment(yearsOfEmployment);
             }

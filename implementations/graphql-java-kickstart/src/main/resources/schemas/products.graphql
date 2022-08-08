@@ -27,7 +27,7 @@ type Query {
 }
 
 type User @key(fields: "email") @extends {
-    averageProductsCreatedPerYear: Int @requires(fields: "yearsOfEmployment")
+    averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
     email: ID! @external
     name: String @override(from: "users")
     totalProductsCreated: Int @external
