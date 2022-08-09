@@ -18,8 +18,11 @@ products = [
 ]
 
 
-def get_product_variation(root) -> Optional["ProductVariation"]:
-    return ProductVariation(root.id)
+def get_product_variation(root: "Product") -> Optional["ProductVariation"]:
+    if root.variation_id:
+        return ProductVariation(root.variation_id)
+
+    return None
 
 
 def get_product_by_id(id: strawberry.ID) -> Optional["Product"]:
@@ -81,16 +84,20 @@ class User:
     email: strawberry.ID = strawberry.federation.field(external=True, override="users")
     name: Optional[str] = strawberry.federation.field(override="users")
     total_products_created: Optional[int] = strawberry.federation.field(external=True)
-    # TODO: the camel casing will be fixed in the next release of Strawberry
     years_of_employment: int = strawberry.federation.field(external=True)
-    average_products_created_per_year: Optional[int] = strawberry.federation.field(
-        requires=["yearsOfEmployment"], default=134
-    )
+
+    # TODO: the camel casing will be fixed in the next release of Strawberry
+    @strawberry.federation.field(requires=["yearsOfEmployment"])
+    def average_products_created_per_year(self) -> Optional[int]:
+        if self.total_products_created is not None:
+            return round(self.total_products_created / self.years_of_employment)
+
+        return None
 
     @classmethod
     def resolve_reference(cls, **data) -> Optional["User"]:
         if email := data.get("email"):
-            years_of_employment = data.get("yearsOfEmployment", 10)
+            years_of_employment = data.get("yearsOfEmployment")
 
             return User(
                 email=email,
