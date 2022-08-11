@@ -3,6 +3,13 @@ import { ApolloServer, ApolloError, gql } from 'apollo-server';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
 const port = process.env.PRODUCTS_PORT || 4001;
+
+const deprecatedProduct = {
+  sku: "apollo-federation-v1",
+  package: "@apollo/federation-v1",
+  reason: "Migrate to Federation V2",
+};
+
 const products = [
   {
     id: 'apollo-federation',
@@ -18,6 +25,27 @@ const products = [
   },
 ];
 
+const productResearch = [
+  {
+    study: {
+      caseNumber: "1234",
+      description: "Federation Study"
+    }
+  },
+  {
+    study: {
+      caseNumber: "1235",
+      description: "Studio Study"
+    }
+  }
+]
+
+const user = {
+  email: "support@apollographql.com",
+  name: "Jane Smith",
+  totalProductsCreated: 1337
+ };
+
 const sdl = readFileSync('products.graphql', 'utf-8');
 
 const typeDefs = gql(sdl);
@@ -28,6 +56,27 @@ const resolvers = {
     product: (_, args, context) => {
       return products.find((p) => p.id == args.id);
     },
+    /** @type {(_: any, args: any, context: any) => any} */
+    deprecatedProduct: (_, args, context) => {
+      if (args.sku === deprecatedProduct.sku && args.package === deprecatedProduct.package) {
+        return deprecatedProduct;
+      } else {
+        return null;
+      }
+    }
+  },
+  DeprecatedProduct: {
+    createdBy: () => {
+      return user;
+    },
+    /** @type {(reference: any) => any} */
+    __resolveReference: (reference) => {
+      if (reference.sku === deprecatedProduct.sku && reference.package === deprecatedProduct.package) {
+        return deprecatedProduct;
+      } else {
+        return null;
+      }
+    }
   },
   Product: {
     /** @type {(reference: any) => any} */
@@ -38,8 +87,18 @@ const resolvers = {
     dimensions: () => {
       return { size: "small", weight: 1, unit: "kg" };
     },
+    /** @type {(reference: any) => any} */
+    research: (reference) => {
+      if (reference.id === "apollo-federation") {
+        return [productResearch[0]];
+      } else if (reference.id === "apollo-studio") {
+        return [productResearch[1]];
+      } else {
+        return [];
+      }
+    },
     createdBy: () => {
-      return { email: 'support@apollographql.com', totalProductsCreated: 1337 };
+      return user;
     },
     /** @type {(reference: any) => any} */
     __resolveReference: (reference) => {
@@ -54,10 +113,15 @@ const resolvers = {
         );
     },
   },
+  ProductResearch: {
+    /** @type {(reference: any) => any} */
+    __resolveReference: (reference) => {
+      return productResearch.find(
+        (p) => reference.study.caseNumber === p.study.caseNumber
+      );
+    }
+  },
   User: {
-    name() {
-      return "Jane Smith";
-    },
     /** @type {(user: { email: String, totalProductsCreated: Number, yearsOfEmployment: Number }, args: any, context: any) => any} */
     averageProductsCreatedPerYear: (user, args, context) => {
       if (user.email != "support@apollographql.com") {
