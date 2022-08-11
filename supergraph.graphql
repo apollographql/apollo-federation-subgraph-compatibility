@@ -22,11 +22,27 @@ directive @link(url: String, as: String, for: link__Purpose, import: [link__Impo
 
 directive @tag(name: String!) repeatable on FIELD_DEFINITION | OBJECT | INTERFACE | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
 
+type CaseStudy
+  @join__type(graph: PRODUCTS)
+{
+  caseNumber: ID!
+  description: String
+}
+
 type DeliveryEstimates
   @join__type(graph: INVENTORY)
 {
   estimatedDelivery: String
   fastestDelivery: String
+}
+
+type DeprecatedProduct
+  @join__type(graph: PRODUCTS, key: "sku package")
+{
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
 }
 
 scalar join__FieldSet
@@ -65,6 +81,7 @@ type Product
   variation: ProductVariation @join__field(graph: PRODUCTS)
   createdBy: User @join__field(graph: PRODUCTS, provides: "totalProductsCreated")
   notes: String @tag(name: "internal") @join__field(graph: PRODUCTS)
+  research: [ProductResearch!]! @join__field(graph: PRODUCTS)
 }
 
 type ProductDimension
@@ -74,6 +91,13 @@ type ProductDimension
   size: String
   weight: Float
   unit: String @inaccessible @join__field(graph: PRODUCTS)
+}
+
+type ProductResearch
+  @join__type(graph: PRODUCTS, key: "study { caseNumber }")
+{
+  study: CaseStudy!
+  outcome: String
 }
 
 type ProductVariation
@@ -88,6 +112,7 @@ type Query
   @join__type(graph: USERS)
 {
   product(id: ID!): Product @join__field(graph: PRODUCTS)
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead") @join__field(graph: PRODUCTS)
 }
 
 type User

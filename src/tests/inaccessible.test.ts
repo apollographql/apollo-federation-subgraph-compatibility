@@ -1,4 +1,4 @@
-import { productsRequest, graphqlRequest, ROUTER_URL } from "../utils/client";
+import { productsRequest } from "../utils/client";
 import { stripIgnoredCharacters } from "graphql";
 
 describe("@inaccessible", () => {
@@ -7,9 +7,8 @@ describe("@inaccessible", () => {
       query: "query { _service { sdl } }",
     });
 
-    
     const { sdl } = response.data._service;
-    const normalizedSDL = stripIgnoredCharacters(sdl); 
+    const normalizedSDL = stripIgnoredCharacters(sdl);
     expect(normalizedSDL).not.toContain("@federation__inaccessible");
     expect(normalizedSDL).toContain("unit:String@inaccessible");
   });

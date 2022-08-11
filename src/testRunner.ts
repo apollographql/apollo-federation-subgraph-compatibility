@@ -17,6 +17,7 @@ export const TESTS = [
   { assertion: "@key single", column: "@key (single)", fedVersion: 1, required: true },
   { assertion: "@key multiple", column: "@key (multi)", fedVersion: 1, required: false },
   { assertion: "@key composite", column: "@key (composite)", fedVersion: 1, required: false },
+  { assertion: "repeatable @key", column: "repeatable @key", fedVersion: 1, required: false },
   { assertion: "@requires", column: "@requires", fedVersion: 1, required: false },
   { assertion: "@provides", column: "@provides", fedVersion: 1, required: false },
   { assertion: "ftv1", column: "@ftv1", fedVersion: 1, required: false },

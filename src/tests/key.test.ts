@@ -1,17 +1,28 @@
+import { stripIgnoredCharacters } from "graphql";
 import { productsRequest } from "../utils/client";
 
 describe("@key single", () => {
-  test("single", async () => {
+  test("applies single field @key on User", async () => {
+    const serviceSDLQuery = await productsRequest({
+      query: "query { _service { sdl } }",
+    });
+
+    const { sdl } = serviceSDLQuery.data._service;
+    const normalizedSDL = stripIgnoredCharacters(sdl);
+    expect(normalizedSDL).toContain("type User@key(fields:\"email\")");
+  });
+
+  test("resolves single field @key on User", async () => {
     const resp = await productsRequest({
       query: `#graphql
       query ($representations: [_Any!]!) {
         _entities(representations: $representations) {
-          ...on Product { sku }
+          ...on User { email name }
         }
       }
     `,
       variables: {
-        representations: [{ __typename: "Product", id: "apollo-federation" }],
+        representations: [{ __typename: "User", email: "support@apollographql.com" }],
       },
     });
 
@@ -19,7 +30,8 @@ describe("@key single", () => {
       data: {
         _entities: [
           {
-            sku: "federation",
+            email: "support@apollographql.com",
+            name: "Jane Smith"
           },
         ],
       },
@@ -28,21 +40,31 @@ describe("@key single", () => {
 });
 
 describe("@key multiple", () => {
-  test("multiple", async () => {
+  test("applies multiple field @key on DeprecatedProduct", async () => {
+    const serviceSDLQuery = await productsRequest({
+      query: "query { _service { sdl } }",
+    });
+
+    const { sdl } = serviceSDLQuery.data._service;
+    const normalizedSDL = stripIgnoredCharacters(sdl);
+    expect(normalizedSDL).toContain("type DeprecatedProduct@key(fields:\"sku package\")");
+  });
+
+  test("resolves multiple field @key on DeprecatedProduct", async () => {
     const resp = await productsRequest({
       query: `#graphql
       query ($representations: [_Any!]!) {
         _entities(representations: $representations) {
-          ...on Product { id }
+          ...on DeprecatedProduct { sku package reason }
         }
       }
     `,
       variables: {
         representations: [
           {
-            __typename: "Product",
-            sku: "federation",
-            package: "@apollo/federation",
+            __typename: "DeprecatedProduct",
+            sku: "apollo-federation-v1",
+            package: "@apollo/federation-v1",
           },
         ],
       },
@@ -52,7 +74,9 @@ describe("@key multiple", () => {
       data: {
         _entities: [
           {
-            id: "apollo-federation",
+            sku: "apollo-federation-v1",
+            package: "@apollo/federation-v1",
+            reason: "Migrate to Federation V2"
           },
         ],
       },
@@ -61,21 +85,32 @@ describe("@key multiple", () => {
 });
 
 describe("@key composite", () => {
-  test("composite", async () => {
+  test("applies composite object @key on ProductResearch", async () => {
+    const serviceSDLQuery = await productsRequest({
+      query: "query { _service { sdl } }",
+    });
+
+    const { sdl } = serviceSDLQuery.data._service;
+    const normalizedSDL = stripIgnoredCharacters(sdl);
+    expect(normalizedSDL).toContain("type ProductResearch@key(fields:\"study { caseNumber }\")");
+  });
+
+  test("resolves composite object @key on ProductResearch", async () => {
     const resp = await productsRequest({
       query: `#graphql
       query ($representations: [_Any!]!) {
         _entities(representations: $representations) {
-          ...on Product { id }
+          ...on ProductResearch { study { caseNumber description } }
         }
       }
     `,
       variables: {
         representations: [
           {
-            __typename: "Product",
-            sku: "federation",
-            variation: { id: "OSS" },
+            __typename: "ProductResearch",
+            study: {
+              caseNumber: "1234"
+            }
           },
         ],
       },
@@ -85,10 +120,74 @@ describe("@key composite", () => {
       data: {
         _entities: [
           {
-            id: "apollo-federation",
+            study: {
+              caseNumber: "1234",
+              description: "Federation Study"
+            }
           },
         ],
       },
+    });
+  });
+});
+
+describe("repeatable @key", () => {
+  test("applies repeatable @key directive on Product", async () => {
+    const serviceSDLQuery = await productsRequest({
+      query: "query { _service { sdl } }",
+    });
+
+    const { sdl } = serviceSDLQuery.data._service;
+    const normalizedSDL = stripIgnoredCharacters(sdl);
+    expect(normalizedSDL).toContain("type Product@key(fields:\"id\")@key(fields:\"sku package\")@key(fields:\"sku variation { id }\")");
+  });
+
+  test("resolves multiple @key directives on Product", async () => {
+    const entitiesQuery = await productsRequest({
+      query: `#graphql
+      query ($representations: [_Any!]!) {
+        _entities(representations: $representations) {
+          ...on Product { id sku }
+        }
+      }
+    `,
+      variables: {
+        representations: [
+          { 
+            __typename: "Product",
+            id: "apollo-federation"
+          },
+          {
+            __typename: "Product",
+            sku: "federation",
+            package: "@apollo/federation"
+          },
+          {
+            __typename: "Product",
+            sku: "studio",
+            variation: { id: "platform" }
+          }
+        ]
+      }
+    });
+
+    expect(entitiesQuery).toMatchObject({
+      data: {
+        _entities: [
+          {
+            id: "apollo-federation",
+            sku: "federation"
+          },
+          {
+            id: "apollo-federation",
+            sku: "federation"
+          },
+          {
+            id: "apollo-studio",
+            sku: "studio"
+          }
+        ]
+      }
     });
   });
 });
