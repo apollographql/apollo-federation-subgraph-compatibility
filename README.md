@@ -206,14 +206,15 @@ extend schema
   @link(
     url: "https://specs.apollo.dev/federation/v2.0",
     import: [
-      "@key",
-      "@shareable",
-      "@provides",
-      "@external",
-      "@tag",
       "@extends",
+      "@external",
+      "@key",
+      "@inaccessible",
       "@override",
-      "@inaccessible"
+      "@provides",
+      "@requires",
+      "@shareable",
+      "@tag"
     ]
   )
 
@@ -221,17 +222,35 @@ type Product
   @key(fields: "id")
   @key(fields: "sku package")
   @key(fields: "sku variation { id }") {
-  id: ID!
-  sku: String
-  package: String
-  variation: ProductVariation
-  dimensions: ProductDimension
-  createdBy: User @provides(fields: "totalProductsCreated")
-  notes: String @tag(name: "internal")
+    id: ID!
+    sku: String
+    package: String
+    variation: ProductVariation
+    dimensions: ProductDimension
+    createdBy: User @provides(fields: "totalProductsCreated")
+    notes: String @tag(name: "internal")
+    research: [ProductResearch!]!
+}
+
+type DeprecatedProduct @key(fields: "sku package") {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
 }
 
 type ProductVariation {
   id: ID!
+}
+
+type ProductResearch @key(fields: "study { caseNumber }") {
+  study: CaseStudy!
+  outcome: String
+}
+
+type CaseStudy {
+  caseNumber: ID!
+  description: String
 }
 
 type ProductDimension @shareable {
@@ -242,6 +261,7 @@ type ProductDimension @shareable {
 
 extend type Query {
   product(id: ID!): Product
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
 }
 
 extend type User @key(fields: "email") {
@@ -264,13 +284,13 @@ This is a minimum set of functionality to allow for API-side joins and use of en
 - `_service` - support a `rover subgraph introspect` command (this is the Apollo Federation equivalent of Introspection for subgraphs)
   - executes `query { _service { sdl } }` and verifies the contents of the SDL
 - `@key` and `_entities` - support defining a single `@key`
-  - Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph (the variables will be changed to test all `@key` definitions):
+  - Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph:
 
 ```graphql
-query ($representations: [_Any!]!) {
-    _entities(representations: [{ "__typename": "Product", "id": "apollo-federation" }]) {
-        ...on Product {sku package variation { id } dimensions { size weight }
-        }
+query {
+    _entities(representations: [{ "__typename": "User", "email": "support@apollographql.com" }]) {
+        ...on User { email name }
+      }
     }
 }
 ```
@@ -280,7 +300,41 @@ query ($representations: [_Any!]!) {
 
 #### Additional functionality to fully support Apollo Federation
 
-- `@key` and `_entities` - multiple `@key` definitions, multiple-fields `@key` and a complex fields `@key`. 
+- `@key` and `_entities` - multiple `@key` definitions, multiple-fields `@key` and a composite object fields `@key`
+  - Below is an example of a multiple fields `@key` query that is sent from the graph router to the implementing `products` subgraph:
+
+```graphql
+query {
+  _entities(representations: [{ "__typename": "DeprecatedProduct", "sku": "apollo-federation-v1", "package": "@apollo/federation-v1" }]) {
+    ...on DeprecatedProduct { sku package reason }
+  }
+}
+```
+
+  - Below is an example of a composite object fields `@key` query that is sent from the graph router to the implementing `products` subgraph:
+
+```graphql
+query {
+  _entities(representations: [{ "__typename": "ProductResearch", "study": { "caseNumber": "1234" } }]) {
+    ...on ProductResearch { study { caseNumber description } }
+  }
+}
+```
+  
+  - Below is an example of a multiple `@key` query that is sent from the graph router to the implementing `products` subgraph:
+
+```graphql
+query {
+  _entities(representations: [
+     { "__typename": "Product", "id: "apollo-federation" },
+     { "__typename": "Product", "sku": "federation", "package": "@apollo/federation" },
+     { "__typename": "Product", "sku": "studio", "variation": { "id": "platform" } }
+  ]) {
+    ...on Product { id sku }
+  }
+}
+```
+  
 - `@requires` - directive used to provide additional non-key information from one subgraph to the computed fields in another subgraph, should support defining complex fields
 - - This will be covered by the subgraph implementors at `Product.createdBy` where they will be expected to provide the `User.averageProductsCreatedPerYear` using `yearsOfEmployment` value provided by the `user` graph and the `totalProductsCreated` value from the implementing `products` subgraph. Example query that will be sent directly to `products` subgraph.
 

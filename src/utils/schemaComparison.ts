@@ -1,5 +1,17 @@
 import { readFileSync } from "fs";
-import { visit, parse, FieldDefinitionNode, NamedTypeNode, isNonNullType, NonNullTypeNode, TypeNode, InputValueDefinitionNode } from "graphql";
+import { 
+  parse,
+  DocumentNode,
+  FieldDefinitionNode,
+  InputValueDefinitionNode,
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
+  ObjectTypeDefinitionNode,
+  ObjectTypeExtensionNode,
+  TypeNode,
+  buildASTSchema
+} from "graphql";
 import { resolve } from "path";
 
 const productsRaw = readFileSync(
@@ -14,35 +26,57 @@ const productsRaw = readFileSync(
   "utf-8"
 );
 const productsReferenceSchema = parse(productsRaw);
-const productDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == "ObjectTypeDefinition" && d.name.value == "Product"
-) as any;
-const productDimensionDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == "ObjectTypeDefinition" && d.name.value == "ProductDimension"
-) as any;
-const productVariationDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == "ObjectTypeDefinition" && d.name.value == "ProductVariation"
-) as any;
-const queryDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == "ObjectTypeExtension" && d.name.value == "Query"
-) as any;
-const userDefinition = productsReferenceSchema.definitions.find(
-  (d) => d.kind == "ObjectTypeExtension" && d.name.value == "User"
-) as any;
 
-function isNonNullReturnType(type: TypeNode) {
-  return type.kind === "NonNullType"
+function findObjectTypeDefinition(document: DocumentNode, typeName: string): any | null {
+  return document.definitions.find(
+    (d) => d.kind == "ObjectTypeDefinition" && d.name.value === typeName
+  ) as any;
 }
 
-function getReturnTypeName(type: TypeNode) {
+function findObjectTypeExtensionDefinition(document: DocumentNode, typeName: string): any | null {
+  return document.definitions.find(
+    (d) => d.kind == "ObjectTypeExtension" && d.name.value === typeName
+  ) as any;
+}
+
+function isListReturnType(type: TypeNode | null): boolean {
+  return type?.kind === "ListType";
+}
+
+function isNonNullReturnType(type: TypeNode | null): boolean {
+  return type?.kind === "NonNullType"
+}
+
+function unwrapReturnType(type: TypeNode) {
   if (isNonNullReturnType(type)) {
-    return getReturnTypeName((type as NonNullTypeNode).type);
+    return unwrapReturnType((type as NonNullTypeNode).type);
+  } else if (isListReturnType(type)) {
+    return unwrapReturnType((type as ListTypeNode).type);
   } else {
-    return (type as NamedTypeNode).name.value;
+    return (type as NamedTypeNode)?.name?.value;
   }
 }
 
-function compareType(typeName: String, fields: ReadonlyArray<FieldDefinitionNode>, expectedFields: ReadonlyArray<FieldDefinitionNode>) {
+function compareType(
+  typeName: string,
+  actualType: ObjectTypeDefinitionNode | ObjectTypeExtensionNode | null,
+  expectedType: ObjectTypeDefinitionNode | ObjectTypeExtensionNode
+): string {
+  let errors: string = "";
+  if (actualType === null || actualType === undefined) {
+    errors += `\n * target schema does not define ${typeName} type`;
+  } else {
+    errors += compareTypeFields(typeName, actualType.fields, expectedType.fields);
+  }
+  return errors;
+}
+
+
+function compareTypeFields(
+  typeName: String,
+  fields: ReadonlyArray<FieldDefinitionNode>,
+  expectedFields: ReadonlyArray<FieldDefinitionNode>
+): string {
   let errors: string = ""
   if (expectedFields.length !== fields.length) {
     errors += `\n * ${typeName} does not declare the same number of fields`;
@@ -64,21 +98,59 @@ function compareType(typeName: String, fields: ReadonlyArray<FieldDefinitionNode
       }
     }
   });
-  expect(errors).toBe("");
+  return errors;
 }
 
-function compareNode(parentType: String, fieldName: String, type: TypeNode, expected: TypeNode) {
+function compareNode(
+  parentType: String,
+  fieldName: String,
+  actual: TypeNode,
+  expected: TypeNode
+): string {
   let errors: string = "";
-  if (isNonNullReturnType(type) !== isNonNullReturnType(expected)) {
-    errors += `\n * ${parentType} defines different nullability for ${fieldName}, expected ${isNonNullType(expected) ? "nullable but was non-nullable" : "non-nullable but was nullable"}`;
+  const expectedNonNullable = isNonNullReturnType(expected);
+  if (isNonNullReturnType(actual) === expectedNonNullable) {
+    if (expectedNonNullable) {
+      errors += compareNode(parentType, fieldName, (actual as NonNullTypeNode).type, (expected as NonNullTypeNode).type);
+      return errors;
+    }
+  } else if (expectedNonNullable) {
+    errors += `\n * ${parentType} defines different nullability for ${fieldName} field, expected non-nullable but was nullable`;
+    errors += compareNode(parentType, fieldName, actual, (expected as NonNullTypeNode).type,);
+    return errors;
+  } else {
+    errors += `\n * ${parentType} defines different nullability for ${fieldName} field, expected nullable but was non-nullable`;
+    errors += compareNode(parentType, fieldName, (actual as NonNullTypeNode).type, expected);
+    return errors;
   }
-  if (getReturnTypeName(type) !== getReturnTypeName(expected)) {
-    errors += `\n * ${parentType} defines different return type for ${fieldName}, expected ${getReturnTypeName(expected)} but was ${getReturnTypeName(type)}`;
+
+  const expectedListReturnType = isListReturnType(expected);
+  if (isListReturnType(actual) === expectedListReturnType) {
+    if (expectedListReturnType) {
+      errors += compareNode(parentType, fieldName, (actual as ListTypeNode).type, (expected as ListTypeNode).type);
+      return errors;
+    }
+  } else if (expectedListReturnType) {
+    errors += `\n * ${parentType} defines different return type for ${fieldName} field, was expecting a list return type`;
+    errors += compareNode(parentType, fieldName, actual, (expected as ListTypeNode).type);
+    return errors;
+  } else {
+    errors += `\n * ${parentType} defines different return type for ${fieldName} field, did not expect a list return type`;
+    errors += compareNode(parentType, fieldName, (actual as ListTypeNode).type, expected);
+    return errors;
+  }
+
+  if (unwrapReturnType(actual) !== unwrapReturnType(expected)) {
+    errors += `\n * ${parentType} defines different return type for ${fieldName} field, expected ${unwrapReturnType(expected)} but was ${unwrapReturnType(actual)}`;
   }
   return errors;
 }
 
-function compareArguments(fieldName: String, actual: ReadonlyArray<InputValueDefinitionNode>, expected: ReadonlyArray<InputValueDefinitionNode>) {
+function compareArguments(
+  fieldName: String,
+  actual: ReadonlyArray<InputValueDefinitionNode>,
+  expected: ReadonlyArray<InputValueDefinitionNode>
+): string {
   let errors: string = "";
   expected.forEach((expectedArg) => {
     const matchedArg = actual.find(
@@ -94,37 +166,31 @@ function compareArguments(fieldName: String, actual: ReadonlyArray<InputValueDef
   return errors;
 }
 
-export function compareSchemas(schemaToCompare: string) {
-  visit(parse(schemaToCompare), {
-    ObjectTypeExtension(node) {
-      switch (node.name.value) {
-        case "User":
-          compareType(node.name.value, node.fields, userDefinition.fields);
-          break;
-      }
-    },
-    ObjectTypeDefinition(node) {
-      switch (node.name.value) {
-        case "Product":
-          compareType(node.name.value, node.fields, productDefinition.fields);
-          break;
-        case "ProductDimension":
-          compareType(node.name.value, node.fields, productDimensionDefinition.fields);
-          break;
-        case "ProductVariation":
-          compareType(node.name.value, node.fields, productVariationDefinition.fields);
-          break;
-        case "Query":
-          const queryFields = node.fields.filter((field) => {
-            return !["_service", "_entities"].includes(field.name.value)
-          });
-          compareType(node.name.value, queryFields, queryDefinition.fields);
-          break;
-        case "User":
-          compareType(node.name.value, node.fields, userDefinition.fields);
-          break;
-      }
-    },
+export function compareSchemas(schemaToCompare: string): boolean {
+  const schemaDefinition = parse(schemaToCompare);
+  let errors: string = "";
+
+  const typesToCompare = ["CaseStudy", "DeprecatedProduct", "Product", "ProductDimension", "ProductResearch", "ProductVariation"];
+
+  typesToCompare.forEach((typeName) => {
+    const expectedDefinition = findObjectTypeDefinition(productsReferenceSchema, typeName);
+    const actualDefinition = findObjectTypeDefinition(schemaDefinition, typeName);
+    errors += compareType(typeName, actualDefinition, expectedDefinition);
+  })
+
+  // compare User type extension
+  const expectedUserExtensionDefinition = findObjectTypeExtensionDefinition(productsReferenceSchema, "User") ?? findObjectTypeDefinition(productsReferenceSchema, "User");
+  const actualUserExtensionDefinition = findObjectTypeExtensionDefinition(schemaDefinition, "User") ?? findObjectTypeDefinition(schemaDefinition, "User");
+  errors += compareType("User", actualUserExtensionDefinition, expectedUserExtensionDefinition);
+
+  // compare query fields
+  const expectedQueryDefinition = findObjectTypeExtensionDefinition(productsReferenceSchema, "Query") ?? findObjectTypeDefinition(productsReferenceSchema, "Query");
+  const actualQueryDefinition = findObjectTypeExtensionDefinition(schemaDefinition, "Query") ?? findObjectTypeDefinition(schemaDefinition, "Query");
+  const queryFields = actualQueryDefinition.fields.filter((field) => {
+    return !["_service", "_entities"].includes(field.name.value)
   });
+  errors += compareTypeFields("Query", queryFields, expectedQueryDefinition.fields);
+
+  expect(errors).toBe("");
   return true;
 }

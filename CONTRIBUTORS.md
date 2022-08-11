@@ -90,27 +90,47 @@ in your server (it is okay to return hardcoded results, this is what is done in
 `apollo-server` and `federation-jvm`).
 
 ```javascript
-const dimensions = [
-  {
-    size: "small",
-    weight: 1,
-    unit: "kg"
-  }
-]
+const dimension = {
+  size: "small",
+  weight: 1,
+  unit: "kg"
+}
 
-const users = [
-  {
-    averageProductsCreatedPerYear: if (totalProductsCreated) { 
-       Math.round(totalProductsCreated / yearsOfEmployment)
-    } else { 
-      null
-    },
-    email: "support@apollographql.com",
-    name: "Jane Smith",
-    totalProductsCreated: 1337,
-    yearsOfEmployment: 10
+const user = {
+  averageProductsCreatedPerYear: if (totalProductsCreated) { 
+    Math.round(totalProductsCreated / yearsOfEmployment)
+  } else { 
+    null
   },
-];
+  email: "support@apollographql.com",
+  name: "Jane Smith",
+  totalProductsCreated: 1337,
+  yearsOfEmployment: 10
+ };
+
+ const deprecatedProduct = {
+  sku: "apollo-federation-v1",
+  package: "@apollo/federation-v1",
+  reason: "Migrate to Federation V2",
+  createdBy: user
+};
+
+const productsResearch = [
+  {
+    study: {
+      caseNumber: "1234",
+      description: "Federation Study"
+    },
+    outcome: null
+  },
+  {
+    study: {
+      caseNumber: "1235",
+      description: "Studio Study"
+    },
+    outcome: null
+  },
+]
 
 const products = [
   {
@@ -120,8 +140,9 @@ const products = [
     variation: {
       id: "OSS"
     },
-    dimensions: dimensions[0],
-    createdBy: users[0],
+    dimensions: dimension,
+    research: [productsResearch[0]]
+    createdBy: user,
     notes: null
   },
   {
@@ -131,8 +152,9 @@ const products = [
     variation: {
       id: "platform"
     },
-    dimensions: dimensions[0],
-    createdBy: users[0],
+    dimensions: dimension,
+    research: [productsResearch[1]]
+    createdBy: user,
     notes: null
   },
 ];
