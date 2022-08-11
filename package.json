@@ -1,14 +1,19 @@
 {
   "name": "apollo-federation-implementations",
+  "workspaces": [
+    "subgraphs/inventory",
+    "subgraphs/users"
+  ],
   "scripts": {
     "build": "concurrently \"npm:build:*\"",
     "docker": "concurrently \"npm:docker:*\"",
     "start": "concurrently \"npm:start:*\"",
-    "start:graph-router": "node dist/graph-router.js",
-    "start:users": "node dist/subgraphs/users.js",
-    "start:inventory": "node dist/subgraphs/inventory.js",
+    "start:router": "docker run -p 4000:4000 -v ${PWD}/router.yaml:/dist/config/router.yaml -v ${PWD}/supergraph-local.graphql:/dist/config/supergraph-local.graphql ghcr.io/apollographql/router:v0.14.0 -c config/router.yaml -s config/supergraph-local.graphql",
+    "start:users": "npm run start --prefix subgraphs/users",
+    "start:inventory": "npm run start --prefix subgraphs/inventory",
     "build:compile": "tsc",
     "build:supergraph": "APOLLO_ELV2_LICENSE=accept npx rover supergraph compose --config supergraph.yaml > supergraph.graphql",
+    "build:supergraph-local": "APOLLO_ELV2_LICENSE=accept npx rover supergraph compose --config supergraph-local.yaml > supergraph-local.graphql",
     "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
     "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",
     "setup": "npm run build && npm run docker",

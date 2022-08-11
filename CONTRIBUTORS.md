@@ -162,17 +162,30 @@ const products = [
 
 ## Debugging at the command line
 
+The simplest way to start up the federated graph for a single implementation is by using `docker compose`.
+This will start all subgraphs and router as `Docker` containers.
+
 Running the federated graph for a single implementation:
 
 ```sh
-docker-compose -f docker-compose.yaml -f implementations/${LIBRARY_NAME}/docker-compose.yaml up --build
+docker compose -f docker-compose.yaml -f implementations/${LIBRARY_NAME}/docker-compose.yaml up --build
 ```
 
-With the containers running, you can also run the tests:
+Alternatively, you can also start your subgraph implementation locally (e.g. from IDE) and then run following
+to start other subgraphs and the router:
+
+```sh
+npm run build
+npm run start
+```
+
+With all the subgraphs and router running, you can then execute the tests by running:
 
 ```sh
 npm run test:jest
 ```
+
+### Debug Information
 
 When running the test runner with `npm run test`, test failures are written to
 the `tmp` directory.
@@ -181,6 +194,7 @@ To get verbose output when running the test runner, add a `DEBUG` flag like so:
 
 ```sh
 DEBUG=docker,test npm run test
+DEBUG=docker,test npm run test <my_implementation>
 ```
 
 ## Debugging in VSCode
