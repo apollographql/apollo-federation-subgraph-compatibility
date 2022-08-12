@@ -4,6 +4,9 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 public class User {
+
+    public static User DEFAULT_USER = new User("support@apollographql.com");
+
     private final String email;
     private final String name;
     private Integer totalProductsCreated;
