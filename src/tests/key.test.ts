@@ -9,7 +9,7 @@ describe("@key single", () => {
 
     const { sdl } = serviceSDLQuery.data._service;
     const normalizedSDL = stripIgnoredCharacters(sdl);
-    expect(normalizedSDL).toContain("type User@key(fields:\"email\")");
+    expect(normalizedSDL).toMatch(/type User(@extends)?@key\(fields:"email"\)/);
   });
 
   test("resolves single field @key on User", async () => {
