@@ -175,7 +175,7 @@ Alternatively, you can also start your subgraph implementation locally (e.g. fro
 to start other subgraphs and the router:
 
 ```sh
-npm run build
+npm run setup-local
 npm run start
 ```
 
