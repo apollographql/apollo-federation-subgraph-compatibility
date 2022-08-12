@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.7.0"
-	kotlin("jvm") version "1.7.0"
-	kotlin("plugin.spring") version "1.7.0"
+	id("org.springframework.boot") version "2.7.2"
+	kotlin("jvm") version "1.7.10"
+	kotlin("plugin.spring") version "1.7.10"
 }
 
 group = "com.example"
