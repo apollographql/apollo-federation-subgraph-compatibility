@@ -12,20 +12,22 @@ import org.springframework.stereotype.Component
 
 val PRODUCTS = listOf(
     Product(
-        ID("apollo-federation"),
-        "federation",
-        "@apollo/federation",
-        ProductVariation(ID("OSS")),
-        ProductDimension("small", 1.0f, "kg"),
-        User(email = ID("support@apollographql.com"), name = "Jane Smith", totalProductsCreated = 1337)
+        id = ID("apollo-federation"),
+        sku = "federation",
+        pkg = "@apollo/federation",
+        variation = ProductVariation(ID("OSS")),
+        dimensions = ProductDimension("small", 1.0f, "kg"),
+        createdBy = DEFAULT_USER,
+        research = listOf(FEDERATION_RESEARCH)
     ),
     Product(
-        ID("apollo-studio"),
-        "studio",
-        "",
-        ProductVariation(ID("platform")),
-        ProductDimension("small", 1.0f, "kg"),
-        User(email = ID("support@apollographql.com"), name = "Jane Smith", totalProductsCreated = 1337)
+        id = ID("apollo-studio"),
+        sku = "studio",
+        pkg = "",
+        variation = ProductVariation(ID("platform")),
+        dimensions = ProductDimension("small", 1.0f, "kg"),
+        createdBy = DEFAULT_USER,
+        research = listOf(STUDIO_RESEARCH)
     )
 )
 
@@ -41,6 +43,7 @@ type Product
   dimensions: ProductDimension
   createdBy: User @provides(fields: "totalProductsCreated")
   notes: String @tag(name: "internal")
+  research: [ProductResearch!]!
 }
  */
 @KeyDirective(fields = FieldSet("id"))
@@ -56,7 +59,8 @@ data class Product(
     @ProvidesDirective(FieldSet("totalProductsCreated"))
     val createdBy: User? = null,
     @TagDirective("internal")
-    val notes: String? = null
+    val notes: String? = null,
+    val research: List<ProductResearch> = emptyList()
 ) {
     companion object {
         fun byID(id: ID) = PRODUCTS.find { it.id.value == id.value }
@@ -71,7 +75,9 @@ data class Product(
             val variation = ref["variation"]
             val variationId = if (variation is Map<*, *>) {
                 variation["id"].toString()
-            } else null
+            } else {
+                null
+            }
 
             return when {
                 id != null -> byID(ID(id))

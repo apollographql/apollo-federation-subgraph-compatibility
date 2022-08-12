@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
+val DEFAULT_USER = User(email = ID("support@apollographql.com"), name = "Jane Smith", totalProductsCreated = 1337)
+
 /*
 extend type User @key(fields: "email") {
   averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
