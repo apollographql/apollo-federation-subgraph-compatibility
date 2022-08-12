@@ -9,7 +9,7 @@ describe("@key single", () => {
 
     const { sdl } = serviceSDLQuery.data._service;
     const normalizedSDL = stripIgnoredCharacters(sdl);
-    expect(normalizedSDL).toMatch(/type User(@extends)?@key\(fields:"email"\)/);
+    expect(normalizedSDL).toMatch(/type User(@extends)?@key\(fields:"email"( resolvable:true)?\)/);
   });
 
   test("resolves single field @key on User", async () => {
@@ -47,7 +47,7 @@ describe("@key multiple", () => {
 
     const { sdl } = serviceSDLQuery.data._service;
     const normalizedSDL = stripIgnoredCharacters(sdl);
-    expect(normalizedSDL).toContain("type DeprecatedProduct@key(fields:\"sku package\")");
+    expect(normalizedSDL).toContain("type DeprecatedProduct@key(fields:\"sku package\"");
   });
 
   test("resolves multiple field @key on DeprecatedProduct", async () => {
@@ -92,7 +92,7 @@ describe("@key composite", () => {
 
     const { sdl } = serviceSDLQuery.data._service;
     const normalizedSDL = stripIgnoredCharacters(sdl);
-    expect(normalizedSDL).toContain("type ProductResearch@key(fields:\"study { caseNumber }\")");
+    expect(normalizedSDL).toContain("type ProductResearch@key(fields:\"study { caseNumber }\"");
   });
 
   test("resolves composite object @key on ProductResearch", async () => {
@@ -139,10 +139,10 @@ describe("repeatable @key", () => {
 
     const { sdl } = serviceSDLQuery.data._service;
     const normalizedSDL = stripIgnoredCharacters(sdl);
-    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"id"\).*\{/);
+    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"id"( resolvable:true)?\).*\{/);
     // need to end regex with unique field in Product as otherwise we can match against DeprecatedProduct key
-    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"sku package"\).*variation/);
-    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"sku variation { id }"\).*\{/);
+    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"sku package"( resolvable:true)?\).*variation/);
+    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"sku variation { id }"( resolvable:true)?\).*\{/);
   });
 
   test("resolves multiple @key directives on Product", async () => {
