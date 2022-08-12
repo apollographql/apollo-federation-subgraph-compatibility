@@ -1,6 +1,8 @@
 package com.apollographql.federation.compatibility;
 
+import com.apollographql.federation.compatibility.model.DeprecatedProduct;
 import com.apollographql.federation.compatibility.model.Product;
+import com.apollographql.federation.compatibility.model.ProductResearch;
 import com.apollographql.federation.compatibility.model.User;
 import com.apollographql.federation.graphqljava.Federation;
 import com.apollographql.federation.graphqljava._Entity;
@@ -26,19 +28,24 @@ public class GraphQLConfiguration {
                 Federation.transform(registry, wiring)
                         .fetchEntities(env ->
                             env.<List<Map<String, Object>>>getArgument(_Entity.argumentName).stream().map(reference -> {
-                                if ("Product".equals(reference.get("__typename"))) {
-                                    return Product.resolveReference(reference);
-                                } else if ("User".equals(reference.get("__typename"))) {
-                                    return User.resolveReference(reference);
-                                } else {
-                                    return null;
-                                }
+                                final String typeName = (String)reference.get("__typename");
+                                return switch (typeName) {
+                                    case "DeprecatedProduct" -> DeprecatedProduct.resolveReference(reference);
+                                    case "Product" -> Product.resolveReference(reference);
+                                    case "ProductResearch" -> ProductResearch.resolveReference(reference);
+                                    case "User" -> User.resolveReference(reference);
+                                    default -> null;
+                                };
                             }).collect(Collectors.toList())
                         )
                         .resolveEntityType(env -> {
                             final Object src = env.getObject();
-                            if (src instanceof Product) {
+                            if (src instanceof DeprecatedProduct) {
+                                return env.getSchema().getObjectType("DeprecatedProduct");
+                            } else if (src instanceof Product) {
                                 return env.getSchema().getObjectType("Product");
+                            } else if (src instanceof ProductResearch) {
+                                return env.getSchema().getObjectType("ProductResearch");
                             } else if (src instanceof User) {
                                 return env.getSchema().getObjectType("User");
                             } else {

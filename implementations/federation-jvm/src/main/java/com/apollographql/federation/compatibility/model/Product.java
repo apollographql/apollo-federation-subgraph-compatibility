@@ -1,6 +1,8 @@
 package com.apollographql.federation.compatibility.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,52 +11,57 @@ import org.jetbrains.annotations.NotNull;
 public class Product {
 
     private static final Map<String, Product> PRODUCTS = Stream.of(
-            new Product("apollo-federation", "federation", "@apollo/federation", "OSS"),
-            new Product("apollo-studio", "studio", "", "platform")
+            new Product("apollo-federation", "federation", "@apollo/federation", "OSS", List.of(ProductResearch.FEDERATION_STUDY)),
+            new Product("apollo-studio", "studio", "", "platform", List.of(ProductResearch.STUDIO_STUDY))
     ).collect(Collectors.toMap(Product::getId, product -> product));
 
     private final String id;
     private final String sku;
-    private final String productPackage;
+    private final String pkg;
     private final ProductVariation variation;
     private final ProductDimension dimensions;
     private final User createdBy;
 
+    private final List<ProductResearch> research;
+
     public Product(String id) {
         this.id = id;
         this.sku = "";
-        this.productPackage = "";
+        this.pkg = "";
         this.variation = new ProductVariation("");
         this.dimensions = new ProductDimension("small", 1, "kg");
-
-        this.createdBy = new User("support@apollographql.com");
+        this.createdBy = User.DEFAULT_USER;
+        this.research = new ArrayList<>();
     }
 
-    public Product(String id, String sku, String productPackage, String variationId) {
+    public Product(String id, String sku, String pkg, String variationId, List<ProductResearch> research) {
         this.id = id;
         this.sku = sku;
-        this.productPackage = productPackage;
+        this.pkg = pkg;
         this.variation = new ProductVariation(variationId);
         this.dimensions = new ProductDimension("small", 1, "kg");
-        this.createdBy = new User("support@apollographql.com");
+        this.createdBy = User.DEFAULT_USER;
+        this.research = research;
     }
 
-    public Product(String sku, String productPackage) {
+    public Product(String sku, String pkg) {
         this.id = "";
         this.sku = sku;
-        this.productPackage = productPackage;
+        this.pkg = pkg;
         this.variation = new ProductVariation("");
         this.dimensions = new ProductDimension("small", 1, "kg");
-        this.createdBy = new User("support@apollographql.com");
+        this.createdBy = User.DEFAULT_USER;
+        this.research = new ArrayList<>();
     }
 
     public Product(String sku, ProductVariation variation) {
         this.id = "";
-        this.productPackage = "";
+        this.pkg = "";
         this.sku = sku;
         this.variation = variation;
         this.dimensions = new ProductDimension("small", 1, "kg");
-        this.createdBy = new User("support@apollographql.com");
+        this.createdBy = User.DEFAULT_USER;
+        this.research = new ArrayList<>();
     }
 
     public String getId() {
@@ -69,8 +76,8 @@ public class Product {
         return dimensions;
     }
 
-    public String getProductPackage() {
-        return productPackage;
+    public String getPkg() {
+        return pkg;
     }
 
     public ProductVariation getVariation() {
@@ -79,6 +86,10 @@ public class Product {
 
     public User getCreatedBy() {
         return createdBy;
+    }
+
+    public List<ProductResearch> getResearch() {
+        return research;
     }
 
     public static Product resolveById(String id) {
@@ -92,7 +103,7 @@ public class Product {
             String productSku = (String) reference.get("sku");
             if (reference.get("package") instanceof String productPackage) {
                 for (Product product : PRODUCTS.values()) {
-                    if (product.getSku().equals(productSku) && product.getProductPackage().equals(productPackage)) {
+                    if (product.getSku().equals(productSku) && product.getPkg().equals(productPackage)) {
                         return product;
                     }
                 }
