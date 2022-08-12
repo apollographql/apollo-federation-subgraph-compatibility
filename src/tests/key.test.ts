@@ -139,7 +139,10 @@ describe("repeatable @key", () => {
 
     const { sdl } = serviceSDLQuery.data._service;
     const normalizedSDL = stripIgnoredCharacters(sdl);
-    expect(normalizedSDL).toContain("type Product@key(fields:\"id\")@key(fields:\"sku package\")@key(fields:\"sku variation { id }\")");
+    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"id"\).*\{/);
+    // need to end regex with unique field in Product as otherwise we can match against DeprecatedProduct key
+    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"sku package"\).*variation/);
+    expect(normalizedSDL).toMatch(/type Product.*@key\(fields:"sku variation { id }"\).*\{/);
   });
 
   test("resolves multiple @key directives on Product", async () => {
