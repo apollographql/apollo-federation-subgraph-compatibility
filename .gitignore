@@ -78,3 +78,6 @@ tmp/*
 # .NET
 bin
 obj
+
+# ignore router executable
+router

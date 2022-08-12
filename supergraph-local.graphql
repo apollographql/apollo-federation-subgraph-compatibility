@@ -48,9 +48,9 @@ type DeprecatedProduct
 scalar join__FieldSet
 
 enum join__Graph {
-  INVENTORY @join__graph(name: "inventory", url: "http://host.docker.internal:4003")
-  PRODUCTS @join__graph(name: "products", url: "http://host.docker.internal:4001")
-  USERS @join__graph(name: "users", url: "http://host.docker.internal:4002")
+  INVENTORY @join__graph(name: "inventory", url: "http://localhost:4003")
+  PRODUCTS @join__graph(name: "products", url: "http://localhost:4001")
+  USERS @join__graph(name: "users", url: "http://localhost:4002")
 }
 
 scalar link__Import
