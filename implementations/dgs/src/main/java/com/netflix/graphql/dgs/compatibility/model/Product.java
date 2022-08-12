@@ -5,16 +5,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class Product {
+    public static List<Product> PRODUCTS = List.of(
+            new Product("apollo-federation", "federation", "@apollo/federation", "OSS"),
+            new Product("apollo-studio", "studio", "", "platform"));
+
     private final String id;
     private final String sku;
     private final String productPackage;
     private final ProductVariation variation;
     private final ProductDimension dimensions;
     private final User createdBy;
-
-    public static List<Product> products = List.of(
-            new Product("apollo-federation", "federation", "@apollo/federation", "OSS"),
-            new Product("apollo-studio", "studio", "", "platform"));
 
     public Product(String id, String sku, String productPackage, String variationId) {
         this.id = id;
@@ -23,7 +23,7 @@ public class Product {
         this.variation = new ProductVariation(variationId);
         this.dimensions = new ProductDimension("small", 1, "kg");
 
-        this.createdBy = new User("support@apollographql.com");
+        this.createdBy = User.DEFAULT_USER;
     }
 
     public String getId() {
@@ -50,8 +50,8 @@ public class Product {
         return createdBy;
     }
 
-    public static Product getProductById(@NotNull String productId) {
-        for (Product product : products) {
+    public static Product resolveById(@NotNull String productId) {
+        for (Product product : PRODUCTS) {
             if (product.getId().equals(productId)) {
                 return product;
             }
