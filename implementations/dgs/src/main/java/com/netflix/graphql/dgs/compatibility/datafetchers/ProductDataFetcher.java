@@ -15,33 +15,26 @@ import java.util.Map;
 public class ProductDataFetcher {
   @DgsQuery(field = "product")
   public Product getProduct(@InputArgument String id) {
-    return Product.getProductById(id);
+    return Product.resolveById(id);
   }
 
   @DgsEntityFetcher(name = "Product")
   public static Product resolveReference(@NotNull Map<String, Object> reference) {
-    if (reference.get("id") instanceof String) {
-      String productId = (String) reference.get("id");
-      for (Product product : Product.products) {
-        if (product.getId().equals(productId)) {
-          return product;
-        }
-      }
+    if (reference.get("id") instanceof String id) {
+      return Product.resolveById(id);
     } else {
       String productSku = (String) reference.get("sku");
 
-      if (reference.get("package") instanceof String) {
-        String productPackage = (String) reference.get("package");
-        for (Product product : Product.products) {
-          if (product.getSku().equals(productSku) && product.getPackage().equals(productPackage)) {
+      if (reference.get("package") instanceof String pkg) {
+        for (Product product : Product.PRODUCTS) {
+          if (product.getSku().equals(productSku) && product.getPackage().equals(pkg)) {
             return product;
           }
         }
-      } else if (reference.get("variation") instanceof HashMap) {
-        var productVariation = (HashMap) reference.get("variation");
-        for (Product product : Product.products) {
+      } else if (reference.get("variation") instanceof HashMap variation) {
+        for (Product product : Product.PRODUCTS) {
           if (product.getSku().equals(productSku)
-              && product.getVariation().getId().equals(productVariation.get("id"))) {
+              && product.getVariation().getId().equals(variation.get("id"))) {
             return product;
           }
         }
