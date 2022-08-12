@@ -35,7 +35,7 @@ defmodule Products.MixProject do
   defp deps do
     [
       {:absinthe, "~> 1.7.0"},
-      {:absinthe_federation, "~> 0.2.52"},
+      {:absinthe_federation, "~> 0.2.53"},
       {:absinthe_plug, "~> 1.5"},
       {:phoenix, "~> 1.6.10"},
       {:gettext, "~> 0.19"},
