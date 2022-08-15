@@ -31,7 +31,7 @@ function getFolderNamesFromPath(path: string) {
 }
 
 async function runDockerCompose(libraryName: string, librariesPath: string) {
-  console.log("Starting containers...");
+  console.log(`Starting containers for testing ${libraryName} implementation...`);
   const proc = execa("docker", [
     "compose",
     "-f",
@@ -53,7 +53,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   }
 
   return async () => {
-    console.log("Stopping containers...");
+    console.log(`Stopping ${libraryName} and related containers...`);
     await execa("docker-compose", ["down", "--remove-orphans"]);
   };
 }
