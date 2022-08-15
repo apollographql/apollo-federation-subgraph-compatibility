@@ -97,7 +97,7 @@ def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional["Pro
         (
             product
             for product in products
-            if product["sku"] == sku and product["variation"] == variation["id"]
+            if product["sku"] == sku and product["variation"]["id"] == variation["id"]
         ),
         None,
     )
@@ -262,14 +262,17 @@ class Product:
         if "id" in data:
             return get_product_by_id(id=data["id"])
 
-        if "sku" in data and "package" in data:
-            return get_product_by_sku_and_package(
-                sku=data["sku"], package=data["package"]
-            )
+        if "sku" in data:
+            if "variation" in data:
+                return get_product_by_sku_and_variation(
+                    sku=data["sku"], variation=data["variation"]
+                )
+            elif "package" in data:
+                return get_product_by_sku_and_package(
+                    sku=data["sku"], package=data["package"]
+                )
 
-        return get_product_by_sku_and_variation(
-            sku=data["sku"], variation=data["variation"]
-        )
+        return None
 
 
 @strawberry.federation.type(extend=True)
