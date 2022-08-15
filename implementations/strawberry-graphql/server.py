@@ -171,6 +171,26 @@ class ProductResearch:
             outcome=data["outcome"],
         )
 
+    @classmethod
+    def resolve_reference(cls, **data) -> Optional["ProductResearch"]:
+        study = data.get("study")
+
+        if not study:
+            return None
+
+        case_number = study["caseNumber"]
+
+        research = next(
+            (
+                product_research
+                for product_research in products_research
+                if product_research["study"]["case_number"] == case_number
+            ),
+            None,
+        )
+
+        return ProductResearch.from_data(research) if research else None
+
 
 @strawberry.federation.type(keys=["sku package"])
 class DeprecatedProduct:
@@ -178,6 +198,22 @@ class DeprecatedProduct:
     package: str
     reason: Optional[str]
     created_by: Optional[User]
+
+    @classmethod
+    def resolve_reference(cls, **data) -> Optional["DeprecatedProduct"]:
+        if deprecated_product["sku"] == data.get("sku") and deprecated_product[
+            "package"
+        ] == data.get("package"):
+            return DeprecatedProduct(
+                sku=deprecated_product["sku"],
+                package=deprecated_product["package"],
+                reason=deprecated_product["reason"],
+                created_by=User.resolve_reference(
+                    email=deprecated_product["created_by"]
+                ),
+            )
+
+        return None
 
 
 @strawberry.federation.type(keys=["id", "sku package", "sku variation { id }"])
