@@ -2,27 +2,81 @@ from typing import Optional, List
 
 import strawberry
 
+# ------- data -------
+
+dimension = {
+    "size": "small",
+    "weight": 1,
+    "unit": "kg",
+}
+
+user = {
+    "email": "support@apollographql.com",
+    "name": "Jane Smith",
+    "total_products_created": 1337,
+    "years_of_employment": 10,
+}
+
+
+deprecated_product = {
+    "sku": "apollo-federation-v1",
+    "package": "@apollo/federation-v1",
+    "reason": "Migrate to Federation V2",
+    "created_by": user["email"],
+}
+
+products_research = [
+    {
+        "study": {
+            "case_number": "1234",
+            "description": "Federation Study",
+        },
+        "outcome": None,
+    },
+    {
+        "study": {
+            "case_number": "1235",
+            "description": "Studio Study",
+        },
+        "outcome": None,
+    },
+]
+
+
 products = [
     {
         "id": "apollo-federation",
         "sku": "federation",
         "package": "@apollo/federation",
-        "variation": "OSS",
+        "variation": {"id": "OSS"},
+        "dimensions": dimension,
+        "research": [products_research[0]],
+        "created_by": user["email"],
+        "notes": None,
     },
     {
         "id": "apollo-studio",
         "sku": "studio",
         "package": "",
-        "variation": "platform",
+        "variation": {"id": "platform"},
+        "dimensions": dimension,
+        "research": [products_research[1]],
+        "created_by": user["email"],
+        "notes": None,
     },
 ]
 
 
-def get_product_variation(root: "Product") -> Optional["ProductVariation"]:
-    if root.variation_id:
-        return ProductVariation(root.variation_id)
+# ------- resolvers -------
 
-    return None
+
+def get_product_by_id(id: strawberry.ID) -> Optional["Product"]:
+    data = next((product for product in products if product["id"] == id), None)
+
+    if not data:
+        return None
+
+    return Product.from_data(data)
 
 
 def get_product_by_sku_and_package(sku: str, package: str) -> Optional["Product"]:
@@ -35,10 +89,7 @@ def get_product_by_sku_and_package(sku: str, package: str) -> Optional["Product"
         None,
     )
 
-    if not data:
-        return None
-
-    return Product.from_data(data)
+    return Product.from_data(data) if data else None
 
 
 def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional["Product"]:
@@ -51,23 +102,10 @@ def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional["Pro
         None,
     )
 
-    if not data:
-        return None
-
-    return Product.from_data(data)
+    return Product.from_data(data) if data else None
 
 
-def get_product_dimensions() -> Optional["ProductDimension"]:
-    return ProductDimension(size="small", weight="1", unit="kg")
-
-
-def get_product_created_by() -> Optional["User"]:
-    return User(
-        email="support@apollographql.com",
-        name="Jane Smith",
-        total_products_created="1337",
-        years_of_employment="10",
-    )
+# ------- types -------
 
 
 @strawberry.federation.type(extend=True, keys=["email"])
@@ -123,6 +161,16 @@ class ProductResearch:
     study: CaseStudy
     outcome: Optional[str]
 
+    @classmethod
+    def from_data(cls, data: dict) -> "ProductResearch":
+        return ProductResearch(
+            study=CaseStudy(
+                case_number=data["study"]["case_number"],
+                description=data["study"]["description"],
+            ),
+            outcome=data["outcome"],
+        )
+
 
 @strawberry.federation.type(keys=["sku package"])
 class DeprecatedProduct:
@@ -138,30 +186,43 @@ class Product:
     sku: Optional[str]
     package: Optional[str]
     variation_id: strawberry.Private[str]
-    variation: Optional[ProductVariation] = strawberry.field(
-        resolver=get_product_variation
-    )
-    dimensions: Optional[ProductDimension] = strawberry.field(
-        resolver=get_product_dimensions
-    )
-    created_by: Optional[User] = strawberry.federation.field(
-        provides=["totalProductsCreated"], resolver=get_product_created_by
-    )
+
+    @strawberry.field
+    def variation(self) -> Optional[ProductVariation]:
+        return (
+            ProductVariation(strawberry.ID(self.variation_id))
+            if self.variation_id
+            else None
+        )
+
+    @strawberry.field
+    def dimensions(self) -> Optional[ProductDimension]:
+        return ProductDimension(**dimension)
+
+    @strawberry.federation.field(provides=["totalProductsCreated"])
+    def created_by(self) -> Optional[User]:
+        return User(**user)
+
     notes: Optional[str] = strawberry.federation.field(tags=["internal"])
     research: List[ProductResearch]
 
     @classmethod
     def from_data(cls, data: dict):
+        research = [
+            ProductResearch.from_data(research) for research in data.get("research", [])
+        ]
+
         return cls(
             id=data["id"],
             sku=data["sku"],
             package=data["package"],
             variation_id=data["variation"],
             notes="hello",
+            research=research,
         )
 
     @classmethod
-    def resolve_reference(cls, **data) -> "Product":
+    def resolve_reference(cls, **data) -> Optional["Product"]:
         if "id" in data:
             return get_product_by_id(id=data["id"])
 
@@ -177,14 +238,7 @@ class Product:
 
 @strawberry.federation.type(extend=True)
 class Query:
-    @strawberry.field
-    def product(self, id: strawberry.ID) -> Optional[Product]:
-        data = next((product for product in products if product["id"] == id), None)
-
-        if not data:
-            return None
-
-        return Product.from_data(data)
+    product: Optional[Product] = strawberry.field(resolver=get_product_by_id)
 
     @strawberry.field(deprecation_reason="Use product query instead")
     def deprecated_product(self, sku: str, package: str) -> Optional[DeprecatedProduct]:
