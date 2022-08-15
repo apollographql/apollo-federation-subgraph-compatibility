@@ -187,7 +187,7 @@ export function compareSchemas(schemaToCompare: string): boolean {
   const expectedQueryDefinition = findObjectTypeExtensionDefinition(productsReferenceSchema, "Query") ?? findObjectTypeDefinition(productsReferenceSchema, "Query");
   const actualQueryDefinition = findObjectTypeExtensionDefinition(schemaDefinition, "Query") ?? findObjectTypeDefinition(schemaDefinition, "Query");
   const queryFields = actualQueryDefinition.fields.filter((field) => {
-    return !["_service", "_entities"].includes(field.name.value)
+    return ["product", "deprecatedProduct"].includes(field.name.value)
   });
   errors += compareTypeFields("Query", queryFields, expectedQueryDefinition.fields);
 
