@@ -13,10 +13,28 @@ type Product @key(fields: "id") @key(fields: "sku package") {
   dimensions: ProductDimension
   createdBy: User
   notes: String @tag(name: "internal")
+  research: [ProductResearch!]!
+}
+
+type DeprecatedProduct @key(fields: "sku package") {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
 }
 
 type ProductVariation {
   id: ID!
+}
+
+type ProductResearch @key(fields: "study { caseNumber }") {
+  study: CaseStudy!
+  outcome: String
+}
+
+type CaseStudy {
+  caseNumber: ID!
+  description: String
 }
 
 type ProductDimension @shareable {
@@ -29,12 +47,32 @@ type Query {
   product(id: ID!): Product @sequence(steps: {query: "_product_data"})
   productBySku(sku: String, package: String): Product
     @sequence(steps: {query: "_product_data"})
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
+    @rest(
+      endpoint: "stepzen:empty"
+      ecmascript: """
+      function transformREST() {
+        const deprecatedProduct = {
+          sku: 'apollo-federation-v1',
+          package: '@apollo/federation-v1',
+          reason: 'Migrate to Federation V2',
+        };
+        if (get('sku') === deprecatedProduct.sku && get('package') === deprecatedProduct.package) {
+          return JSON.stringify(deprecatedProduct);
+        }
+        return null;
+      }
+      """
+   )
 }
 
 type User @key(fields: "email") {
+  averageProductsCreatedPerYear: Int
+    @materializer(query: "_averageProductsCreatedPerYear")
   email: ID! @external
   name: String @materializer(query: "nameFromEmail") @override(from: "users")
   totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
 }
 
 extend type Query {
@@ -43,9 +81,21 @@ extend type Query {
       endpoint: "stepzen:empty"
       ecmascript: """
       function transformREST() {
-      	var email = get('email');
-      	if (email == 'support@apollographql.com')
-      		return JSON.stringify('Apollo Studio Support');
+        if (get('email') == 'support@apollographql.com')
+          return JSON.stringify('Jane Smith');
+      }
+      """
+    )
+
+  _averageProductsCreatedPerYear(
+    totalProductsCreated: Int
+    yearsOfEmployment: Int!
+  ): Int
+    @rest(
+      endpoint: "stepzen:empty"
+      ecmascript: """
+      function transformREST() {
+        return JSON.stringify(Math.round(get('totalProductsCreated') / get('yearsOfEmployment')));
       }
       """
     )
@@ -73,6 +123,14 @@ extend type Query {
       				email: 'support@apollographql.com',
       				totalProductsCreated: 1337
       			},
+                        research: [
+                           {
+                             study: {
+                               caseNumber: "1234",
+                               description: "Federation Study"
+                             }
+                           }
+                        ],
       		},
       		'apollo-studio': {
       			sku: 'studio',
@@ -89,6 +147,14 @@ extend type Query {
       				email: 'support@apollographql.com',
       				totalProductsCreated: 1337
       			},
+                        research: [
+                           {
+                             study: {
+                               caseNumber: "1235",
+                               description: "Studio Study"
+                             }
+                           }
+                        ],
       		}
       	};
       	var id = get('id');
