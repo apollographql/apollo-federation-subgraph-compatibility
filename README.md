@@ -134,7 +134,7 @@ The following open-source GraphQL server libraries and hosted subgraphs provide 
 <tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
 </thead>
 <tbody>
-<tr><td><a href="https://async-graphql.github.io/async-graphql/en/index.html">Async-graphql</a></td><td><table><tr><th>_service</th><td>🟩</td></tr><tr><th>@key (single)</th><td>🟩</td></tr><tr><th>@key (multi)</th><td>🟩</td></tr><tr><th>@key (composite)</th><td>🟩</td></tr><tr><th>@requires</th><td>🟩</td></tr><tr><th>@provides</th><td>🟩</td></tr><tr><th>@ftv1</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟥</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
+<tr><td><a href="https://async-graphql.github.io/async-graphql/en/index.html">Async-graphql</a></td><td><table><tr><th>_service</th><td>🟩</td></tr><tr><th>@key (single)</th><td>🟩</td></tr><tr><th>@key (multi)</th><td>🟩</td></tr><tr><th>@key (composite)</th><td>🟩</td></tr><tr><th>repeatable @key</th><td>🟩</td></tr><tr><th>@requires</th><td>🔲</td></tr><tr><th>@provides</th><td>🟩</td></tr><tr><th>@ftv1</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟥</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
 </tbody>
 </table>
 
@@ -320,7 +320,7 @@ query {
   }
 }
 ```
-  
+
   - Below is an example of a multiple `@key` query that is sent from the graph router to the implementing `products` subgraph:
 
 ```graphql
@@ -334,7 +334,7 @@ query {
   }
 }
 ```
-  
+
 - `@requires` - directive used to provide additional non-key information from one subgraph to the computed fields in another subgraph, should support defining complex fields
 - - This will be covered by the subgraph implementors at `Product.createdBy` where they will be expected to provide the `User.averageProductsCreatedPerYear` using `yearsOfEmployment` value provided by the `user` graph and the `totalProductsCreated` value from the implementing `products` subgraph. Example query that will be sent directly to `products` subgraph.
 
@@ -366,7 +366,7 @@ query ($id: ID!) {
 - `@external` - directive used to mark fields as external (defined in other subgraph). This is covered in the tests above.
 - `extends` or `@extends` - ability to extend the type that is defined in other subgraph
   - This is covered in the `products` subgraph extension of the `User`
-- `ftv1` (Federated Traces version 1) 
+- `ftv1` (Federated Traces version 1)
   - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
   - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
 - `@tag` - directive used to add arbitrary metadata information to the schema elements. Used by [Apollo Contracts](https://www.apollographql.com/docs/studio/contracts/) to expose different variants of the schema.
