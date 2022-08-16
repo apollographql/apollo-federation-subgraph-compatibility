@@ -20,6 +20,34 @@ interface Product {
   variation: string;
 }
 
+interface ProductResearch {
+  study: CaseStudy
+  outcome?: string
+}
+
+interface CaseStudy {
+  caseNumber: string;
+  description: string;
+}
+
+interface DeprecatedProduct {
+  sku: string
+  package: string
+  reason?: string
+}
+
+interface User {
+  email: string
+  name: string
+  totalProducts: number
+}
+
+const deprecatedProduct: DeprecatedProduct = {
+  sku: "apollo-federation-v1",
+  package: "@apollo/federation-v1",
+  reason: "Migrate to Federation V2",
+};
+
 const products: Product[] = [
   {
     id: 'apollo-federation',
@@ -35,6 +63,73 @@ const products: Product[] = [
   },
 ];
 
+const productResearch: ProductResearch[] = [
+  {
+    study: {
+      caseNumber: "1234",
+      description: "Federation Study"
+    }
+  },
+  {
+    study: {
+      caseNumber: "1235",
+      description: "Studio Study"
+    }
+  }
+]
+const user = {
+  email: "support@apollographql.com",
+  name: "Jane Smith",
+  totalProductsCreated: 1337
+};
+
+const DeprecatedProduct = builder.objectRef<DeprecatedProduct>('DeprecatedProduct').implement({
+  fields: t => ({
+    sku: t.exposeString('sku', { nullable: false }),
+    package: t.exposeString('package', { nullable: false }),
+    reason: t.exposeString('reason'),
+    createdBy: t.field({
+      type: User,
+      resolve: () => user,
+    })
+  })
+});
+
+builder.asEntity(DeprecatedProduct, {
+  key: builder.selection<{ sku: string, package: string }>('sku package'),
+  resolveReference: async (reference) => {
+    if (reference.sku === deprecatedProduct.sku && reference.package === deprecatedProduct.package) {
+      return deprecatedProduct;
+    } else {
+      return null;
+    }
+  }
+})
+
+const ProductResearch = builder.objectRef<ProductResearch>('ProductResearch').implement({
+  fields: (t) => ({
+    study: t.expose('study',{
+      type: CaseStudy,
+      nullable: false,
+    }),
+    outcome: t.exposeString('outcome', { nullable: true }),
+  }),
+});
+
+builder.asEntity(ProductResearch, {
+  key: builder.selection<{ study: { caseNumber: string } }>('study { caseNumber }'),
+  resolveReference: async (reference) => productResearch.find(
+    (p) => reference.study.caseNumber === p.study.caseNumber
+  )
+})
+
+const CaseStudy = builder.objectRef<CaseStudy>('CaseStudy').implement({
+  fields: (t) => ({
+    caseNumber: t.exposeID('caseNumber', { nullable: false }),
+    description: t.exposeString('description')
+  }),
+});
+
 const ProductVariation = builder.objectRef<{ id: string }>('ProductVariation').implement({
   fields: (t) => ({
     id: t.exposeID('id', { nullable: false }),
@@ -47,7 +142,7 @@ const ProductDimension = builder
     shareable: true,
     fields: (t) => ({
       size: t.exposeString('size'),
-      weight: t.exposeInt('weight'),
+      weight: t.exposeFloat('weight'),
       unit: t.exposeString('unit', {
         inaccessible: true,
       }),
@@ -71,18 +166,22 @@ const ProductType = builder.objectRef<Product>('Product').implement({
       type: ProductVariation,
       resolve: (product) => ({ id: product.variation }),
     }),
-    notes: t.stringList({
+    notes: t.string({
       tag: 'internal',
-      inaccessible: true,
-      resolve: () => ['This is a note'],
+      resolve: () => 'This is a note',
     }),
     createdBy: t.field({
-      type: User.provides<{ totalProductsCreated: number }>('totalProductsCreated'),
-      resolve: () => ({
-        totalProductsCreated: 1,
-        email: 'support@apollographql.com',
-      }),
+      type: User.provides<{
+        totalProductsCreated: number
+      }>('totalProductsCreated'),
+      nullable: true,
+      resolve: () => user,
     }),
+    research: t.field({
+      type: [ProductResearch],
+      nullable: false,
+      resolve: () => productResearch,
+    })
   }),
 });
 
@@ -90,14 +189,21 @@ const User = builder
   .externalRef('User', builder.selection<{ email: string }>('email'), (key) => key)
   .implement({
     externalFields: (t) => ({
-      email: t.string({ nullable: false }),
+      email: t.id({ nullable: false }),
       totalProductsCreated: t.int(),
+      yearsOfEmployment: t.int({ nullable: false })
     }),
     fields: (t) => ({
       name: t.string({
         override: { from: 'users' },
         resolve: () => 'Jane Smith',
       }),
+      averageProductsCreatedPerYear: t.int({
+        requires: builder.selection<{totalProductsCreated: number, yearsOfEmployment: number}>(
+          'totalProductsCreated yearsOfEmployment'
+        ),
+        resolve: (parent) => Math.round(parent.totalProductsCreated / parent.yearsOfEmployment),
+      })
     }),
   });
 
@@ -136,12 +242,19 @@ builder.queryType({
       },
       resolve: (root, args) => products.find((product) => product.id === args.id),
     }),
+    deprecatedProduct: t.field({
+      type: DeprecatedProduct,
+      deprecationReason: 'Use product query instead',
+      args: {
+        sku: t.arg.string({ required: true }),
+        package: t.arg.string({ required: true }),
+      },
+      resolve: () => deprecatedProduct,
+    }),
   }),
 });
 
 export const schema = builder.toSubGraphSchema({});
-
-
 
 const server = new ApolloServer({
   schema: builder.toSubGraphSchema({}),
