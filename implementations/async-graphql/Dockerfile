@@ -1,8 +1,12 @@
-FROM rust:1.61 as build
+FROM rust:1.63 as build
 
 WORKDIR /usr/src/federation-async-graphql-compatibility
 
-COPY . .
+RUN USER=root cargo init
+COPY Cargo.toml Cargo.lock ./
+RUN cargo build --release
+
+COPY src ./src
 
 RUN cargo install --path .
 
