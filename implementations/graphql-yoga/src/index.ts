@@ -1,43 +1,108 @@
-import { buildSubgraphSchema } from '@apollo/subgraph'
-import { createServer } from '@graphql-yoga/node'
+import { buildSubgraphSchema } from "@apollo/subgraph";
+import { createServer, GraphQLYogaError } from "@graphql-yoga/node";
 import { gql } from "graphql-tag";
-import { readFileSync } from 'node:fs'
+import { readFileSync } from "node:fs";
 
-import { Product, Resolvers } from './resolvers-types'
+import { Product, ProductResearch, Resolvers, User } from "./resolvers-types";
 
+const typeDefs = readFileSync("./products.graphql", "utf8");
 
-const typeDefs = readFileSync('./products.graphql', 'utf8')
+const productResearch: ProductResearch[] = [
+  {
+    study: {
+      caseNumber: "1234",
+      description: "Federation Study",
+    },
+  },
+  {
+    study: {
+      caseNumber: "1235",
+      description: "Studio Study",
+    },
+  },
+];
 
-const products: Product[] = [
+const products: Omit<Product, "research">[] = [
   {
     id: "apollo-federation",
     sku: "federation",
     package: "@apollo/federation",
-    variation: {
-      id: "OSS",
-    },
+    variation: { id: "OSS", __typename: "ProductVariation" },
   },
   {
     id: "apollo-studio",
     sku: "studio",
     package: "",
-    variation: {
-      id: "platform",
-    },
+    variation: { id: "platform", __typename: "ProductVariation" },
   },
 ];
+
+const deprecatedProduct = {
+  sku: "apollo-federation-v1",
+  package: "@apollo/federation-v1",
+  reason: "Migrate to Federation V2",
+};
+
+const user: User = {
+  email: "support@apollographql.com",
+  name: "Jane Smith",
+  totalProductsCreated: 1337,
+  yearsOfEmployment: 3,
+};
 
 const resolvers: Resolvers = {
   Query: {
     product(_: unknown, args: { id: string }) {
-      return products.find((p) => p.id == args.id)!;
+      return products.find((p) => p.id == args.id)! as unknown as Product;
+    },
+    deprecatedProduct: (_, args, context) => {
+      if (
+        args.sku === deprecatedProduct.sku &&
+        args.package === deprecatedProduct.package
+      ) {
+        return deprecatedProduct;
+      } else {
+        return null;
+      }
+    },
+  },
+  DeprecatedProduct: {
+    createdBy: () => {
+      return user;
+    },
+    __resolveReference: (reference) => {
+      if (
+        reference.sku === deprecatedProduct.sku &&
+        reference.package === deprecatedProduct.package
+      ) {
+        return deprecatedProduct;
+      } else {
+        return null;
+      }
+    },
+  },
+  ProductResearch: {
+    __resolveReference: (reference) => {
+      return productResearch.find(
+        (p) => reference.study.caseNumber === p.study.caseNumber
+      )!;
     },
   },
   Product: {
     variation(parent) {
       if (parent.variation) return parent.variation;
-      const p = products.find((p) => p.id == parent.id)
+      const p = products.find((p) => p.id == parent.id);
       return p && p.variation ? p.variation : null;
+    },
+
+    research: (reference) => {
+      if (reference.id === "apollo-federation") {
+        return [productResearch[0]];
+      } else if (reference.id === "apollo-studio") {
+        return [productResearch[1]];
+      } else {
+        return [];
+      }
     },
 
     dimensions() {
@@ -45,39 +110,55 @@ const resolvers: Resolvers = {
     },
 
     createdBy() {
-      return { email: "support@apollographql.com", totalProductsCreated: 1337 };
+      return user;
     },
 
     __resolveReference(productRef) {
       // will be improved in the future: https://github.com/dotansimha/graphql-code-generator/pull/5645
-      let ref = productRef as Product
+      let ref = productRef as Product;
       if (ref.id) {
-        return products.find((p) => p.id == ref.id) || null;
+        return (products.find((p) => p.id == ref.id) ||
+          null) as unknown as Product;
       } else if (ref.sku && ref.package) {
-        return products.find(
+        return (products.find(
           (p) => p.sku == ref.sku && p.package == ref.package
-        ) || null;
+        ) || null) as unknown as Product;
       } else {
-        return products.find(
+        return (products.find(
           (p) =>
-            p.sku == ref.sku && p.variation && ref.variation && p.variation.id == ref.variation.id
-        ) || null;
+            p.sku == ref.sku &&
+            p.variation &&
+            ref.variation &&
+            p.variation.id == ref.variation.id
+        ) || null) as unknown as Product;
       }
     },
   },
   User: {
+    averageProductsCreatedPerYear: (user, args, context) => {
+      if (user.email != "support@apollographql.com") {
+        throw new GraphQLYogaError(
+          "user.email was not 'support@apollographql.com'"
+        );
+      }
+      return Math.round(
+        (user.totalProductsCreated || 0) / user.yearsOfEmployment
+      );
+    },
     name() {
       return "Jane Smith";
-    }
-  }
+    },
+  },
 };
 
 const server = createServer({
   schema: buildSubgraphSchema([{ typeDefs: gql(typeDefs), resolvers }]),
-  port: process.env.PRODUCTS_PORT ? parseInt(process.env.PRODUCTS_PORT, 10) : 4001,
-  endpoint: '/'
-})
+  port: process.env.PRODUCTS_PORT
+    ? parseInt(process.env.PRODUCTS_PORT, 10)
+    : 4001,
+  endpoint: "/",
+});
 
 server.start().then(() => {
-  console.log(`🚀 Server ready at http://localhost:4001`)
-})
+  console.log(`🚀 Server ready at http://localhost:4001`);
+});

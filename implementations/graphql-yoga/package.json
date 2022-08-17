@@ -11,15 +11,15 @@
   "author": "Charly POLY",
   "license": "ISC",
   "dependencies": {
-    "@apollo/subgraph": "^2.0.1",
-    "@graphql-yoga/node": "^2.2.1",
+    "@apollo/subgraph": "^2.0.5",
+    "@graphql-yoga/node": "^2.13.7",
     "graphql": "^16.3.0",
     "graphql-tag": "^2.12.6"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.6.2",
-    "@graphql-codegen/typescript": "^2.4.8",
-    "@graphql-codegen/typescript-resolvers": "^2.6.1",
+    "@graphql-codegen/cli": "^2.11.6",
+    "@graphql-codegen/typescript": "^2.7.3",
+    "@graphql-codegen/typescript-resolvers": "^2.7.3",
     "@types/node": "^17.0.23"
   }
 }
