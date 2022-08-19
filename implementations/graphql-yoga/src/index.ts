@@ -47,7 +47,7 @@ const user: User = {
   email: "support@apollographql.com",
   name: "Jane Smith",
   totalProductsCreated: 1337,
-  yearsOfEmployment: 3,
+  yearsOfEmployment: 10,
 };
 
 const resolvers: Resolvers = {
