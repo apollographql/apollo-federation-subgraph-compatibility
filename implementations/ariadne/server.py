@@ -175,11 +175,13 @@ def resolve_deprecated_product_reference(_, _info, representation):
 
 @product_research.reference_resolver
 def resolve_product_research_reference(_, _info, representation):
+    case_number = representation["study"]["caseNumber"]
+
     return next(
         (
             research
             for research in products_research_data
-            if research["study"]["caseNumber"] == representation["caseNumber"]
+            if research["study"]["caseNumber"] == case_number
         ),
         None,
     )
