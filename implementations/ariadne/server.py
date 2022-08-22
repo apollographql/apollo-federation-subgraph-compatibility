@@ -2,42 +2,114 @@ from typing import Optional
 
 import uvicorn
 
-from ariadne import QueryType
+from ariadne import QueryType, load_schema_from_path
 from ariadne.asgi import GraphQL
 from ariadne.contrib.federation import FederatedObjectType, make_federated_schema
 
 
-type_defs = '''
-    type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
-        id: ID!
-        sku: String
-        package: String
-        variation: ProductVariation
-        dimensions: ProductDimension
-        createdBy: User @provides(fields: "totalProductsCreated")
-    }
+# ------- data -------
 
-    type ProductDimension {
-        size: String
-        weight: Float
-    }
+dimension_data = {
+    "size": "small",
+    "weight": 1,
+    "unit": "kg",
+}
 
-    type ProductVariation {
-        id: ID!
-    }
+user_data = {
+    "email": "support@apollographql.com",
+    "name": "Jane Smith",
+    "totalProductsCreated": 1337,
+    "yearsOfEmployment": 10,
+}
 
-    type Query {
-        product(id: ID!): Product
-    }
 
-    type User @key(fields: "email") @extends {
-        email: ID! @external
-        totalProductsCreated: Int @external
-    }
-'''
+deprecated_product_data = {
+    "sku": "apollo-federation-v1",
+    "package": "@apollo/federation-v1",
+    "reason": "Migrate to Federation V2",
+    "createdBy": user_data["email"],
+}
+
+products_research_data = [
+    {
+        "study": {
+            "caseNumber": "1234",
+            "description": "Federation Study",
+        },
+        "outcome": None,
+    },
+    {
+        "study": {
+            "caseNumber": "1235",
+            "description": "Studio Study",
+        },
+        "outcome": None,
+    },
+]
+
+
+products_data = [
+    {
+        "id": "apollo-federation",
+        "sku": "federation",
+        "package": "@apollo/federation",
+        "variation": {"id": "OSS"},
+        "dimensions": dimension_data,
+        "research": [products_research_data[0]],
+        "createdBy": user_data["email"],
+        "notes": None,
+    },
+    {
+        "id": "apollo-studio",
+        "sku": "studio",
+        "package": "",
+        "variation": {"id": "platform"},
+        "dimensions": dimension_data,
+        "research": [products_research_data[1]],
+        "createdBy": user_data["email"],
+        "notes": None,
+    },
+]
+
+
+# ------- resolvers -------
+
+
+def get_product_by_id(id: str) -> Optional[dict]:
+    return next((product for product in products_data if product["id"] == id), None)
+
+
+def get_product_by_sku_and_package(sku: str, package: str) -> Optional[dict]:
+    return next(
+        (
+            product
+            for product in products_data
+            if product["sku"] == sku and product["package"] == package
+        ),
+        None,
+    )
+
+
+def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional[dict]:
+    return next(
+        (
+            product
+            for product in products_data
+            if product["sku"] == sku and product["variation"]["id"] == variation["id"]
+        ),
+        None,
+    )
+
+
+# ------- schema -------
 
 query = QueryType()
 product = FederatedObjectType("Product")
+deprecated_product = FederatedObjectType("DeprecatedProduct")
+product_research = FederatedObjectType("ProductResearch")
+user = FederatedObjectType("User")
+
+schema = load_schema_from_path("schema.graphql")
 
 
 @query.field("product")
@@ -45,94 +117,95 @@ def resolve_product(*_, id):
     return get_product_by_id(id)
 
 
-@product.field('variation')
+@query.field("deprecatedProduct")
+def resolve_deprecated_product(*_, sku: str, package: str):
+    # TODO: deprecated_product
+    return None
+
+
+# ------- product -------
+
+
+@product.field("variation")
 def resolve_product_variation(obj, *_):
-    return get_product_variation(obj)
+    if obj["variation"]:
+        return {"id": obj["variation"]["id"]}
+
+    variation = next(
+        (product for product in products_data if product["id"] == obj["id"]), None
+    )
+
+    return {"id": variation}
 
 
-@product.field('dimensions')
+@product.field("dimensions")
 def resolve_product_dimensions(*_):
-    return {'size': 'small', 'weight': 1}
+    return dimension_data
 
 
-@product.field('createdBy')
+@product.field("createdBy")
 def resolve_product_created_by(*_):
-    return {'email': 'support@apollographql.com',
-            'totalProductsCreated': 1337}
+    return user_data
 
 
 @product.reference_resolver
 def resolve_product_reference(_, _info, representation):
     if "sku" in representation and "package" in representation:
-        return get_product_by_sku_and_package(representation['sku'], representation['package'])
+        return get_product_by_sku_and_package(
+            representation["sku"], representation["package"]
+        )
     if "sku" in representation and "variation" in representation:
-        return get_product_by_sku_and_variation(representation['sku'], representation['variation'])
-    return get_product_by_id(representation['id'])
+        return get_product_by_sku_and_variation(
+            representation["sku"], representation["variation"]
+        )
+    return get_product_by_id(representation["id"])
 
 
-schema = make_federated_schema(type_defs, [query, product])
+# ------- deprecated product -------
+
+
+@deprecated_product.reference_resolver
+def resolve_deprecated_product_reference(_, _info, representation):
+    # TODO: check user data
+    return deprecated_product_data
+
+
+# ------- product research -------
+
+
+@product_research.reference_resolver
+def resolve_product_research_reference(_, _info, representation):
+    return next(
+        (
+            research
+            for research in products_research_data
+            if research["study"]["caseNumber"] == representation["caseNumber"]
+        ),
+        None,
+    )
+
+
+# ------- user -------
+
+
+@user.reference_resolver
+def resolve_user_reference(_, _info, representation):
+    return user_data
+
+
+@user.field("averageProductsCreatedPerYear")
+def resolve_user_average_products_created_per_year(obj, info):
+    if obj.get("totalProductCreated") is None:
+        return 0
+
+    return obj["totalProductsCreated"] / obj["yearsOfEmployment"]
+
+
+schema = make_federated_schema(
+    schema, [query, product, deprecated_product, product_research, user]
+)
 application = GraphQL(schema)
-
-products = [
-    {
-        "id": "apollo-federation",
-        "sku": "federation",
-        "package": "@apollo/federation",
-        "variation": "OSS",
-    },
-    {
-        "id": "apollo-studio",
-        "sku": "studio",
-        "package": "",
-        "variation": "platform",
-    },
-]
-
-
-def get_product_variation(reference):
-    if reference['variation']:
-        return {'id': reference['variation']}
-    variation = next((product for product in products if product['id']
-                     == reference['id']), None)
-    return {'id': variation}
-
-
-def get_product_by_id(id):
-    return next((product for product in products if product['id']
-                == id), None)
-
-
-def get_product_by_sku_and_package(sku: str, package: str) -> Optional[dict]:
-    data = next(
-        (
-            product
-            for product in products
-            if product["sku"] == sku and product["package"] == package
-        ),
-        None,
-    )
-
-    if not data:
-        return None
-
-    return data
-
-
-def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional[dict]:
-    data = next(
-        (
-            product
-            for product in products
-            if product["sku"] == sku and product["variation"] == variation["id"]
-        ),
-        None,
-    )
-
-    if not data:
-        return None
-
-    return data
 
 
 if __name__ == "__main__":
-    uvicorn.run(application, host='0.0.0.0', port=4001)
+    uvicorn.run(application, host="0.0.0.0", port=4001)
