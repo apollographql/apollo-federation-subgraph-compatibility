@@ -119,7 +119,12 @@ def resolve_product(*_, id):
 
 @query.field("deprecatedProduct")
 def resolve_deprecated_product(*_, sku: str, package: str):
-    # TODO: deprecated_product
+    if (
+        sku == deprecated_product_data["sku"]
+        and package == deprecated_product_data["package"]
+    ):
+        return deprecated_product_data
+
     return None
 
 
