@@ -166,7 +166,6 @@ def resolve_product_reference(_, _info, representation):
 
 @deprecated_product.reference_resolver
 def resolve_deprecated_product_reference(_, _info, representation):
-    # TODO: check user data
     return deprecated_product_data
 
 
