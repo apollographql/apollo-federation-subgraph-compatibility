@@ -1,4 +1,4 @@
-ariadne==0.15.1
+ariadne==0.16.0b1
 certifi==2020.12.5
 click==7.1.2
 graphql-core==3.2.1
