@@ -171,7 +171,15 @@ def resolve_product_reference(_, _info, representation):
 
 @deprecated_product.reference_resolver
 def resolve_deprecated_product_reference(_, _info, representation):
-    return deprecated_product_data
+    data = deprecated_product_data
+
+    if (
+        representation["sku"] == data["sku"]
+        and representation["package"] == data["package"]
+    ):
+        return data
+
+    return None
 
 
 # ------- product research -------
@@ -196,7 +204,19 @@ def resolve_product_research_reference(_, _info, representation):
 
 @user.reference_resolver
 def resolve_user_reference(_, _info, representation):
-    return user_data
+    if email := representation.get("email"):
+        user = {
+            "email": email,
+            "name": "Jane Smith",
+            "totalProductsCreated": 1337,
+        }
+
+        if yearsOfEmployment := representation.get("yearsOfEmployment"):
+            user["yearsOfEmployment"] = yearsOfEmployment
+
+        return user
+
+    return None
 
 
 @user.field("averageProductsCreatedPerYear")
