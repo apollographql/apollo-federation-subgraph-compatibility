@@ -1,13 +1,13 @@
 import caliban.Value.StringValue
 import caliban.federation.EntityResolver
-import caliban.federation.v2._
 import caliban.federation.tracing.ApolloFederatedTracing
+import caliban.federation.v2._
+import caliban.schema.Annotations.GQLDeprecated
 import caliban.schema.Schema.scalarSchema
 import caliban.schema.{ ArgBuilder, GenericSchema, Schema }
-import caliban.{ CalibanError, GraphQL, GraphQLInterpreter, InputValue, RootResolver }
-import zio.clock.Clock
+import caliban._
 import zio.query.ZQuery
-import zio.{ Has, IO, URIO, ZIO }
+import zio.{ IO, URIO, ZIO }
 
 case class ID(id: String) extends AnyVal
 
@@ -20,7 +20,9 @@ object ID {
 case class User(
   @GQLExternal email: ID,
   @GQLExternal totalProductsCreated: Option[Int],
-  @GQLOverride("users") name: Option[String]
+  @GQLOverride("users") name: Option[String],
+  @GQLRequires("totalProductsCreated yearsOfEmployment") averageProductsCreatedPerYear: Option[Int],
+  @GQLExternal yearsOfEmployment: Int
 )
 
 @GQLKey(fields = "id")
@@ -32,17 +34,39 @@ case class Product(
   `package`: Option[String],
   variation: Option[ProductVariation],
   dimensions: Option[ProductDimension],
-  @GQLProvides(fields = "totalProductsCreated") createdBy: Option[User],
-  @GQLTag("internal") notes: Option[String]
+  @GQLProvides(fields = "totalProductsCreated") createdBy: URIO[UserService, Option[User]],
+  @GQLTag("internal") notes: Option[String],
+  research: List[ProductResearch]
 )
 
 @GQLShareable
 case class ProductDimension(size: Option[String], weight: Option[Float], @GQLInaccessible unit: Option[String])
 case class ProductVariation(id: ID)
 
-object ProductApi extends GenericSchema[Has[ProductService]] {
+@GQLKey("study { caseNumber }")
+case class ProductResearch(
+  study: CaseStudy,
+  outcome: Option[String]
+)
+
+case class CaseStudy(
+  caseNumber: ID,
+  description: Option[String]
+)
+
+@GQLKey("sku package")
+case class DeprecatedProduct(
+  sku: String,
+  `package`: String,
+  reason: Option[String],
+  createdBy: URIO[UserService, Option[User]]
+)
+
+object ProductApi extends GenericSchema[ProductService with UserService] {
 
   case class IDArgs(id: ID)
+
+  case class DeprecatedProductArgs(sku: String, `package`: String)
 
   sealed trait ProductArgs
 
@@ -64,28 +88,46 @@ object ProductApi extends GenericSchema[Has[ProductService]] {
 
   }
 
-  val productResolver = EntityResolver.from[ProductArgs] {
-    case ProductArgs.IdOnly(id)                        =>
-      ZQuery.fromEffect(ZIO.serviceWith[ProductService](_.getProductById(id.id)))
-    case ProductArgs.SkuAndPackage(sku, p)             =>
-      ZQuery.fromEffect(ZIO.serviceWith[ProductService](_.getProductBySkuAndPackage(sku, p)))
-    case ProductArgs.SkuAndVariationId(sku, variation) =>
-      ZQuery.fromEffect(ZIO.serviceWith[ProductService](_.getProductBySkuAndVariationId(sku, variation.id.id)))
+  implicit val productSchema = gen[ProductService with UserService, Product]
 
-  }
+  val productResolver: EntityResolver[ProductService with UserService] =
+    EntityResolver[ProductService with UserService, ProductArgs, Product] {
+      case ProductArgs.IdOnly(id)                        =>
+        ZQuery.serviceWithZIO[ProductService](_.getProductById(id.id))
+      case ProductArgs.SkuAndPackage(sku, p)             =>
+        ZQuery.serviceWithZIO[ProductService](_.getProductBySkuAndPackage(sku, p))
+      case ProductArgs.SkuAndVariationId(sku, variation) =>
+        ZQuery.serviceWithZIO[ProductService](_.getProductBySkuAndVariationId(sku, variation.id.id))
+
+    }
 
   case class Query(
-    product: IDArgs => URIO[Has[ProductService], Option[Product]]
+    product: IDArgs => URIO[ProductService, Option[Product]],
+    @GQLDeprecated("Use product query instead") deprecatedProduct: DeprecatedProductArgs => URIO[
+      ProductService,
+      DeprecatedProduct
+    ]
   )
 
-  val graphql: GraphQL[Clock with Has[ProductService]] =
+  val graphql: GraphQL[ProductService with UserService] =
     GraphQL.graphQL(
       RootResolver(
-        Query(args => ZIO.serviceWith[ProductService](_.getProductById(args.id.id)))
+        Query(
+          args => ZIO.serviceWithZIO[ProductService](_.getProductById(args.id.id)),
+          args =>
+            ZIO.succeed(
+              DeprecatedProduct(
+                sku = "apollo-federation-v1",
+                `package` = "@apollo/federation-v1",
+                reason = Some("Migrate to Federation V2"),
+                createdBy = ZIO.serviceWithZIO[UserService](_.getUser)
+              )
+            )
+        )
       )
     ) @@ federated(productResolver) @@ ApolloFederatedTracing.wrapper
 
-  val interpreter: IO[CalibanError.ValidationError, GraphQLInterpreter[Clock with Has[ProductService], CalibanError]] =
+  val interpreter: IO[CalibanError.ValidationError, GraphQLInterpreter[ProductService with UserService, CalibanError]] =
     graphql.interpreter
 
 }

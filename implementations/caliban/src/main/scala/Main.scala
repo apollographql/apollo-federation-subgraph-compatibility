@@ -1,21 +1,21 @@
 import caliban.ZHttpAdapter
 import zhttp.http._
 import zhttp.service.Server
-import zio.console.putStrLn
-import zio.{ ExitCode, URIO }
+import zio.Console.printLine
+import zio.ZIOAppDefault
 
-object Main extends zio.App {
-  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
+object Main extends ZIOAppDefault {
+  override def run =
     (for {
-      _           <- putStrLn("Starting server")
+      _           <- printLine("Starting server")
       interpreter <- ProductApi.interpreter
       _           <- Server
                        .start(
                          4001,
-                         Http.route { case _ -> !! =>
+                         Http.collectHttp { case _ -> !! =>
                            ZHttpAdapter.makeHttpService(interpreter)
                          }
                        )
                        .forever
-    } yield ()).provideCustomLayer(ProductService.inMemory).exitCode
+    } yield ()).provide(ProductService.inMemory, UserService.inMemory).exitCode
 }
