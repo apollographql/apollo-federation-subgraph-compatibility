@@ -7,28 +7,6 @@ trait ProductService {
 }
 
 object ProductService {
-//  const productsResearch =
-//  [
-//  {
-//    study: {
-//      caseNumber: "1234",
-//      description: "Federation Study"
-//    }
-//    ,
-//    outcome: null
-//  }
-//  ,
-//  {
-//    study: {
-//      caseNumber: "1235",
-//      description: "Studio Study"
-//    }
-//    ,
-//    outcome: null
-//  }
-//  ,
-//  ]
-
   val productsResearch = List(
     ProductResearch(
       study = CaseStudy(ID("1234"), Some("Federation Study")),

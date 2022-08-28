@@ -68,6 +68,12 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
 
   case class DeprecatedProductArgs(sku: String, `package`: String)
 
+  case class UserArgs(email: ID)
+
+  case class CaseStudyArgs(caseNumber: ID)
+
+  case class ProductResearchArgs(study: CaseStudyArgs)
+
   sealed trait ProductArgs
 
   object ProductArgs {
@@ -88,7 +94,9 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
 
   }
 
-  implicit val productSchema = gen[ProductService with UserService, Product]
+  implicit val productSchema           = gen[ProductService with UserService, Product]
+  implicit val userSchema              = gen[ProductService with UserService, User]
+  implicit val deprecatedProductSchema = gen[ProductService with UserService, DeprecatedProduct]
 
   val productResolver: EntityResolver[ProductService with UserService] =
     EntityResolver[ProductService with UserService, ProductArgs, Product] {
@@ -98,14 +106,40 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
         ZQuery.serviceWithZIO[ProductService](_.getProductBySkuAndPackage(sku, p))
       case ProductArgs.SkuAndVariationId(sku, variation) =>
         ZQuery.serviceWithZIO[ProductService](_.getProductBySkuAndVariationId(sku, variation.id.id))
+    }
 
+  val userResolver: EntityResolver[UserService with ProductService] =
+    EntityResolver[UserService with ProductService, UserArgs, User] { args =>
+      ZQuery.serviceWithZIO[UserService](_.getUser)
+    }
+
+  val productResearchResolver: EntityResolver[UserService with ProductService] =
+    EntityResolver.from[ProductResearchArgs] { args =>
+      ZQuery.some(
+        ProductResearch(
+          CaseStudy(caseNumber = args.study.caseNumber, Some("Federation Study")),
+          None
+        )
+      )
+    }
+
+  val deprecatedProductResolver: EntityResolver[ProductService with UserService] =
+    EntityResolver[ProductService with UserService, DeprecatedProductArgs, DeprecatedProduct] { args =>
+      ZQuery.some(
+        DeprecatedProduct(
+          sku = "apollo-federation-v1",
+          `package` = "@apollo/federation-v1",
+          reason = Some("Migrate to Federation V2"),
+          createdBy = ZIO.serviceWithZIO[UserService](_.getUser)
+        )
+      )
     }
 
   case class Query(
     product: IDArgs => URIO[ProductService, Option[Product]],
     @GQLDeprecated("Use product query instead") deprecatedProduct: DeprecatedProductArgs => URIO[
       ProductService,
-      DeprecatedProduct
+      Option[DeprecatedProduct]
     ]
   )
 
@@ -115,7 +149,7 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
         Query(
           args => ZIO.serviceWithZIO[ProductService](_.getProductById(args.id.id)),
           args =>
-            ZIO.succeed(
+            ZIO.some(
               DeprecatedProduct(
                 sku = "apollo-federation-v1",
                 `package` = "@apollo/federation-v1",
@@ -125,7 +159,12 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
             )
         )
       )
-    ) @@ federated(productResolver) @@ ApolloFederatedTracing.wrapper
+    ) @@ federated(
+      productResolver,
+      userResolver,
+      productResearchResolver,
+      deprecatedProductResolver
+    ) @@ ApolloFederatedTracing.wrapper
 
   val interpreter: IO[CalibanError.ValidationError, GraphQLInterpreter[ProductService with UserService, CalibanError]] =
     graphql.interpreter
