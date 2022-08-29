@@ -1,1 +1,4 @@
 target
+docker-compose.yaml
+metadata.yaml
+Dockerfile
