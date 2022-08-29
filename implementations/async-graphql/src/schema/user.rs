@@ -7,6 +7,7 @@ pub struct User {
     #[graphql(external)]
     pub email: ID,
 
+    #[graphql(override_from = "users")]
     pub name: Option<String>,
 
     #[graphql(external)]
