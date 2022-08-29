@@ -23,9 +23,9 @@ The following open-source GraphQL server libraries and hosted subgraphs provide 
 
 | Icon | Description |
 | ---- | ----------- |
-| 🟩 | Functionality is supported |
-| 🟥 | Critical functionality is not supported |
-| 🔲 | Additional Federation functionality is not supported |
+| 🟢 | Functionality is supported |
+| ❌ | Critical functionality is NOT supported |
+| 🔲 | Additional federation functionality is NOT supported |
 
 ## C# / .NET
 
