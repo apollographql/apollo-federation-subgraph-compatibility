@@ -29,7 +29,7 @@
   "dependencies": {
     "debug": "^4.3.4",
     "execa": "^5.1.1",
-    "graphql": "^16.5.0",
+    "graphql": "^16.6.0",
     "jest": "^28.1.0",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
