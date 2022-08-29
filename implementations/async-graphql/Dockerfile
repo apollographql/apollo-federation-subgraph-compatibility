@@ -1,17 +1,16 @@
-FROM rust:1.63 as build
+FROM lukemathwalker/cargo-chef:latest-rust-1.63 AS chef
+WORKDIR app
 
-WORKDIR /usr/src/federation-async-graphql-compatibility
+FROM chef as planner
+COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
 
-RUN USER=root cargo init
-COPY Cargo.toml Cargo.lock ./
+FROM chef AS builder
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json
+COPY . .
 RUN cargo build --release
 
-COPY src ./src
-
-RUN cargo install --path .
-
 FROM gcr.io/distroless/cc-debian10
-
-COPY --from=build /usr/local/cargo/bin/federation-async-graphql-compatibility /usr/local/bin/federation-async-graphql-compatibility
-
+COPY --from=builder /app/target/release/federation-async-graphql-compatibility /usr/local/bin/federation-async-graphql-compatibility
 CMD ["federation-async-graphql-compatibility"]
