@@ -44,6 +44,10 @@ implement to be used in the testing suite:
    should only affect the `products` service defined.
 5. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`
+6. Copy the `.github/workflows/templates/test-subgraph-library.yaml.template` and rename
+   it to include the name of your library under `.github/workflows/test-subgraph-<library>.yaml`
+   - This is a workflow that will be triggered for PRs opened against your implementation.
+   - Modify the template so it only triggers for your implementation.
 
 ## How can I have my hosted subgraph included in this?
 
@@ -82,6 +86,11 @@ compatibility tests will fail.**
    export URL_FOO=http://example.com
    npm run test foo
    ```
+
+6. Copy the `.github/workflows/templates/test-subgraph-hosted.yaml.template` and rename
+   it to include the name of your implementation under `.github/workflows/test-subgraph-<hosted>.yaml`
+   - This is a workflow that will be triggered for PRs opened against your implementation.
+   - Modify the template so it only triggers for your implementation.
 
 ### Expected Data Sets
 

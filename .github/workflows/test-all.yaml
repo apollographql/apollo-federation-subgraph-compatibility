@@ -32,9 +32,6 @@ jobs:
       matrix:
         name: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
-    # uses: ./.github/workflows/test-subgraph.yaml
-    # with:
-    #   library: "${{ matrix.name }}"
 
     steps:
       - uses: actions/checkout@v3
