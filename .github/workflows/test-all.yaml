@@ -1,11 +1,15 @@
 name: Test
 
-on: 
+on:
   pull_request_target:
     branches:
       - main
-    paths-ignore:
-      - '**.md'
+    paths:
+      - 'src/**'
+      - 'subgraphs/**'
+      - '*.json'
+      - '*.yaml'
+      - '*.graphql'
 
 jobs:
   build-matrix:
@@ -13,7 +17,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: generate matrix
@@ -28,10 +32,18 @@ jobs:
       matrix:
         name: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     runs-on: ubuntu-latest
+    # uses: ./.github/workflows/test-subgraph.yaml
+    # with:
+    #   library: "${{ matrix.name }}"
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
       - run: npm install
       - run: npm run setup
       - run: npm run test ${{ matrix.name }}

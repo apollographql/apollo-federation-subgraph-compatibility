@@ -1,0 +1,14 @@
+name: Strawberry GraphQL Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/strawberry-graphql/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "strawberry-graphql"

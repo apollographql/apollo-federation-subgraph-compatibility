@@ -1,0 +1,14 @@
+name: GraphQL Java Kickstart Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/graphql-java-kickstart/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "graphql-java-kickstart"

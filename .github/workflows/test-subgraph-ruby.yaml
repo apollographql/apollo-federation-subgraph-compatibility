@@ -1,0 +1,14 @@
+name: GraphQL Ruby Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/ruby/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "ruby"
