@@ -20,7 +20,7 @@ export const TESTS = [
   { assertion: "repeatable @key", column: "repeatable @key", fedVersion: 1, required: false },
   { assertion: "@requires", column: "@requires", fedVersion: 1, required: false },
   { assertion: "@provides", column: "@provides", fedVersion: 1, required: false },
-  { assertion: "ftv1", column: "federated tracing v1", fedVersion: 1, required: false },
+  { assertion: "ftv1", column: "federated tracing", fedVersion: 1, required: false },
   { assertion: "@link", column: "@link", fedVersion: 2, required: true },
   { assertion: "@shareable", column: "@shareable", fedVersion: 2, required: false },
   { assertion: "@tag", column: "@tag", fedVersion: 2, required: false },
