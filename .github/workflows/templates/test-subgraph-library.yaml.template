@@ -1,0 +1,14 @@
+name: <Implementation> Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/<implementation>/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "<implementation>"

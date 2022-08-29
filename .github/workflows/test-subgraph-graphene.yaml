@@ -1,0 +1,14 @@
+name: Graphene Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/graphene/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "graphene"
