@@ -26,6 +26,7 @@ jobs:
           echo "::set-output name=matrix::$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]"))]')"
 
   build:
+    timeout-minutes: 60
     needs: build-matrix
     strategy:
       fail-fast: false
