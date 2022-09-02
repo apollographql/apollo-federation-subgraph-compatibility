@@ -8,9 +8,7 @@ describe("@shareable", () => {
     });
 
     const { sdl } = response.data._service;
-    expect(stripIgnoredCharacters(sdl)).toContain(
-      "type ProductDimension@shareable"
-    );
+    expect(stripIgnoredCharacters(sdl)).toMatch(/type ProductDimension(@shareable|@federation__shareable)/);
   });
 
   it("should be able to resolve @shareable ProductDimension types", async () => {

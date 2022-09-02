@@ -81,3 +81,5 @@ obj
 
 # ignore router executable
 router
+
+.bundle
