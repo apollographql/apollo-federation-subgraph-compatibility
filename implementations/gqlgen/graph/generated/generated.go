@@ -37,20 +37,36 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	DeprecatedProduct() DeprecatedProductResolver
 	Entity() EntityResolver
 	Product() ProductResolver
 	Query() QueryResolver
+	User() UserResolver
 }
 
 type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	CaseStudy struct {
+		CaseNumber  func(childComplexity int) int
+		Description func(childComplexity int) int
+	}
+
+	DeprecatedProduct struct {
+		CreatedBy func(childComplexity int) int
+		Package   func(childComplexity int) int
+		Reason    func(childComplexity int) int
+		Sku       func(childComplexity int) int
+	}
+
 	Entity struct {
-		FindProductByID                func(childComplexity int, id string) int
-		FindProductBySkuAndPackage     func(childComplexity int, sku *string, packageArg *string) int
-		FindProductBySkuAndVariationID func(childComplexity int, sku *string, variationID string) int
-		FindUserByEmail                func(childComplexity int, email string) int
+		FindDeprecatedProductBySkuAndPackage func(childComplexity int, sku string, packageArg string) int
+		FindProductByID                      func(childComplexity int, id string) int
+		FindProductBySkuAndPackage           func(childComplexity int, sku *string, packageArg *string) int
+		FindProductBySkuAndVariationID       func(childComplexity int, sku *string, variationID string) int
+		FindProductResearchByStudyCaseNumber func(childComplexity int, studyCaseNumber string) int
+		FindUserByEmail                      func(childComplexity int, email string) int
 	}
 
 	Product struct {
@@ -59,6 +75,7 @@ type ComplexityRoot struct {
 		ID         func(childComplexity int) int
 		Notes      func(childComplexity int) int
 		Package    func(childComplexity int) int
+		Research   func(childComplexity int) int
 		Sku        func(childComplexity int) int
 		Variation  func(childComplexity int) int
 	}
@@ -69,20 +86,28 @@ type ComplexityRoot struct {
 		Weight func(childComplexity int) int
 	}
 
+	ProductResearch struct {
+		Outcome func(childComplexity int) int
+		Study   func(childComplexity int) int
+	}
+
 	ProductVariation struct {
 		ID func(childComplexity int) int
 	}
 
 	Query struct {
+		DeprecatedProduct  func(childComplexity int, sku string, packageArg string) int
 		Product            func(childComplexity int, id string) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
 
 	User struct {
-		Email                func(childComplexity int) int
-		Name                 func(childComplexity int) int
-		TotalProductsCreated func(childComplexity int) int
+		AverageProductsCreatedPerYear func(childComplexity int) int
+		Email                         func(childComplexity int) int
+		Name                          func(childComplexity int) int
+		TotalProductsCreated          func(childComplexity int) int
+		YearsOfEmployment             func(childComplexity int) int
 	}
 
 	_Service struct {
@@ -90,17 +115,28 @@ type ComplexityRoot struct {
 	}
 }
 
+type DeprecatedProductResolver interface {
+	CreatedBy(ctx context.Context, obj *model.DeprecatedProduct) (*model.User, error)
+}
 type EntityResolver interface {
+	FindDeprecatedProductBySkuAndPackage(ctx context.Context, sku string, packageArg string) (*model.DeprecatedProduct, error)
 	FindProductByID(ctx context.Context, id string) (*model.Product, error)
 	FindProductBySkuAndPackage(ctx context.Context, sku *string, packageArg *string) (*model.Product, error)
 	FindProductBySkuAndVariationID(ctx context.Context, sku *string, variationID string) (*model.Product, error)
+	FindProductResearchByStudyCaseNumber(ctx context.Context, studyCaseNumber string) (*model.ProductResearch, error)
 	FindUserByEmail(ctx context.Context, email string) (*model.User, error)
 }
 type ProductResolver interface {
 	CreatedBy(ctx context.Context, obj *model.Product) (*model.User, error)
+
+	Research(ctx context.Context, obj *model.Product) ([]*model.ProductResearch, error)
 }
 type QueryResolver interface {
 	Product(ctx context.Context, id string) (*model.Product, error)
+	DeprecatedProduct(ctx context.Context, sku string, packageArg string) (*model.DeprecatedProduct, error)
+}
+type UserResolver interface {
+	AverageProductsCreatedPerYear(ctx context.Context, obj *model.User) (*int, error)
 }
 
 type executableSchema struct {
@@ -117,6 +153,60 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "CaseStudy.caseNumber":
+		if e.complexity.CaseStudy.CaseNumber == nil {
+			break
+		}
+
+		return e.complexity.CaseStudy.CaseNumber(childComplexity), true
+
+	case "CaseStudy.description":
+		if e.complexity.CaseStudy.Description == nil {
+			break
+		}
+
+		return e.complexity.CaseStudy.Description(childComplexity), true
+
+	case "DeprecatedProduct.createdBy":
+		if e.complexity.DeprecatedProduct.CreatedBy == nil {
+			break
+		}
+
+		return e.complexity.DeprecatedProduct.CreatedBy(childComplexity), true
+
+	case "DeprecatedProduct.package":
+		if e.complexity.DeprecatedProduct.Package == nil {
+			break
+		}
+
+		return e.complexity.DeprecatedProduct.Package(childComplexity), true
+
+	case "DeprecatedProduct.reason":
+		if e.complexity.DeprecatedProduct.Reason == nil {
+			break
+		}
+
+		return e.complexity.DeprecatedProduct.Reason(childComplexity), true
+
+	case "DeprecatedProduct.sku":
+		if e.complexity.DeprecatedProduct.Sku == nil {
+			break
+		}
+
+		return e.complexity.DeprecatedProduct.Sku(childComplexity), true
+
+	case "Entity.findDeprecatedProductBySkuAndPackage":
+		if e.complexity.Entity.FindDeprecatedProductBySkuAndPackage == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findDeprecatedProductBySkuAndPackage_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindDeprecatedProductBySkuAndPackage(childComplexity, args["sku"].(string), args["packageArg"].(string)), true
 
 	case "Entity.findProductByID":
 		if e.complexity.Entity.FindProductByID == nil {
@@ -153,6 +243,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindProductBySkuAndVariationID(childComplexity, args["sku"].(*string), args["variationID"].(string)), true
+
+	case "Entity.findProductResearchByStudyCaseNumber":
+		if e.complexity.Entity.FindProductResearchByStudyCaseNumber == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findProductResearchByStudyCaseNumber_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindProductResearchByStudyCaseNumber(childComplexity, args["studyCaseNumber"].(string)), true
 
 	case "Entity.findUserByEmail":
 		if e.complexity.Entity.FindUserByEmail == nil {
@@ -201,6 +303,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Product.Package(childComplexity), true
 
+	case "Product.research":
+		if e.complexity.Product.Research == nil {
+			break
+		}
+
+		return e.complexity.Product.Research(childComplexity), true
+
 	case "Product.sku":
 		if e.complexity.Product.Sku == nil {
 			break
@@ -236,12 +345,38 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ProductDimension.Weight(childComplexity), true
 
+	case "ProductResearch.outcome":
+		if e.complexity.ProductResearch.Outcome == nil {
+			break
+		}
+
+		return e.complexity.ProductResearch.Outcome(childComplexity), true
+
+	case "ProductResearch.study":
+		if e.complexity.ProductResearch.Study == nil {
+			break
+		}
+
+		return e.complexity.ProductResearch.Study(childComplexity), true
+
 	case "ProductVariation.id":
 		if e.complexity.ProductVariation.ID == nil {
 			break
 		}
 
 		return e.complexity.ProductVariation.ID(childComplexity), true
+
+	case "Query.deprecatedProduct":
+		if e.complexity.Query.DeprecatedProduct == nil {
+			break
+		}
+
+		args, err := ec.field_Query_deprecatedProduct_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.DeprecatedProduct(childComplexity, args["sku"].(string), args["package"].(string)), true
 
 	case "Query.product":
 		if e.complexity.Query.Product == nil {
@@ -274,6 +409,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "User.averageProductsCreatedPerYear":
+		if e.complexity.User.AverageProductsCreatedPerYear == nil {
+			break
+		}
+
+		return e.complexity.User.AverageProductsCreatedPerYear(childComplexity), true
+
 	case "User.email":
 		if e.complexity.User.Email == nil {
 			break
@@ -295,6 +437,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.TotalProductsCreated(childComplexity), true
 
+	case "User.yearsOfEmployment":
+		if e.complexity.User.YearsOfEmployment == nil {
+			break
+		}
+
+		return e.complexity.User.YearsOfEmployment(childComplexity), true
+
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
 			break
@@ -309,6 +458,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e}
+	inputUnmarshalMap := graphql.BuildUnmarshalerMap()
 	first := true
 
 	switch rc.Operation.Operation {
@@ -318,6 +468,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 				return nil
 			}
 			first = false
+			ctx = graphql.WithUnmarshalerMap(ctx, inputUnmarshalMap)
 			data := ec._Query(ctx, rc.Operation.SelectionSet)
 			var buf bytes.Buffer
 			data.MarshalGQL(&buf)
@@ -352,23 +503,57 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "graph/schema.graphqls", Input: `extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.0",
-        import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override"])
+	{Name: "../schema.graphqls", Input: `extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.0",
+    import: [
+      "@extends",
+      "@external",
+      "@key",
+      "@inaccessible",
+      "@override",
+      "@provides",
+      "@requires",
+      "@shareable",
+      "@tag"
+    ]
+  )
 
 type Product
   @key(fields: "id")
   @key(fields: "sku package")
   @key(fields: "sku variation { id }") {
+    id: ID!
+    sku: String
+    package: String
+    variation: ProductVariation
+    dimensions: ProductDimension
+    createdBy: User
+        @provides(fields: "totalProductsCreated")
+        @goField(forceResolver: true)
+    notes: String @tag(name: "internal")
+    research: [ProductResearch!]! @goField(forceResolver: true)
+}
+
+type DeprecatedProduct @key(fields: "sku package") {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User @goField(forceResolver: true)
+}
+
+type ProductVariation {
   id: ID!
-  sku: String
-  package: String
-  variation: ProductVariation
-  dimensions: ProductDimension
-  createdBy: User
-    @provides(fields: "totalProductsCreated")
-    @goField(forceResolver: true)
-  notes: String @tag(name: "internal")
+}
+
+type ProductResearch @key(fields: "study { caseNumber }") {
+  study: CaseStudy!
+  outcome: String
+}
+
+type CaseStudy {
+  caseNumber: ID!
+  description: String
 }
 
 type ProductDimension @shareable {
@@ -377,18 +562,20 @@ type ProductDimension @shareable {
   unit: String @inaccessible
 }
 
-type ProductVariation {
-  id: ID!
-}
-
-type Query {
+extend type Query {
   product(id: ID!): Product
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
 }
 
-type User @key(fields: "email") @extends {
+extend type User @key(fields: "email") {
+  averageProductsCreatedPerYear: Int
+      # @requires is not supported due to https://github.com/99designs/gqlgen/issues/2357
+      # @requires(fields: "totalProductsCreated yearsOfEmployment")
+      @goField(forceResolver: true)
   email: ID! @external
   name: String @override(from: "users")
   totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
 }
 
 directive @goModel(
@@ -405,10 +592,10 @@ directive @goTag(
   key: String!
   value: String
 ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION`, BuiltIn: false},
-	{Name: "federation/directives.graphql", Input: `
+	{Name: "../../federation/directives.graphql", Input: `
 	scalar _Any
 	scalar _FieldSet
-	
+
 	directive @external on FIELD_DEFINITION
 	directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 	directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
@@ -421,15 +608,17 @@ directive @goTag(
 	directive @override(from: String!) on FIELD_DEFINITION
 	directive @inaccessible on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
 `, BuiltIn: true},
-	{Name: "federation/entity.graphql", Input: `
+	{Name: "../../federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Product | User
+union _Entity = DeprecatedProduct | Product | ProductResearch | User
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findProductByID(id: ID!,): Product!
+		findDeprecatedProductBySkuAndPackage(sku: String!,packageArg: String!,): DeprecatedProduct!
+	findProductByID(id: ID!,): Product!
 	findProductBySkuAndPackage(sku: String,packageArg: String,): Product!
 	findProductBySkuAndVariationID(sku: String,variationID: ID!,): Product!
+	findProductResearchByStudyCaseNumber(studyCaseNumber: ID!,): ProductResearch!
 	findUserByEmail(email: ID!,): User!
 
 }
@@ -449,6 +638,30 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Entity_findDeprecatedProductBySkuAndPackage_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["sku"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sku"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sku"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["packageArg"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("packageArg"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["packageArg"] = arg1
+	return args, nil
+}
 
 func (ec *executionContext) field_Entity_findProductByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -513,6 +726,21 @@ func (ec *executionContext) field_Entity_findProductBySkuAndVariationID_args(ctx
 	return args, nil
 }
 
+func (ec *executionContext) field_Entity_findProductResearchByStudyCaseNumber_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["studyCaseNumber"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("studyCaseNumber"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["studyCaseNumber"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Entity_findUserByEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -555,6 +783,30 @@ func (ec *executionContext) field_Query__entities_args(ctx context.Context, rawA
 		}
 	}
 	args["representations"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_deprecatedProduct_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["sku"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sku"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sku"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["package"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("package"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["package"] = arg1
 	return args, nil
 }
 
@@ -611,6 +863,338 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _CaseStudy_caseNumber(ctx context.Context, field graphql.CollectedField, obj *model.CaseStudy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CaseStudy_caseNumber(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CaseNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CaseStudy_caseNumber(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CaseStudy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CaseStudy_description(ctx context.Context, field graphql.CollectedField, obj *model.CaseStudy) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CaseStudy_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CaseStudy_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CaseStudy",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeprecatedProduct_sku(ctx context.Context, field graphql.CollectedField, obj *model.DeprecatedProduct) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_DeprecatedProduct_sku(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sku, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_DeprecatedProduct_sku(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeprecatedProduct",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeprecatedProduct_package(ctx context.Context, field graphql.CollectedField, obj *model.DeprecatedProduct) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_DeprecatedProduct_package(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Package, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_DeprecatedProduct_package(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeprecatedProduct",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeprecatedProduct_reason(ctx context.Context, field graphql.CollectedField, obj *model.DeprecatedProduct) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_DeprecatedProduct_reason(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reason, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_DeprecatedProduct_reason(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeprecatedProduct",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeprecatedProduct_createdBy(ctx context.Context, field graphql.CollectedField, obj *model.DeprecatedProduct) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_DeprecatedProduct_createdBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.DeprecatedProduct().CreatedBy(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖsubgraphᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_DeprecatedProduct_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeprecatedProduct",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "averageProductsCreatedPerYear":
+				return ec.fieldContext_User_averageProductsCreatedPerYear(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "totalProductsCreated":
+				return ec.fieldContext_User_totalProductsCreated(ctx, field)
+			case "yearsOfEmployment":
+				return ec.fieldContext_User_yearsOfEmployment(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Entity_findDeprecatedProductBySkuAndPackage(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Entity_findDeprecatedProductBySkuAndPackage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindDeprecatedProductBySkuAndPackage(rctx, fc.Args["sku"].(string), fc.Args["packageArg"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeprecatedProduct)
+	fc.Result = res
+	return ec.marshalNDeprecatedProduct2ᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProduct(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Entity_findDeprecatedProductBySkuAndPackage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sku":
+				return ec.fieldContext_DeprecatedProduct_sku(ctx, field)
+			case "package":
+				return ec.fieldContext_DeprecatedProduct_package(ctx, field)
+			case "reason":
+				return ec.fieldContext_DeprecatedProduct_reason(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_DeprecatedProduct_createdBy(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeprecatedProduct", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Entity_findDeprecatedProductBySkuAndPackage_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Entity_findProductByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Entity_findProductByID(ctx, field)
 	if err != nil {
@@ -664,6 +1248,8 @@ func (ec *executionContext) fieldContext_Entity_findProductByID(ctx context.Cont
 				return ec.fieldContext_Product_createdBy(ctx, field)
 			case "notes":
 				return ec.fieldContext_Product_notes(ctx, field)
+			case "research":
+				return ec.fieldContext_Product_research(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -735,6 +1321,8 @@ func (ec *executionContext) fieldContext_Entity_findProductBySkuAndPackage(ctx c
 				return ec.fieldContext_Product_createdBy(ctx, field)
 			case "notes":
 				return ec.fieldContext_Product_notes(ctx, field)
+			case "research":
+				return ec.fieldContext_Product_research(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -806,6 +1394,8 @@ func (ec *executionContext) fieldContext_Entity_findProductBySkuAndVariationID(c
 				return ec.fieldContext_Product_createdBy(ctx, field)
 			case "notes":
 				return ec.fieldContext_Product_notes(ctx, field)
+			case "research":
+				return ec.fieldContext_Product_research(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -818,6 +1408,67 @@ func (ec *executionContext) fieldContext_Entity_findProductBySkuAndVariationID(c
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Entity_findProductBySkuAndVariationID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Entity_findProductResearchByStudyCaseNumber(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Entity_findProductResearchByStudyCaseNumber(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindProductResearchByStudyCaseNumber(rctx, fc.Args["studyCaseNumber"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.ProductResearch)
+	fc.Result = res
+	return ec.marshalNProductResearch2ᚖsubgraphᚋgraphᚋmodelᚐProductResearch(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Entity_findProductResearchByStudyCaseNumber(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "study":
+				return ec.fieldContext_ProductResearch_study(ctx, field)
+			case "outcome":
+				return ec.fieldContext_ProductResearch_outcome(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ProductResearch", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Entity_findProductResearchByStudyCaseNumber_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -863,12 +1514,16 @@ func (ec *executionContext) fieldContext_Entity_findUserByEmail(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "averageProductsCreatedPerYear":
+				return ec.fieldContext_User_averageProductsCreatedPerYear(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "totalProductsCreated":
 				return ec.fieldContext_User_totalProductsCreated(ctx, field)
+			case "yearsOfEmployment":
+				return ec.fieldContext_User_yearsOfEmployment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
@@ -1143,12 +1798,16 @@ func (ec *executionContext) fieldContext_Product_createdBy(ctx context.Context, 
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "averageProductsCreatedPerYear":
+				return ec.fieldContext_User_averageProductsCreatedPerYear(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "totalProductsCreated":
 				return ec.fieldContext_User_totalProductsCreated(ctx, field)
+			case "yearsOfEmployment":
+				return ec.fieldContext_User_yearsOfEmployment(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
@@ -1192,6 +1851,56 @@ func (ec *executionContext) fieldContext_Product_notes(ctx context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Product_research(ctx context.Context, field graphql.CollectedField, obj *model.Product) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Product_research(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Product().Research(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.ProductResearch)
+	fc.Result = res
+	return ec.marshalNProductResearch2ᚕᚖsubgraphᚋgraphᚋmodelᚐProductResearchᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Product_research(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Product",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "study":
+				return ec.fieldContext_ProductResearch_study(ctx, field)
+			case "outcome":
+				return ec.fieldContext_ProductResearch_outcome(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ProductResearch", field.Name)
 		},
 	}
 	return fc, nil
@@ -1320,6 +2029,97 @@ func (ec *executionContext) fieldContext_ProductDimension_unit(ctx context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _ProductResearch_study(ctx context.Context, field graphql.CollectedField, obj *model.ProductResearch) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProductResearch_study(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Study, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CaseStudy)
+	fc.Result = res
+	return ec.marshalNCaseStudy2ᚖsubgraphᚋgraphᚋmodelᚐCaseStudy(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProductResearch_study(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProductResearch",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "caseNumber":
+				return ec.fieldContext_CaseStudy_caseNumber(ctx, field)
+			case "description":
+				return ec.fieldContext_CaseStudy_description(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CaseStudy", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ProductResearch_outcome(ctx context.Context, field graphql.CollectedField, obj *model.ProductResearch) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ProductResearch_outcome(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Outcome, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ProductResearch_outcome(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ProductResearch",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _ProductVariation_id(ctx context.Context, field graphql.CollectedField, obj *model.ProductVariation) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ProductVariation_id(ctx, field)
 	if err != nil {
@@ -1414,6 +2214,8 @@ func (ec *executionContext) fieldContext_Query_product(ctx context.Context, fiel
 				return ec.fieldContext_Product_createdBy(ctx, field)
 			case "notes":
 				return ec.fieldContext_Product_notes(ctx, field)
+			case "research":
+				return ec.fieldContext_Product_research(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -1426,6 +2228,68 @@ func (ec *executionContext) fieldContext_Query_product(ctx context.Context, fiel
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_product_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_deprecatedProduct(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_deprecatedProduct(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().DeprecatedProduct(rctx, fc.Args["sku"].(string), fc.Args["package"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeprecatedProduct)
+	fc.Result = res
+	return ec.marshalODeprecatedProduct2ᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProduct(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_deprecatedProduct(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sku":
+				return ec.fieldContext_DeprecatedProduct_sku(ctx, field)
+			case "package":
+				return ec.fieldContext_DeprecatedProduct_package(ctx, field)
+			case "reason":
+				return ec.fieldContext_DeprecatedProduct_reason(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_DeprecatedProduct_createdBy(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeprecatedProduct", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_deprecatedProduct_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -1664,6 +2528,47 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _User_averageProductsCreatedPerYear(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_averageProductsCreatedPerYear(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.User().AverageProductsCreatedPerYear(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_averageProductsCreatedPerYear(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_User_email(ctx, field)
 	if err != nil {
@@ -1778,6 +2683,50 @@ func (ec *executionContext) _User_totalProductsCreated(ctx context.Context, fiel
 }
 
 func (ec *executionContext) fieldContext_User_totalProductsCreated(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _User_yearsOfEmployment(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_yearsOfEmployment(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.YearsOfEmployment, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_yearsOfEmployment(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -3612,6 +4561,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case model.DeprecatedProduct:
+		return ec._DeprecatedProduct(ctx, sel, &obj)
+	case *model.DeprecatedProduct:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._DeprecatedProduct(ctx, sel, obj)
 	case model.Product:
 		return ec._Product(ctx, sel, &obj)
 	case *model.Product:
@@ -3619,6 +4575,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Product(ctx, sel, obj)
+	case model.ProductResearch:
+		return ec._ProductResearch(ctx, sel, &obj)
+	case *model.ProductResearch:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ProductResearch(ctx, sel, obj)
 	case model.User:
 		return ec._User(ctx, sel, &obj)
 	case *model.User:
@@ -3634,6 +4597,94 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var caseStudyImplementors = []string{"CaseStudy"}
+
+func (ec *executionContext) _CaseStudy(ctx context.Context, sel ast.SelectionSet, obj *model.CaseStudy) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, caseStudyImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CaseStudy")
+		case "caseNumber":
+
+			out.Values[i] = ec._CaseStudy_caseNumber(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "description":
+
+			out.Values[i] = ec._CaseStudy_description(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var deprecatedProductImplementors = []string{"DeprecatedProduct", "_Entity"}
+
+func (ec *executionContext) _DeprecatedProduct(ctx context.Context, sel ast.SelectionSet, obj *model.DeprecatedProduct) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deprecatedProductImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeprecatedProduct")
+		case "sku":
+
+			out.Values[i] = ec._DeprecatedProduct_sku(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "package":
+
+			out.Values[i] = ec._DeprecatedProduct_package(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "reason":
+
+			out.Values[i] = ec._DeprecatedProduct_reason(ctx, field, obj)
+
+		case "createdBy":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._DeprecatedProduct_createdBy(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
 
 var entityImplementors = []string{"Entity"}
 
@@ -3654,6 +4705,29 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
+		case "findDeprecatedProductBySkuAndPackage":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findDeprecatedProductBySkuAndPackage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "findProductByID":
 			field := field
 
@@ -3710,6 +4784,29 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 					}
 				}()
 				res = ec._Entity_findProductBySkuAndVariationID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "findProductResearchByStudyCaseNumber":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findProductResearchByStudyCaseNumber(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -3811,6 +4908,26 @@ func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, 
 
 			out.Values[i] = ec._Product_notes(ctx, field, obj)
 
+		case "research":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Product_research(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3843,6 +4960,38 @@ func (ec *executionContext) _ProductDimension(ctx context.Context, sel ast.Selec
 		case "unit":
 
 			out.Values[i] = ec._ProductDimension_unit(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var productResearchImplementors = []string{"ProductResearch", "_Entity"}
+
+func (ec *executionContext) _ProductResearch(ctx context.Context, sel ast.SelectionSet, obj *model.ProductResearch) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, productResearchImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ProductResearch")
+		case "study":
+
+			out.Values[i] = ec._ProductResearch_study(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "outcome":
+
+			out.Values[i] = ec._ProductResearch_outcome(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -3912,6 +5061,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_product(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "deprecatedProduct":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_deprecatedProduct(ctx, field)
 				return res
 			}
 
@@ -4001,12 +5170,29 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("User")
+		case "averageProductsCreatedPerYear":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._User_averageProductsCreatedPerYear(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "email":
 
 			out.Values[i] = ec._User_email(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 
@@ -4016,6 +5202,13 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._User_totalProductsCreated(ctx, field, obj)
 
+		case "yearsOfEmployment":
+
+			out.Values[i] = ec._User_yearsOfEmployment(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4385,6 +5578,30 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCaseStudy2ᚖsubgraphᚋgraphᚋmodelᚐCaseStudy(ctx context.Context, sel ast.SelectionSet, v *model.CaseStudy) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CaseStudy(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNDeprecatedProduct2subgraphᚋgraphᚋmodelᚐDeprecatedProduct(ctx context.Context, sel ast.SelectionSet, v model.DeprecatedProduct) graphql.Marshaler {
+	return ec._DeprecatedProduct(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDeprecatedProduct2ᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProduct(ctx context.Context, sel ast.SelectionSet, v *model.DeprecatedProduct) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._DeprecatedProduct(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4392,6 +5609,21 @@ func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface
 
 func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalID(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -4412,6 +5644,64 @@ func (ec *executionContext) marshalNProduct2ᚖsubgraphᚋgraphᚋmodelᚐProduc
 		return graphql.Null
 	}
 	return ec._Product(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNProductResearch2subgraphᚋgraphᚋmodelᚐProductResearch(ctx context.Context, sel ast.SelectionSet, v model.ProductResearch) graphql.Marshaler {
+	return ec._ProductResearch(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNProductResearch2ᚕᚖsubgraphᚋgraphᚋmodelᚐProductResearchᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.ProductResearch) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNProductResearch2ᚖsubgraphᚋgraphᚋmodelᚐProductResearch(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNProductResearch2ᚖsubgraphᚋgraphᚋmodelᚐProductResearch(ctx context.Context, sel ast.SelectionSet, v *model.ProductResearch) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ProductResearch(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -4830,6 +6120,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) marshalODeprecatedProduct2ᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProduct(ctx context.Context, sel ast.SelectionSet, v *model.DeprecatedProduct) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeprecatedProduct(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {

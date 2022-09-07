@@ -80,6 +80,30 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		}()
 
 		switch typeName {
+		case "DeprecatedProduct":
+			resolverName, err := entityResolverNameForDeprecatedProduct(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "DeprecatedProduct": %w`, err)
+			}
+			switch resolverName {
+
+			case "findDeprecatedProductBySkuAndPackage":
+				id0, err := ec.unmarshalNString2string(ctx, rep["sku"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findDeprecatedProductBySkuAndPackage(): %w`, err)
+				}
+				id1, err := ec.unmarshalNString2string(ctx, rep["package"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 1 for findDeprecatedProductBySkuAndPackage(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindDeprecatedProductBySkuAndPackage(ctx, id0, id1)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "DeprecatedProduct": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
 		case "Product":
 			resolverName, err := entityResolverNameForProduct(ctx, rep)
 			if err != nil {
@@ -127,6 +151,26 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 				entity, err := ec.resolvers.Entity().FindProductBySkuAndVariationID(ctx, id0, id1)
 				if err != nil {
 					return fmt.Errorf(`resolving Entity "Product": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
+		case "ProductResearch":
+			resolverName, err := entityResolverNameForProductResearch(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "ProductResearch": %w`, err)
+			}
+			switch resolverName {
+
+			case "findProductResearchByStudyCaseNumber":
+				id0, err := ec.unmarshalNID2string(ctx, rep["study"].(map[string]interface{})["caseNumber"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findProductResearchByStudyCaseNumber(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindProductResearchByStudyCaseNumber(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "ProductResearch": %w`, err)
 				}
 
 				list[idx[i]] = entity
@@ -221,6 +265,27 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 	}
 }
 
+func entityResolverNameForDeprecatedProduct(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["sku"]; !ok {
+			break
+		}
+		m = rep
+		if _, ok = m["package"]; !ok {
+			break
+		}
+		return "findDeprecatedProductBySkuAndPackage", nil
+	}
+	return "", fmt.Errorf("%w for DeprecatedProduct", ErrTypeNotFound)
+}
+
 func entityResolverNameForProduct(ctx context.Context, rep map[string]interface{}) (string, error) {
 	for {
 		var (
@@ -276,6 +341,29 @@ func entityResolverNameForProduct(ctx context.Context, rep map[string]interface{
 		return "findProductBySkuAndVariationID", nil
 	}
 	return "", fmt.Errorf("%w for Product", ErrTypeNotFound)
+}
+
+func entityResolverNameForProductResearch(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if val, ok = m["study"]; !ok {
+			break
+		}
+		if m, ok = val.(map[string]interface{}); !ok {
+			break
+		}
+		if _, ok = m["caseNumber"]; !ok {
+			break
+		}
+		return "findProductResearchByStudyCaseNumber", nil
+	}
+	return "", fmt.Errorf("%w for ProductResearch", ErrTypeNotFound)
 }
 
 func entityResolverNameForUser(ctx context.Context, rep map[string]interface{}) (string, error) {
