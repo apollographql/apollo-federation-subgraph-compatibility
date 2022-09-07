@@ -11,6 +11,7 @@ test("@provides", async () => {
     variables: { id: "apollo-federation" },
   });
 
+  expect(resp).not.toHaveProperty("errors");
   expect(resp).toMatchObject({
     data: {
       product: {

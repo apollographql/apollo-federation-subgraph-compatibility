@@ -26,6 +26,7 @@ describe("@key single", () => {
       },
     });
 
+    expect(resp).not.toHaveProperty("errors");
     expect(resp).toMatchObject({
       data: {
         _entities: [
@@ -70,6 +71,7 @@ describe("@key multiple", () => {
       },
     });
 
+    expect(resp).not.toHaveProperty("errors");
     expect(resp).toMatchObject({
       data: {
         _entities: [
@@ -116,6 +118,7 @@ describe("@key composite", () => {
       },
     });
 
+    expect(resp).not.toHaveProperty("errors");
     expect(resp).toMatchObject({
       data: {
         _entities: [
@@ -174,6 +177,7 @@ describe("repeatable @key", () => {
       }
     });
 
+    expect(entitiesQuery).not.toHaveProperty("errors");
     expect(entitiesQuery).toMatchObject({
       data: {
         _entities: [
