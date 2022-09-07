@@ -57,7 +57,7 @@ The following open-source GraphQL server libraries and hosted subgraphs provide 
 <tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
 </thead>
 <tbody>
-<tr><td><a href="https://gqlgen.com">gqlgen</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
+<tr><td><a href="https://gqlgen.com">gqlgen</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🔲</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
 </tbody>
 </table>
 
