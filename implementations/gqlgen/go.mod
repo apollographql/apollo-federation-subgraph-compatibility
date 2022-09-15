@@ -3,8 +3,8 @@ module subgraph
 go 1.19
 
 require (
-	github.com/99designs/gqlgen v0.17.16
-	github.com/vektah/gqlparser/v2 v2.5.0
+	github.com/99designs/gqlgen v0.17.18-0.20220915184003-4dbe2e475f15
+	github.com/vektah/gqlparser/v2 v2.5.1
 )
 
 require (
@@ -14,10 +14,10 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/urfave/cli/v2 v2.14.1 // indirect
+	github.com/urfave/cli/v2 v2.16.3 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/sys v0.0.0-20220906165534-d0df966e6959 // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220907135952-02c991387e35 // indirect
+	golang.org/x/sys v0.0.0-20220913175220-63ea55921009 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
