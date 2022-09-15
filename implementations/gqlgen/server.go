@@ -13,6 +13,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 )
 
+//go:generate go run -mod=mod github.com/99designs/gqlgen generate .
+
 const defaultPort = "4001"
 
 func main() {
