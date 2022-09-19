@@ -1,5 +1,7 @@
 import { buildSubgraphSchema } from "@apollo/subgraph";
-import { createServer, GraphQLYogaError } from "@graphql-yoga/node";
+import { useApolloInlineTrace } from "@graphql-yoga/plugin-apollo-inline-trace";
+import { createYoga } from "graphql-yoga";
+import { createServer } from "http";
 import { gql } from "graphql-tag";
 import { readFileSync } from "node:fs";
 
@@ -137,9 +139,7 @@ const resolvers: Resolvers = {
   User: {
     averageProductsCreatedPerYear: (user, args, context) => {
       if (user.email != "support@apollographql.com") {
-        throw new GraphQLYogaError(
-          "user.email was not 'support@apollographql.com'"
-        );
+        throw new Error("user.email was not 'support@apollographql.com'");
       }
       return Math.round(
         (user.totalProductsCreated || 0) / user.yearsOfEmployment
@@ -151,14 +151,14 @@ const resolvers: Resolvers = {
   },
 };
 
-const server = createServer({
+const yoga = createYoga({
   schema: buildSubgraphSchema([{ typeDefs: gql(typeDefs), resolvers }]),
-  port: process.env.PRODUCTS_PORT
-    ? parseInt(process.env.PRODUCTS_PORT, 10)
-    : 4001,
-  endpoint: "/",
+  graphqlEndpoint: "/",
+  plugins: [useApolloInlineTrace()],
 });
 
-server.start().then(() => {
-  console.log(`🚀 Server ready at http://localhost:4001`);
-});
+const server = createServer(yoga);
+
+server.listen(4001);
+
+console.log(`🚀 Server ready at http://localhost:4001`);
