@@ -7,6 +7,8 @@ import {
 
 import { UsersResolver } from "./users.resolver";
 import { ProductsResolver } from "./products.resolver";
+import { ProductResearchResolver } from "./product-research.resolver";
+import { DeprecatedProductsResolver } from "./deprecated-products.resolver";
 
 @Module({
   imports: [
@@ -16,6 +18,11 @@ import { ProductsResolver } from "./products.resolver";
       path: "/",
     }),
   ],
-  providers: [UsersResolver, ProductsResolver],
+  providers: [
+    UsersResolver,
+    ProductsResolver,
+    ProductResearchResolver,
+    DeprecatedProductsResolver,
+  ],
 })
 export class AppModule {}
