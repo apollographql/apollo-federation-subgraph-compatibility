@@ -80,7 +80,7 @@ type Product
   package: String @join__field(graph: PRODUCTS)
   variation: ProductVariation @join__field(graph: PRODUCTS)
   createdBy: User @join__field(graph: PRODUCTS, provides: "totalProductsCreated")
-  notes: String @tag(name: "internal") @join__field(graph: PRODUCTS)
+  notes: String @join__field(graph: PRODUCTS) @tag(name: "internal")
   research: [ProductResearch!]! @join__field(graph: PRODUCTS)
 }
 
@@ -112,7 +112,7 @@ type Query
   @join__type(graph: USERS)
 {
   product(id: ID!): Product @join__field(graph: PRODUCTS)
-  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead") @join__field(graph: PRODUCTS)
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @join__field(graph: PRODUCTS) @deprecated(reason: "Use product query instead")
 }
 
 type User
