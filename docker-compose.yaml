@@ -6,6 +6,7 @@ services:
       - ./supergraph.graphql:/dist/config/supergraph.graphql
     ports:
       - 4000:4000
+      - 8088:8088
     command: -c config/router.yaml -s config/supergraph.graphql
   inventory:
     image: apollo-federation-implementations/inventory
