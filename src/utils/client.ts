@@ -3,9 +3,8 @@ import fetch from "make-fetch-happen";
 export const ROUTER_URL = "http://localhost:4000/";
 const PING_QUERY = "query { __typename }";
 
-const routerHealthCheck =
-  "http://localhost:4000/.well-known/apollo/server-health";
-const productsUrl = "http://localhost:4001/";
+const ROUTER_HEALTH_URL = "http://localhost:8088/health";
+const PRODUCTS_URL = "http://localhost:4001/";
 
 export async function graphqlRequest(
   url: string,
@@ -40,7 +39,7 @@ export function productsRequest(
   },
   headers?: { [key: string]: any }
 ) {
-  return graphqlRequest(productsUrl, req, headers);
+  return graphqlRequest(PRODUCTS_URL, req, headers);
 }
 
 export function routerRequest(
@@ -55,7 +54,8 @@ export function routerRequest(
 }
 
 export async function ping(): Promise<boolean> {
-  const routerPing = await fetch(routerHealthCheck, { retry: 10 });
+  console.log("router health check", ROUTER_HEALTH_URL)
+  const routerPing = await fetch(ROUTER_HEALTH_URL, { retry: { retries: 10, maxTimeout: 1000 } });
 
   if (!routerPing.ok) {
     console.log("router failed to start");
@@ -65,8 +65,9 @@ export async function ping(): Promise<boolean> {
   let attempts = 100;
   let lastError = null;
   while (attempts--) {
+    console.log("products health check", ROUTER_HEALTH_URL)
     try {
-      const implementationPing = await graphqlRequest(productsUrl, {
+      const implementationPing = await graphqlRequest(PRODUCTS_URL, {
         query: PING_QUERY,
       });
 
