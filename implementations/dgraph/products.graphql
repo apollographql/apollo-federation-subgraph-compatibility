@@ -1,0 +1,54 @@
+type Product @key(fields: "id")  @generate(query: { get: true, query: false, aggregate: false }) {
+  # dgraph does not support custom values for ID fields
+  id: String! @id
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User @provides(fields: "totalProductsCreated")
+  notes: String
+  research: [ProductResearch!]!
+}
+
+type DeprecatedProduct @generate(query: { get: true, query: false, aggregate: false }) {
+  sku: String! @id
+  package: String! @id
+  reason: String
+  createdBy: User
+}
+
+type ProductVariation @generate(query: { get: false, query: false, aggregate: false }) {
+  id: String! @id
+  # dgraph does not allow creating types with just ID value
+  dummy: String
+}
+
+type ProductResearch @generate(query: { get: false, query: false, aggregate: false }) {
+  study: CaseStudy!
+  outcome: String
+}
+
+type CaseStudy @generate(query: { get: false, query: false, aggregate: false }) {
+  caseNumber: String! @id
+  description: String
+}
+
+type ProductDimension @generate(query: { get: false, query: false, aggregate: false }) {
+  size: String
+  weight: Float
+  unit: String
+}
+
+type Query {
+  product(id: String!): Product @lambda
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead") @lambda
+}
+
+extend type User @key(fields: "email") @generate(query: { get: false, query: false, aggregate: false }) {
+  averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment") @lambda
+  email: String! @id
+  name: String
+  totalProductsCreated: Int @external
+  # dgraph does not support non-nullable external types
+  yearsOfEmployment: Int @external
+}
