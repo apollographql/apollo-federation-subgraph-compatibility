@@ -83,3 +83,6 @@ obj
 router
 
 .bundle
+
+# Python - ignore virtual env
+venv
