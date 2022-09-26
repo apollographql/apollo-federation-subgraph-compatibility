@@ -1,0 +1,14 @@
+name: GraphQL Helix Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/helix/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "helix"

@@ -65,7 +65,7 @@ export async function ping(): Promise<boolean> {
   let attempts = 100;
   let lastError = null;
   while (attempts--) {
-    console.log("products health check", ROUTER_HEALTH_URL)
+    console.log("products health check", PRODUCTS_URL)
     try {
       const implementationPing = await graphqlRequest(PRODUCTS_URL, {
         query: PING_QUERY,
