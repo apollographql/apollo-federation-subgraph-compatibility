@@ -152,7 +152,7 @@ class DeprecatedProduct(ObjectType):
 
 class Query(ObjectType):
     product = Field(Product, id=ID(required=True))
-    deprecatedProduct = Field(DeprecatedProduct, sku=String(required=True), package=String(required=True),
+    deprecated_product = Field(DeprecatedProduct, sku=String(required=True), package=String(required=True),
                               deprecation_reason="Use product query instead")
 
     def resolve_product(self, info, id):
