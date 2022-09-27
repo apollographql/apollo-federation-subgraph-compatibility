@@ -1,0 +1,14 @@
+name: Sangria Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/sangria/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "sangria"
