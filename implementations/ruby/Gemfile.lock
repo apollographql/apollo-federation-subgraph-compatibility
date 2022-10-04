@@ -7,7 +7,7 @@ GEM
     daemons (1.4.0)
     eventmachine (1.2.7)
     ffi (1.15.3)
-    google-protobuf (3.21.5)
+    google-protobuf (3.21.7)
     graphql (2.0.13)
     listen (3.6.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
