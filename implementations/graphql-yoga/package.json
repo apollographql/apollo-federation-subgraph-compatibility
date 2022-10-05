@@ -1,7 +1,7 @@
 {
   "name": "graphql-yoga-federation-service",
   "version": "1.0.0",
-  "description": "Federation Service implemented with GraphQL Yoga 2.x",
+  "description": "Federation Service implemented with GraphQL Yoga",
   "main": "index.js",
   "scripts": {
     "prebuild": "graphql-codegen",
@@ -12,10 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/subgraph": "^2.0.5",
-    "@graphql-yoga/plugin-apollo-inline-trace": "^1.0.0-alpha-20220830204053-48062364",
+    "@graphql-yoga/plugin-apollo-inline-trace": "^1.0.0-next.3",
     "graphql": "^16.3.0",
     "graphql-tag": "^2.12.6",
-    "graphql-yoga": "^3.0.0-alpha-20220830204053-48062364"
+    "graphql-yoga": "^3.0.0-next.3"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.11.6",
