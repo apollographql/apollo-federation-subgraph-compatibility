@@ -1,6 +1,7 @@
 serve:
   port: 4001
   browser: false
+  endpoint: /
 
 sources:
   - name: GraphQL API
