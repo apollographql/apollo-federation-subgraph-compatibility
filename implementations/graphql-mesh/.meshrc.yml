@@ -1,0 +1,9 @@
+serve:
+  port: 4001
+  browser: false
+
+sources:
+  - name: GraphQL API
+    handler:
+      graphql:
+        schema: ./dist/schema.js
