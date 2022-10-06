@@ -7,3 +7,6 @@ sources:
     handler:
       graphql:
         schema: ./dist/schema.js
+
+plugins:
+  - "@graphql-yoga/plugin-apollo-inline-trace": {}
