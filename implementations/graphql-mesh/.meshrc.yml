@@ -17,8 +17,9 @@ transforms:
           config:
             keyFields:
               - id
-              # TODO: @key multi and composite not supported
+              # TODO: @key(fields: "sku package") (multi) not supported
               # - sku package
+              # TODO: @key(fields: "sku variation { id }") (composite) not supported
               # - sku variation { id }
             fields:
               - name: createdBy
@@ -27,19 +28,19 @@ transforms:
               - name: notes
                 config:
                   {}
-                  # TODO: @tag not supported
+                  # TODO: @tag(name: "internal") not supported
                   # tag: internal
         - name: DeprecatedProduct
           config:
             keyFields:
               []
-              # TODO: @key multi not supported
+              # TODO: @key(fields: "sku package") (multi) not supported
               # - sku package
         - name: ProductResearch
           config:
             keyFields:
               []
-              # TODO: @key composite not supported
+              # TODO: @key(fields: "study { caseNumber }") (composite) not supported
               # - study { caseNumber }
         - name: ProductDimension
           config:
@@ -58,7 +59,7 @@ transforms:
             fields:
               - name: averageProductsCreatedPerYear
                 config:
-                  # TODO: @requires multi works? how to test?
+                  # TODO: @requires(fields: "totalProductsCreated yearsOfEmployment") works? how to test?
                   requires: totalProductsCreated yearsOfEmployment
               - name: email
                 config:
@@ -66,7 +67,7 @@ transforms:
               - name: override
                 config:
                   {}
-                  # TODO: @override not supported
+                  # TODO: @override(from: "users") not supported
                   # override: users
               - name: totalProductsCreated
                 config:
