@@ -1,10 +1,76 @@
 serve:
   port: 4001
   browser: false
-  endpoint: /
+  # TODO: endpoint "/" breaks graphiql (too many redirects)
+  # endpoint: /
 
 sources:
   - name: GraphQL API
     handler:
       graphql:
         schema: ./dist/schema.js
+
+transforms:
+  - federation:
+      types:
+        - name: Product
+          config:
+            keyFields:
+              - id
+              # TODO: @key multi and composite not supported
+              # - sku package
+              # - sku variation { id }
+            fields:
+              - name: createdBy
+                config:
+                  provides: totalProductsCreated
+              - name: notes
+                config:
+                  {}
+                  # TODO: @tag not supported
+                  # tag: internal
+        - name: DeprecatedProduct
+          config:
+            keyFields:
+              []
+              # TODO: @key multi not supported
+              # - sku package
+        - name: ProductResearch
+          config:
+            keyFields:
+              []
+              # TODO: @key composite not supported
+              # - study { caseNumber }
+        - name: ProductDimension
+          config:
+            # TODO: @shareable not supported
+            # shareable: true
+            fields:
+              - name: unit
+                config:
+                  {}
+                  # TODO: @inaccessible not supported
+                  # inaccessible: true
+        - name: User
+          config:
+            keyFields:
+              - email
+            fields:
+              - name: averageProductsCreatedPerYear
+                config:
+                  # TODO: @requires multi works? how to test?
+                  requires: totalProductsCreated yearsOfEmployment
+              - name: email
+                config:
+                  external: true
+              - name: override
+                config:
+                  {}
+                  # TODO: @override not supported
+                  # override: users
+              - name: totalProductsCreated
+                config:
+                  external: true
+              - name: yearsOfEmployment
+                config:
+                  external: true
