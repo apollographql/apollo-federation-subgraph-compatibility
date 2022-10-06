@@ -60,6 +60,7 @@ export type ProductVariation = {
 
 export type Query = {
   __typename?: 'Query';
+  /** @deprecated Use product query instead */
   deprecatedProduct?: Maybe<DeprecatedProduct>;
   product?: Maybe<Product>;
 };

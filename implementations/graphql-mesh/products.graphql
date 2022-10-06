@@ -39,6 +39,7 @@ type ProductDimension {
 type Query {
   product(id: ID!): Product
   deprecatedProduct(sku: String!, package: String!): DeprecatedProduct
+    @deprecated(reason: "Use product query instead")
 }
 
 type User {
