@@ -17,18 +17,20 @@ const productResearch: ProductResearch[] = [
   },
 ];
 
-const products: Omit<Product, "research">[] = [
+const products: Product[] = [
   {
     id: "apollo-federation",
     sku: "federation",
     package: "@apollo/federation",
     variation: { id: "OSS", __typename: "ProductVariation" },
+    research: [], // will resolve
   },
   {
     id: "apollo-studio",
     sku: "studio",
     package: "",
     variation: { id: "platform", __typename: "ProductVariation" },
+    research: [], // will resolve
   },
 ];
 
@@ -47,36 +49,40 @@ const user: User = {
 
 const resolvers: Resolvers = {
   Query: {
-    product(_: unknown, args: { id: string }) {
-      return products.find((p) => p.id == args.id)! as unknown as Product;
+    product(_, args) {
+      return products.find((p) => p.id == args.id) || null;
     },
-    resolveProduct(
-      _: unknown,
-      args: { id: string; sku: string; package: string; variationId: string }
-    ) {
+    resolveProduct(_, args) {
       if (args.id) {
-        return products.find((product) => product.id === args.id);
+        return products.find((product) => product.id === args.id) || null;
       }
       if (args.sku && args.package) {
-        return products.find(
-          (product) =>
-            product.sku === args.sku && product.package === args.package
+        return (
+          products.find(
+            (product) =>
+              product.sku === args.sku && product.package === args.package
+          ) || null
         );
       }
       if (args.sku && args.variationId) {
-        return products.find(
-          (product) =>
-            product.sku === args.sku &&
-            product.variation?.id === args.variationId
+        return (
+          products.find(
+            (product) =>
+              product.sku === args.sku &&
+              product.variation?.id === args.variationId
+          ) || null
         );
       }
+      return null;
     },
-    resolveProductResearch: (_: unknown, args: { studyCaseNumber: string }) => {
-      return productResearch.find(
-        (p) => p.study.caseNumber === args.studyCaseNumber
+    resolveProductResearch(_, args) {
+      return (
+        productResearch.find(
+          (p) => p.study.caseNumber === args.studyCaseNumber
+        ) || null
       );
     },
-    deprecatedProduct: (_, args, context) => {
+    deprecatedProduct(_, args) {
       if (
         args.sku === deprecatedProduct.sku &&
         args.package === deprecatedProduct.package
@@ -88,7 +94,7 @@ const resolvers: Resolvers = {
     },
   },
   DeprecatedProduct: {
-    createdBy: () => {
+    createdBy() {
       return user;
     },
   },
@@ -118,7 +124,7 @@ const resolvers: Resolvers = {
     },
   },
   User: {
-    averageProductsCreatedPerYear: (user, args, context) => {
+    averageProductsCreatedPerYear(user) {
       if (user.email != "support@apollographql.com") {
         throw new Error("user.email was not 'support@apollographql.com'");
       }
