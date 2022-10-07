@@ -12,7 +12,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  _FieldSet: any;
 };
 
 export type CaseStudy = {
@@ -61,7 +60,6 @@ export type ProductVariation = {
 
 export type Query = {
   __typename?: 'Query';
-  /** @deprecated Use product query instead */
   deprecatedProduct?: Maybe<DeprecatedProduct>;
   product?: Maybe<Product>;
 };
@@ -90,17 +88,6 @@ export type User = {
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
-export type ReferenceResolver<TResult, TReference, TContext> = (
-      reference: TReference,
-      context: TContext,
-      info: GraphQLResolveInfo
-    ) => Promise<TResult> | TResult;
-
-      type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
-      type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
-      type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
-      export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
-    
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -166,36 +153,36 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CaseStudy: ResolverTypeWrapper<CaseStudy>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  String: ResolverTypeWrapper<Scalars['String']>;
   DeprecatedProduct: ResolverTypeWrapper<DeprecatedProduct>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Product: ResolverTypeWrapper<Product>;
   ProductDimension: ResolverTypeWrapper<ProductDimension>;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
   ProductResearch: ResolverTypeWrapper<ProductResearch>;
   ProductVariation: ResolverTypeWrapper<ProductVariation>;
   Query: ResolverTypeWrapper<{}>;
+  String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Boolean: Scalars['Boolean'];
   CaseStudy: CaseStudy;
-  ID: Scalars['ID'];
-  String: Scalars['String'];
   DeprecatedProduct: DeprecatedProduct;
+  Float: Scalars['Float'];
+  ID: Scalars['ID'];
+  Int: Scalars['Int'];
   Product: Product;
   ProductDimension: ProductDimension;
-  Float: Scalars['Float'];
   ProductResearch: ProductResearch;
   ProductVariation: ProductVariation;
   Query: {};
+  String: Scalars['String'];
   User: User;
-  Int: Scalars['Int'];
-  Boolean: Scalars['Boolean'];
 };
 
 export type CaseStudyResolvers<ContextType = any, ParentType extends ResolversParentTypes['CaseStudy'] = ResolversParentTypes['CaseStudy']> = {
@@ -205,7 +192,6 @@ export type CaseStudyResolvers<ContextType = any, ParentType extends ResolversPa
 };
 
 export type DeprecatedProductResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeprecatedProduct'] = ResolversParentTypes['DeprecatedProduct']> = {
-  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['DeprecatedProduct']>, { __typename: 'DeprecatedProduct' } & GraphQLRecursivePick<ParentType, {"sku":true,"package":true}>, ContextType>;
   createdBy?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   package?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reason?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -214,7 +200,6 @@ export type DeprecatedProductResolvers<ContextType = any, ParentType extends Res
 };
 
 export type ProductResolvers<ContextType = any, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = {
-  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Product']>, { __typename: 'Product' } & (GraphQLRecursivePick<ParentType, {"id":true}> | GraphQLRecursivePick<ParentType, {"sku":true,"package":true}> | GraphQLRecursivePick<ParentType, {"sku":true,"variation":{"id":true}}>), ContextType>;
   createdBy?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   dimensions?: Resolver<Maybe<ResolversTypes['ProductDimension']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -234,7 +219,6 @@ export type ProductDimensionResolvers<ContextType = any, ParentType extends Reso
 };
 
 export type ProductResearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductResearch'] = ResolversParentTypes['ProductResearch']> = {
-  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['ProductResearch']>, { __typename: 'ProductResearch' } & GraphQLRecursivePick<ParentType, {"study":{"caseNumber":true}}>, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   study?: Resolver<ResolversTypes['CaseStudy'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -251,12 +235,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"email":true}>, ContextType>;
-  averageProductsCreatedPerYear?: Resolver<Maybe<ResolversTypes['Int']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"email":true}> & GraphQLRecursivePick<ParentType, {"totalProductsCreated":true,"yearsOfEmployment":true}>, ContextType>;
-
-  name?: Resolver<Maybe<ResolversTypes['String']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"email":true}>, ContextType>;
-  totalProductsCreated?: Resolver<Maybe<ResolversTypes['Int']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"email":true}>, ContextType>;
-
+  averageProductsCreatedPerYear?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  totalProductsCreated?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  yearsOfEmployment?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

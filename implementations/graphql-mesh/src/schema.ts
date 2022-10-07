@@ -1,10 +1,6 @@
-import { buildSubgraphSchema } from "@apollo/subgraph";
-import { gql } from "graphql-tag";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import { readFileSync } from "node:fs";
-
 import { Product, ProductResearch, Resolvers, User } from "./resolvers-types";
-
-const typeDefs = readFileSync("./products.graphql", "utf8");
 
 const productResearch: ProductResearch[] = [
   {
@@ -69,23 +65,6 @@ const resolvers: Resolvers = {
     createdBy: () => {
       return user;
     },
-    __resolveReference: (reference) => {
-      if (
-        reference.sku === deprecatedProduct.sku &&
-        reference.package === deprecatedProduct.package
-      ) {
-        return deprecatedProduct;
-      } else {
-        return null;
-      }
-    },
-  },
-  ProductResearch: {
-    __resolveReference: (reference) => {
-      return productResearch.find(
-        (p) => reference.study.caseNumber === p.study.caseNumber
-      )!;
-    },
   },
   Product: {
     variation(parent) {
@@ -111,27 +90,6 @@ const resolvers: Resolvers = {
     createdBy() {
       return user;
     },
-
-    __resolveReference(productRef) {
-      // will be improved in the future: https://github.com/dotansimha/graphql-code-generator/pull/5645
-      let ref = productRef as Product;
-      if (ref.id) {
-        return (products.find((p) => p.id == ref.id) ||
-          null) as unknown as Product;
-      } else if (ref.sku && ref.package) {
-        return (products.find(
-          (p) => p.sku == ref.sku && p.package == ref.package
-        ) || null) as unknown as Product;
-      } else {
-        return (products.find(
-          (p) =>
-            p.sku == ref.sku &&
-            p.variation &&
-            ref.variation &&
-            p.variation.id == ref.variation.id
-        ) || null) as unknown as Product;
-      }
-    },
   },
   User: {
     averageProductsCreatedPerYear: (user, args, context) => {
@@ -148,6 +106,7 @@ const resolvers: Resolvers = {
   },
 };
 
-export const schema = buildSubgraphSchema([
-  { typeDefs: gql(typeDefs), resolvers },
-]);
+export default makeExecutableSchema({
+  typeDefs: readFileSync("./products.graphql", "utf8"),
+  resolvers,
+});

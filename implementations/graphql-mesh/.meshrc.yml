@@ -1,15 +1,9 @@
 serve:
   port: 4001
   browser: false
-  # TODO: endpoint "/" breaks graphiql (too many redirects)
-  endpoint: /
 
 sources:
   - name: GraphQL API
     handler:
       graphql:
         schema: ./dist/schema.js
-#
-# TODO: use after Mesh upgrade
-# plugins:
-#   - "@graphql-yoga/plugin-apollo-inline-trace": {}

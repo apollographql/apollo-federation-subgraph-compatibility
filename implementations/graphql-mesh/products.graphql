@@ -1,21 +1,15 @@
-extend schema
-  @link(
-    url: "https://specs.apollo.dev/federation/v2.0",
-    import: ["@extends", "@external", "@inaccessible", "@key", "@override", "@provides", "@requires", "@shareable", "@tag"]
-  )
-
-type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
+type Product {
   id: ID!
   sku: String
   package: String
   variation: ProductVariation
   dimensions: ProductDimension
-  createdBy: User @provides(fields: "totalProductsCreated")
-  notes: String @tag(name: "internal")
+  createdBy: User
+  notes: String
   research: [ProductResearch!]!
 }
 
-type DeprecatedProduct @key(fields: "sku package") {
+type DeprecatedProduct {
   sku: String!
   package: String!
   reason: String
@@ -26,7 +20,7 @@ type ProductVariation {
   id: ID!
 }
 
-type ProductResearch @key(fields: "study { caseNumber }") {
+type ProductResearch {
   study: CaseStudy!
   outcome: String
 }
@@ -36,21 +30,21 @@ type CaseStudy {
   description: String
 }
 
-type ProductDimension @shareable {
+type ProductDimension {
   size: String
   weight: Float
-  unit: String @inaccessible
+  unit: String
 }
 
-extend type Query {
+type Query {
   product(id: ID!): Product
-  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct
 }
 
-extend type User @key(fields: "email") {
-  averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
-  email: ID! @external
-  name: String @override(from: "users")
-  totalProductsCreated: Int @external
-  yearsOfEmployment: Int! @external
+type User {
+  averageProductsCreatedPerYear: Int
+  email: ID!
+  name: String
+  totalProductsCreated: Int
+  yearsOfEmployment: Int!
 }
