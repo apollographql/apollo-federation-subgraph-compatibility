@@ -15,7 +15,7 @@ sources:
           types:
             - name: Product
               config:
-                key: 
+                key:
                   - fields: "id"
                   - fields: "sku package"
                   - fields: "sku variation { id }"
@@ -23,7 +23,7 @@ sources:
                   # - sku package
                   # TODO: @key(fields: "sku variation { id }") (composite) not supported
                   # - sku variation { id }
-                resolveReference: 
+                resolveReference:
                   queryFieldName: resolveProduct
                   args:
                     id: "{root.id}"
@@ -33,7 +33,7 @@ sources:
                 fields:
                   - name: createdBy
                     config:
-                      provides: 
+                      provides:
                         fields: "totalProductsCreated"
                   - name: notes
                     config:
@@ -43,11 +43,11 @@ sources:
                       # tag: internal
             - name: DeprecatedProduct
               config:
-                key: 
+                key:
                   - fields: "sku package"
                   # TODO: @key(fields: "sku package") (multi) not supported
                   # - sku package
-                resolveReference: 
+                resolveReference:
                   queryFieldName: deprecatedProduct
                   args:
                     sku: "{root.sku}"
@@ -58,7 +58,7 @@ sources:
                   - fields: "study { caseNumber }"
                 # TODO: @key(fields: "study { caseNumber }") (composite) not supported
                 # - study { caseNumber }
-                resolveReference: 
+                resolveReference:
                   queryFieldName: resolveProductResearch
                   args:
                     studyCaseNumber: "{root.study.caseNumber}"
@@ -81,7 +81,7 @@ sources:
                   - name: averageProductsCreatedPerYear
                     config:
                       # TODO: @requires(fields: "totalProductsCreated yearsOfEmployment") works? how to test?
-                      requires: 
+                      requires:
                         - fields: "totalProductsCreated yearsOfEmployment"
                   - name: email
                     config:
