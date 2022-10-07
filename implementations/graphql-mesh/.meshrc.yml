@@ -1,7 +1,6 @@
 serve:
   port: 4001
   browser: false
-  # TODO: endpoint "/" breaks graphiql (too many redirects)
   endpoint: /
 
 sources:
