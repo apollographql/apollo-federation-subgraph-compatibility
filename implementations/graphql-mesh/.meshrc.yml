@@ -3,7 +3,6 @@ serve:
   browser: false
   # TODO: endpoint "/" breaks graphiql (too many redirects)
   endpoint: /
-  hostname: "0.0.0.0"
 
 sources:
   - name: GraphQL API
