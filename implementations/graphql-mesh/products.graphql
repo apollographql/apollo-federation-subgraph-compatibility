@@ -38,6 +38,8 @@ type ProductDimension {
 
 type Query {
   product(id: ID!): Product
+  resolveProduct(id: ID, sku: String, package: String, variationId: String): Product
+  resolveProductResearch(studyCaseNumber: ID!): ProductResearch
   deprecatedProduct(sku: String!, package: String!): DeprecatedProduct
     @deprecated(reason: "Use product query instead")
 }

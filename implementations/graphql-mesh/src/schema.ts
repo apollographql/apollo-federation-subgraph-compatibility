@@ -50,6 +50,22 @@ const resolvers: Resolvers = {
     product(_: unknown, args: { id: string }) {
       return products.find((p) => p.id == args.id)! as unknown as Product;
     },
+    resolveProduct(_: unknown, args: { id: string, sku: string, package: string, variationId: string }) {
+      if (args.id) {
+        return products.find((product) => product.id === args.id);
+      }
+      if (args.sku && args.package) {
+        return products.find((product) => product.sku === args.sku && product.package === args.package);
+      }
+      if (args.sku && args.variationId) {
+        return products.find((product) => product.sku === args.sku && product.variation?.id === args.variationId);
+      }
+    },
+    resolveProductResearch: (_: unknown, args: { studyCaseNumber: string }) => {
+      return productResearch.find(
+        (p) => p.study.caseNumber === args.studyCaseNumber
+      );
+    },
     deprecatedProduct: (_, args, context) => {
       if (
         args.sku === deprecatedProduct.sku &&

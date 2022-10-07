@@ -16,7 +16,7 @@ export async function graphqlRequest(
   headers?: { [key: string]: any }
 ) {
   const resp = await fetch(url, {
-    headers: { "content-type": "application/json", ...(headers ?? {}) },
+    headers: { "accept": "application/json", "content-type": "application/json", ...(headers ?? {}) },
     method: "POST",
     body: JSON.stringify(req),
   });

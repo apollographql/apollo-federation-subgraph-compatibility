@@ -3,75 +3,101 @@ serve:
   browser: false
   # TODO: endpoint "/" breaks graphiql (too many redirects)
   endpoint: /
+  hostname: "0.0.0.0"
 
 sources:
   - name: GraphQL API
     handler:
       graphql:
-        schema: ./dist/schema.js
+        schema: ./src/schema.ts
+    transforms:
+      - federation:
+          types:
+            - name: Product
+              config:
+                key: 
+                  - fields: "id"
+                  - fields: "sku package"
+                  - fields: "sku variation { id }"
+                  # TODO: @key(fields: "sku package") (multi) not supported
+                  # - sku package
+                  # TODO: @key(fields: "sku variation { id }") (composite) not supported
+                  # - sku variation { id }
+                resolveReference: 
+                  queryFieldName: resolveProduct
+                  args:
+                    id: "{root.id}"
+                    sku: "{root.sku}"
+                    package: "{root.package}"
+                    variationId: "{root.variation.id}"
+                fields:
+                  - name: createdBy
+                    config:
+                      provides: 
+                        fields: "totalProductsCreated"
+                  - name: notes
+                    config:
+                      tag:
+                        name: "internal"
+                      # TODO: @tag(name: "internal") not supported
+                      # tag: internal
+            - name: DeprecatedProduct
+              config:
+                key: 
+                  - fields: "sku package"
+                  # TODO: @key(fields: "sku package") (multi) not supported
+                  # - sku package
+                resolveReference: 
+                  queryFieldName: deprecatedProduct
+                  args:
+                    sku: "{root.sku}"
+                    package: "{root.package}"
+            - name: ProductResearch
+              config:
+                key:
+                  - fields: "study { caseNumber }"
+                # TODO: @key(fields: "study { caseNumber }") (composite) not supported
+                # - study { caseNumber }
+                resolveReference: 
+                  queryFieldName: resolveProductResearch
+                  args:
+                    studyCaseNumber: "{root.study.caseNumber}"
+            - name: ProductDimension
+              config:
+                # TODO: @shareable not supported
+                # shareable: true
+                shareable: true
+                fields:
+                  - name: unit
+                    config:
+                      inaccessible: true
+                      # TODO: @inaccessible not supported
+                      # inaccessible: true
+            - name: User
+              config:
+                key:
+                  - fields: email
+                fields:
+                  - name: averageProductsCreatedPerYear
+                    config:
+                      # TODO: @requires(fields: "totalProductsCreated yearsOfEmployment") works? how to test?
+                      requires: 
+                        - fields: "totalProductsCreated yearsOfEmployment"
+                  - name: email
+                    config:
+                      external: true
+                  - name: name
+                    config:
+                      override:
+                        from: "users"
+                      # TODO: @override(from: "users") not supported
+                      # override: users
+                  - name: totalProductsCreated
+                    config:
+                      external: true
+                  - name: yearsOfEmployment
+                    config:
+                      external: true
 
-transforms:
-  - federation:
-      types:
-        - name: Product
-          config:
-            keyFields:
-              - id
-              # TODO: @key(fields: "sku package") (multi) not supported
-              # - sku package
-              # TODO: @key(fields: "sku variation { id }") (composite) not supported
-              # - sku variation { id }
-            fields:
-              - name: createdBy
-                config:
-                  provides: totalProductsCreated
-              - name: notes
-                config:
-                  {}
-                  # TODO: @tag(name: "internal") not supported
-                  # tag: internal
-        - name: DeprecatedProduct
-          config:
-            keyFields:
-              []
-              # TODO: @key(fields: "sku package") (multi) not supported
-              # - sku package
-        - name: ProductResearch
-          config:
-            keyFields:
-              []
-              # TODO: @key(fields: "study { caseNumber }") (composite) not supported
-              # - study { caseNumber }
-        - name: ProductDimension
-          config:
-            # TODO: @shareable not supported
-            # shareable: true
-            fields:
-              - name: unit
-                config:
-                  {}
-                  # TODO: @inaccessible not supported
-                  # inaccessible: true
-        - name: User
-          config:
-            keyFields:
-              - email
-            fields:
-              - name: averageProductsCreatedPerYear
-                config:
-                  # TODO: @requires(fields: "totalProductsCreated yearsOfEmployment") works? how to test?
-                  requires: totalProductsCreated yearsOfEmployment
-              - name: email
-                config:
-                  external: true
-              - name: override
-                config:
-                  {}
-                  # TODO: @override(from: "users") not supported
-                  # override: users
-              - name: totalProductsCreated
-                config:
-                  external: true
-              - name: yearsOfEmployment
-                config:
-                  external: true
+plugins:
+  - apolloInlineTrace: {}
