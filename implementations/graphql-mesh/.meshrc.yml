@@ -21,13 +21,7 @@ sources:
                   # - sku package
                   # TODO: @key(fields: "sku variation { id }") (composite) not supported
                   # - sku variation { id }
-                resolveReference:
-                  queryFieldName: resolveProduct
-                  args:
-                    id: "{root.id}"
-                    sku: "{root.sku}"
-                    package: "{root.package}"
-                    variationId: "{root.variation.id}"
+                resolveReference: ./src/resolve-product.ts
                 fields:
                   - name: createdBy
                     config:
@@ -45,21 +39,14 @@ sources:
                   - fields: "sku package"
                   # TODO: @key(fields: "sku package") (multi) not supported
                   # - sku package
-                resolveReference:
-                  queryFieldName: deprecatedProduct
-                  args:
-                    sku: "{root.sku}"
-                    package: "{root.package}"
+                resolveReference: ./src/resolve-deprecated-product.ts
             - name: ProductResearch
               config:
                 key:
                   - fields: "study { caseNumber }"
                 # TODO: @key(fields: "study { caseNumber }") (composite) not supported
                 # - study { caseNumber }
-                resolveReference:
-                  queryFieldName: resolveProductResearch
-                  args:
-                    studyCaseNumber: "{root.study.caseNumber}"
+                resolveReference: ./src/resolve-product-research.ts
             - name: ProductDimension
               config:
                 # TODO: @shareable not supported
