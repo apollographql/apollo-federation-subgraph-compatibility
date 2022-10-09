@@ -17,10 +17,6 @@ sources:
                   - fields: "id"
                   - fields: "sku package"
                   - fields: "sku variation { id }"
-                  # TODO: @key(fields: "sku package") (multi) not supported
-                  # - sku package
-                  # TODO: @key(fields: "sku variation { id }") (composite) not supported
-                  # - sku variation { id }
                 resolveReference: ./src/resolve-product.ts
                 fields:
                   - name: createdBy
@@ -31,33 +27,23 @@ sources:
                     config:
                       tag:
                         name: "internal"
-                      # TODO: @tag(name: "internal") not supported
-                      # tag: internal
             - name: DeprecatedProduct
               config:
                 key:
                   - fields: "sku package"
-                  # TODO: @key(fields: "sku package") (multi) not supported
-                  # - sku package
                 resolveReference: ./src/resolve-deprecated-product.ts
             - name: ProductResearch
               config:
                 key:
                   - fields: "study { caseNumber }"
-                # TODO: @key(fields: "study { caseNumber }") (composite) not supported
-                # - study { caseNumber }
                 resolveReference: ./src/resolve-product-research.ts
             - name: ProductDimension
               config:
-                # TODO: @shareable not supported
-                # shareable: true
                 shareable: true
                 fields:
                   - name: unit
                     config:
                       inaccessible: true
-                      # TODO: @inaccessible not supported
-                      # inaccessible: true
             - name: User
               config:
                 key:
@@ -65,7 +51,6 @@ sources:
                 fields:
                   - name: averageProductsCreatedPerYear
                     config:
-                      # TODO: @requires(fields: "totalProductsCreated yearsOfEmployment") works? how to test?
                       requires:
                         - fields: "totalProductsCreated yearsOfEmployment"
                   - name: email
@@ -75,8 +60,6 @@ sources:
                     config:
                       override:
                         from: "users"
-                      # TODO: @override(from: "users") not supported
-                      # override: users
                   - name: totalProductsCreated
                     config:
                       external: true
