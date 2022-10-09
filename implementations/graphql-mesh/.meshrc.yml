@@ -52,7 +52,7 @@ sources:
                   - name: averageProductsCreatedPerYear
                     config:
                       requires:
-                        - fields: "totalProductsCreated yearsOfEmployment"
+                        fields: "totalProductsCreated yearsOfEmployment"
                   - name: email
                     config:
                       external: true
