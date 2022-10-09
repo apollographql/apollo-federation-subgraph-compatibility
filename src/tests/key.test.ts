@@ -92,8 +92,6 @@ describe("@key composite", () => {
       query: "query { _service { sdl } }",
     });
 
-    expect(serviceSDLQuery).not.toHaveProperty("errors");
-
     const { sdl } = serviceSDLQuery.data._service;
     const normalizedSDL = stripIgnoredCharacters(sdl);
     expect(normalizedSDL).toMatch(/type ProductResearch(@key|@federation__key)\(fields:"study { caseNumber }"/);
