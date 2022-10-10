@@ -17,7 +17,7 @@ The following open-source GraphQL server libraries and hosted subgraphs provide 
 * [Ruby](#ruby)
 * [Rust](#rust)
 * [Scala](#scala)
-* [Hosted Subgraphs](#hosted-subgraphs)
+* [Other Solutions](#other-solutions)
 
 ## Table Legend
 
@@ -151,7 +151,7 @@ The following open-source GraphQL server libraries and hosted subgraphs provide 
 </tbody>
 </table>
 
-## Hosted Subgraphs
+## Other Solutions
 
 <table>
 <thead>
