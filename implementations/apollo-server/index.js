@@ -1,8 +1,11 @@
 import { readFileSync } from 'fs';
-import { ApolloServer, ApolloError, gql } from 'apollo-server';
+import { gql } from 'graphql-tag';
+import { GraphQLError } from 'graphql';
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
-const port = process.env.PRODUCTS_PORT || 4001;
+const serverPort = parseInt(process.env.PRODUCTS_PORT || "") || 4001;
 
 const deprecatedProduct = {
   sku: "apollo-federation-v1",
@@ -125,7 +128,7 @@ const resolvers = {
     /** @type {(user: { email: String, totalProductsCreated: Number, yearsOfEmployment: Number }, args: any, context: any) => any} */
     averageProductsCreatedPerYear: (user, args, context) => {
       if (user.email != "support@apollographql.com") {
-        throw new ApolloError("user.email was not 'support@apollographql.com'")
+        throw new GraphQLError("user.email was not 'support@apollographql.com'")
       }
       return Math.round(user.totalProductsCreated / user.yearsOfEmployment);
     },
@@ -152,6 +155,6 @@ const server = new ApolloServer({
   schema: buildSubgraphSchema({ typeDefs, resolvers }),
 });
 
-server
-  .listen({ port })
-  .then(({ url }) => console.log(`Products subgraph ready at ${url}`));
+startStandaloneServer(server, {
+  listen: { port: serverPort },
+}).then(({ url }) => console.log(`Products subgraph ready at ${url}`));
