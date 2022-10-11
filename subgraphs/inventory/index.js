@@ -1,8 +1,11 @@
 import { readFileSync } from "fs";
-import { ApolloServer, gql, ApolloError } from "apollo-server";
-import { buildSubgraphSchema } from "@apollo/subgraph";
+import { gql } from 'graphql-tag';
+import { GraphQLError } from 'graphql';
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 
-const port = process.env.INVENTORY_PORT || 4003;
+const serverPort = parseInt(process.env.INVENTORY_PORT || "") || 4003;
 
 class DeliveryEstimates {
   /** @type {string} */
@@ -24,13 +27,13 @@ const resolvers = {
     delivery: (product, args, context) => {
       // Validate Product has external information as per @requires
       if (product.id != "apollo-federation")
-        throw new ApolloError("product.id was not 'apollo-federation'");
+        throw new GraphQLError("product.id was not 'apollo-federation'");
       if (product.dimensions.size != "small")
-        throw new ApolloError("product.dimensions.size was not 'small'");
+        throw new GraphQLError("product.dimensions.size was not 'small'");
       if (product.dimensions.weight != 1)
-        throw new ApolloError("product.dimensions.weight was not '1'");
+        throw new GraphQLError("product.dimensions.weight was not '1'");
       if (args.zip != "94111")
-        throw new ApolloError("product.delivery input zip was not '94111'");
+        throw new GraphQLError("product.delivery input zip was not '94111'");
 
       return new DeliveryEstimates();
     },
@@ -41,6 +44,6 @@ const server = new ApolloServer({
   schema: buildSubgraphSchema({ typeDefs, resolvers }),
 });
 
-server
-  .listen({ port })
-  .then(({ url }) => console.log(`Inventory subgraph ready at ${url}`));
+startStandaloneServer(server, {
+  listen: { port: serverPort },
+}).then(({ url }) => console.log(`🚀  Inventory subgraph ready at ${url}`));

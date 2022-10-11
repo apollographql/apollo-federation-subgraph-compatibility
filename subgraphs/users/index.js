@@ -1,8 +1,10 @@
 import { readFileSync } from "fs";
-import { ApolloServer, gql } from "apollo-server";
-import { buildSubgraphSchema } from "@apollo/subgraph";
+import { gql } from 'graphql-tag';
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { buildSubgraphSchema } from '@apollo/subgraph';
 
-const port = process.env.USERS_PORT || 4002;
+const serverPort = parseInt(process.env.USERS_PORT || "") || 4002;
 const users = [
   {
     email: "support@apollographql.com",
@@ -25,6 +27,7 @@ const resolvers = {
 const server = new ApolloServer({
   schema: buildSubgraphSchema({ typeDefs, resolvers }),
 });
-server
-  .listen({ port })
-  .then(({ url }) => console.log(`Users subgraph ready at ${url}`));
+
+startStandaloneServer(server, {
+  listen: { port: serverPort },
+}).then(({ url }) => console.log(`🚀  Users subgraph ready at ${url}`));
