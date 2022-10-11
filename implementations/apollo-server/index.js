@@ -157,4 +157,4 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: serverPort },
-}).then(({ url }) => console.log(`Products subgraph ready at ${url}`));
+}).then(({ url }) => console.log(`🚀  Products subgraph ready at ${url}`));
