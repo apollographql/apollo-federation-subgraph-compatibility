@@ -16,7 +16,11 @@ export async function graphqlRequest(
   headers?: { [key: string]: any }
 ) {
   const resp = await fetch(url, {
-    headers: { "content-type": "application/json", ...(headers ?? {}) },
+    headers: {
+      accept: "application/json", // required because Yoga's default content-type is `application/graphql-response+json` as per the spec
+      "content-type": "application/json",
+      ...(headers ?? {}),
+    },
     method: "POST",
     body: JSON.stringify(req),
   });

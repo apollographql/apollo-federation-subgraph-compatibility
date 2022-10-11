@@ -86,3 +86,6 @@ router
 
 # Python - ignore virtual env
 venv
+
+# GraphQL Mesh
+.mesh
