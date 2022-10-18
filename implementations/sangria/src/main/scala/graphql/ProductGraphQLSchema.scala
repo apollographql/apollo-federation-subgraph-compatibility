@@ -1,11 +1,10 @@
 package graphql
 
-import graphql.Directives.{Inaccessible, Provides, Shareable, Tag}
 import graphql.UserGraphQLSchema.UserType
 import io.circe.Json
 import io.circe.generic.semiauto._
 import model._
-import sangria.federation.v2.Directives.Key
+import sangria.federation.v2.Directives._
 import sangria.federation.v2.{Decoder, EntityResolver}
 import sangria.schema._
 
@@ -17,16 +16,14 @@ object ProductGraphQLSchema {
     )
   )
 
-  private val ProductDimensionType: ObjectType[Unit, ProductDimension] = Shareable(
-    ObjectType(
-      "ProductDimension",
-      fields = fields[Unit, ProductDimension](
-        Field("size", OptionType(StringType), resolve = _.value.size),
-        Field("weight", OptionType(FloatType), resolve = _.value.weight),
-        Inaccessible(Field("unit", OptionType(StringType), resolve = _.value.unit))
-      )
+  private val ProductDimensionType: ObjectType[Unit, ProductDimension] = ObjectType(
+    "ProductDimension",
+    fields = fields[Unit, ProductDimension](
+      Field("size", OptionType(StringType), resolve = _.value.size),
+      Field("weight", OptionType(FloatType), resolve = _.value.weight),
+      Field("unit", OptionType(StringType), resolve = _.value.unit, astDirectives = Vector(Inaccessible))
     )
-  )
+  ).withDirective(Shareable)
 
   private val CaseStudyType: ObjectType[Unit, CaseStudy] = ObjectType(
     "CaseStudy",
@@ -42,7 +39,7 @@ object ProductGraphQLSchema {
       Field("study", CaseStudyType, resolve = _.value.study),
       Field("outcome", OptionType(StringType), resolve = _.value.outcome)
     )
-  ).copy(astDirectives = Vector(Key("study { caseNumber }")))
+  ).withDirective(Key("study { caseNumber }"))
 
   private val ProductType: ObjectType[Unit, Product] = ObjectType(
     "Product",
@@ -52,16 +49,19 @@ object ProductGraphQLSchema {
       Field("package", OptionType(StringType), resolve = _.value.`package`),
       Field("variation", OptionType(ProductVariationType), resolve = _.value.variation),
       Field("dimensions", OptionType(ProductDimensionType), resolve = _.value.dimensions),
-      Provides("totalProductsCreated")(Field("createdBy", OptionType(UserType), resolve = _.value.createdBy)),
-      Tag("internal")(Field("notes", OptionType(StringType), resolve = _.value.notes)),
+      Field(
+        "createdBy",
+        OptionType(UserType),
+        resolve = _.value.createdBy,
+        astDirectives = Vector(Provides("totalProductsCreated"))
+      ),
+      Field("notes", OptionType(StringType), resolve = _.value.notes, astDirectives = Vector(Tag("internal"))),
       Field("research", ListType(ProductResearchType), resolve = _.value.research)
     )
-  ).copy(astDirectives =
-    Vector(
-      Key("id"),
-      Key("sku package"),
-      Key("sku variation { id }")
-    )
+  ).withDirectives(
+    Key("id"),
+    Key("sku package"),
+    Key("sku variation { id }")
   )
 
   private val DeprecatedProductType: ObjectType[Unit, DeprecatedProduct] = ObjectType(
@@ -72,11 +72,7 @@ object ProductGraphQLSchema {
       Field("reason", OptionType(StringType), resolve = _.value.reason),
       Field("createdBy", OptionType(UserType), resolve = _.value.createdBy)
     )
-  ).copy(astDirectives =
-    Vector(
-      Key("sku package")
-    )
-  )
+  ).withDirective(Key("sku package"))
 
   val IdArg: Argument[String] = Argument("id", IDType)
   val SkuArg: Argument[String] = Argument("sku", StringType)

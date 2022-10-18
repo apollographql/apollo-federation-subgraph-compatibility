@@ -1,12 +1,10 @@
 package graphql
 
-import graphql.Directives.{External, Override, Requires}
 import io.circe.Json
 import model.{ID, User}
+import sangria.federation.v2.Directives._
 import sangria.federation.v2.{Decoder, EntityResolver}
-import sangria.federation.v2.Directives.Key
 import sangria.schema._
-import service.UserService
 
 object UserGraphQLSchema {
   // should be "extend", but according to the spec, an extend type can only exist if there is one type:
@@ -14,15 +12,23 @@ object UserGraphQLSchema {
   val UserType: ObjectType[Unit, User] = ObjectType(
     "User",
     fields = fields[Unit, User](
-      External(Field("email", IDType, resolve = _.value.email.value)),
-      Override("users")(Field("name", OptionType(StringType), resolve = _.value.name)),
-      External(Field("yearsOfEmployment", IntType, resolve = _.value.yearsOfEmployment)),
-      External(Field("totalProductsCreated", OptionType(IntType), resolve = _.value.totalProductsCreated)),
-      Requires("totalProductsCreated yearsOfEmployment")(
-        Field("averageProductsCreatedPerYear", OptionType(IntType), resolve = _.value.averageProductsCreatedPerYear)
+      Field("email", IDType, resolve = _.value.email.value, astDirectives = Vector(External)),
+      Field("name", OptionType(StringType), resolve = _.value.name, astDirectives = Vector(Override("users"))),
+      Field("yearsOfEmployment", IntType, resolve = _.value.yearsOfEmployment, astDirectives = Vector(External)),
+      Field(
+        "totalProductsCreated",
+        OptionType(IntType),
+        resolve = _.value.totalProductsCreated,
+        astDirectives = Vector(External)
+      ),
+      Field(
+        "averageProductsCreatedPerYear",
+        OptionType(IntType),
+        resolve = _.value.averageProductsCreatedPerYear,
+        astDirectives = Vector(Requires("totalProductsCreated yearsOfEmployment"))
       )
     )
-  ).copy(astDirectives = Vector(Key("email")))
+  ).withDirective(Key("email"))
 
   implicit val decoder: Decoder[Json, ID] = ID.decoder.decodeJson
 
