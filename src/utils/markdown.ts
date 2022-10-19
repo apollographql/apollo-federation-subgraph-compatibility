@@ -12,8 +12,8 @@ export function generateMarkdown(results: TestResult[]) {
     if (a.language === b.language) return 0;
 
     // push hosted solutions to the end
-    if (a.language === "Hosted Subgraphs") return 1;
-    if (b.language === "Hosted Subgraphs") return -1;
+    if (a.language === "Other Solutions") return 1;
+    if (b.language === "Other Solutions") return -1;
 
     return a.language > b.language ? 1 : -1;
   });
