@@ -54,7 +54,7 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
 
   return async () => {
     console.log(`Stopping ${libraryName} and related containers...`);
-    await execa("docker-compose", ["down", "--remove-orphans"]);
+    await execa("docker-compose", ["down", "--remove-orphans", "-v"]);
   };
 }
 

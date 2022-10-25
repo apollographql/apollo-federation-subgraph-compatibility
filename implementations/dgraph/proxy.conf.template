@@ -1,0 +1,8 @@
+server { 
+    listen 4001;
+    server_name products;
+    location / {
+        proxy_ssl_server_name on;
+        proxy_pass ${DGRAPH_URL};
+    }
+}
