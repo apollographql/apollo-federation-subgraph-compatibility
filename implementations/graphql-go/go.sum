@@ -1,0 +1,4 @@
+github.com/dariuszkuc/graphql v0.9.0-federation h1:dHxP3Z+wX/hRkj/3jaxGXb7iG+Zw3fjW1frQbgsq3lI=
+github.com/dariuszkuc/graphql v0.9.0-federation/go.mod h1:nKiHzRM0qopJEwCITUuIsxk9PlVlwIiiI8pnJEhordQ=
+github.com/graphql-go/handler v0.2.3 h1:CANh8WPnl5M9uA25c2GBhPqJhE53Fg0Iue/fRNla71E=
+github.com/graphql-go/handler v0.2.3/go.mod h1:leLF6RpV5uZMN1CdImAxuiayrYYhOk33bZciaUGaXeU=
