@@ -57,6 +57,11 @@ input ProductVariationInput {
   id: ID!
 }
 
+input CaseStudyInput {
+  caseNumber: ID
+    description: String
+}
+
 type Query @extends {
   _service: _Service!
   _entities(representations: [_Any!]!): [_Entity]!
@@ -72,7 +77,7 @@ type User @key(fields: "email") @extends {
   yearsOfEmployment: Int! @external
 }
 
-union _Entity = User | Product
+union _Entity = User | Product | ProductResearch | ProductVariation | ProductDimension | DeprecatedProduct
 
 input _Any {
     __typename: String!
@@ -81,4 +86,5 @@ input _Any {
     package: String
     variation: ProductVariationInput
     email: String
+    study: CaseStudyInput
 }
