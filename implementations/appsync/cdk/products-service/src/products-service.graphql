@@ -87,4 +87,6 @@ input _Any {
     variation: ProductVariationInput
     email: String
     study: CaseStudyInput
+    totalProductsCreated: Int
+    yearsOfEmployment: Int
 }
