@@ -6,7 +6,7 @@ server:
 graphql:
   servlet:
     mapping: /
-  # graphiql:
-  #   enabled: true
+#  graphiql:
+#    enabled: true
   tools:
     schema-location-pattern: "**/*.graphql"
