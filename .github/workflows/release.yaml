@@ -14,10 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # - uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '16'
-      #     check-latest: true
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
       #Setup project and package extension
       - run: npm install
@@ -33,7 +32,7 @@ jobs:
         run: cat results.md > $GITHUB_STEP_SUMMARY
 
       - id: create-version
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           script: |
             const num = context.runNumber;
@@ -46,6 +45,7 @@ jobs:
             core.exportVariable('VERSION', version);
 
       #Create new release
+      # TODO this action is deprecated and using old version of node (12)
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -57,7 +57,8 @@ jobs:
           draft: false
           prerelease: false
 
-      #Upload Results to release0
+      #Upload Results to release
+      # TODO this action is deprecated and using old version of node (12)
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
