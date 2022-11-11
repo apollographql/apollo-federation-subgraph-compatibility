@@ -8,7 +8,6 @@ describe("@override", () => {
     });
 
     const { sdl } = response.data._service;
-    // expect(stripIgnoredCharacters(sdl)).toContain('@override(from:"users")');
     expect(stripIgnoredCharacters(sdl)).toMatch(/(@override|@federation__override)\(from:"users"\)/);
   });
 

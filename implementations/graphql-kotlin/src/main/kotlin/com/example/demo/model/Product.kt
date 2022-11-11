@@ -6,6 +6,7 @@ import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import com.expediagroup.graphql.generator.federation.directives.ProvidesDirective
 import com.expediagroup.graphql.generator.federation.directives.TagDirective
 import com.expediagroup.graphql.generator.federation.execution.FederatedTypeResolver
+import com.expediagroup.graphql.generator.federation.execution.FederatedTypeSuspendResolver
 import com.expediagroup.graphql.generator.scalars.ID
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
@@ -90,13 +91,11 @@ data class Product(
 }
 
 @Component
-class ProductsResolver : FederatedTypeResolver<Product> {
+class ProductsResolver : FederatedTypeSuspendResolver<Product> {
     override val typeName: String = "Product"
 
     override suspend fun resolve(
         environment: DataFetchingEnvironment,
-        representations: List<Map<String, Any>>
-    ): List<Product?> = representations.map {
-        Product.byReference(it)
-    }
+        representation: Map<String, Any>
+    ): Product? = Product.byReference(representation)
 }
