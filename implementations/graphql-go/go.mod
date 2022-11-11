@@ -7,4 +7,4 @@ require (
 	github.com/graphql-go/handler v0.2.3
 )
 
-replace github.com/graphql-go/graphql => github.com/dariuszkuc/graphql v0.9.0-federation
+replace github.com/graphql-go/graphql => github.com/dariuszkuc/graphql v0.9.1-federation
