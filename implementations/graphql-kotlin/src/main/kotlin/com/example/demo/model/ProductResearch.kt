@@ -3,6 +3,7 @@ package com.example.demo.model
 import com.expediagroup.graphql.generator.federation.directives.FieldSet
 import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import com.expediagroup.graphql.generator.federation.execution.FederatedTypeResolver
+import com.expediagroup.graphql.generator.federation.execution.FederatedTypeSuspendResolver
 import com.expediagroup.graphql.generator.scalars.ID
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
@@ -24,19 +25,19 @@ data class ProductResearch(
 )
 
 @Component
-class ProductResearchResolver : FederatedTypeResolver<ProductResearch> {
+class ProductResearchResolver : FederatedTypeSuspendResolver<ProductResearch> {
     override val typeName: String = "ProductResearch"
 
     override suspend fun resolve(
         environment: DataFetchingEnvironment,
-        representations: List<Map<String, Any>>
-    ): List<ProductResearch?> = representations.map { ref ->
-        val study = ref["study"]
+        representation: Map<String, Any>
+    ): ProductResearch? {
+        val study = representation["study"]
         val caseNumber = if (study is Map<*, *>) {
             study["caseNumber"].toString()
         } else {
             null
         }
-        RESEARCH_LIST.find { research -> research.study.caseNumber.value == caseNumber }
+        return RESEARCH_LIST.find { research -> research.study.caseNumber.value == caseNumber }
     }
 }
