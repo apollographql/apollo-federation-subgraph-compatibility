@@ -23,7 +23,7 @@ jobs:
       - name: generate matrix
         id: matrix
         run: |
-          echo "::set-output name=matrix::$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]"))]')"
+          echo "matrix=$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]"))]')" >> $GITHUB_OUTPUT
 
   build:
     timeout-minutes: 60
