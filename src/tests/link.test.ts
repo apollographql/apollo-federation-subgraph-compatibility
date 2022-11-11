@@ -1,4 +1,6 @@
+import { stripIgnoredCharacters } from "graphql";
 import { productsRequest } from "../utils/client";
+import { readFileSync } from "fs";
 
 test("@link", async () => {
   const response = await productsRequest({
@@ -12,31 +14,36 @@ test("@link", async () => {
   });
 
   const { sdl } = response.data._service;
+  const normalizedSDL = stripIgnoredCharacters(sdl);
 
   const linksRegex = /@link\(([\s\S]+?)\)/g;
   // should have @link imports
-  expect(linksRegex.test(sdl)).toBe(true);
+  expect(linksRegex.test(normalizedSDL)).toBe(true);
 
   let fedLinkCount = 0;
-  sdl.match(linksRegex).forEach(element => {
-    const linkUrlSpecVersionRegex = /url\s*:\s*"https:\/\/specs.apollo.dev\/federation\/v(.+?)"/;
+  normalizedSDL.match(linksRegex).forEach(element => {
+    const urlRegex = /url:(\".+?\")/;
+    expect(urlRegex.test(element))
+
+    const linkUrl = JSON.parse(element.match(urlRegex)[1]);
+    const linkUrlSpecVersionRegex = /https:\/\/specs.apollo.dev\/federation\/v(.+)/;
     // only verify federation spec @links
-    if (linkUrlSpecVersionRegex.test(element)) {
+    if (linkUrlSpecVersionRegex.test(linkUrl)) {
       fedLinkCount++;
 
-      const federationVersion = element.match(linkUrlSpecVersionRegex)[1];
+      const federationVersion = linkUrl.match(linkUrlSpecVersionRegex)[1];
       // only federation v2.0 and v2.1 are supported
       expect(federationVersion).toMatch(/2\.0|2\.1/);
 
-      const linkImportsRegex = /import\s*:\s*(\[.+?\])/;
-      if (linkImportsRegex.test(sdl)) {
+      const linkImportsRegex = /import:\[(.+?)\]/;
+      if (linkImportsRegex.test(element)) {
         // verify federation imports
         const expected = ["@composeDirective", "@extends", "@external", "@inaccessible", "@key", "@override", "@provides", "@requires", "@shareable", "@tag", "FieldSet"];
 
-        const linkImportsMatch = sdl.match(linkImportsRegex);
-        const linkImports = JSON.parse(linkImportsMatch[1]);
+        const linkImportsMatch = element.match(linkImportsRegex);
+        const linkImports = linkImportsMatch[1].split(" ");
         linkImports.forEach(importedElement => {
-          if (!expected.includes(importedElement)) {
+          if (!expected.includes(importedElement.replaceAll("\"", ""))) {
             expect('').toBe('unexpected federation import ${element}');
           }
         });
