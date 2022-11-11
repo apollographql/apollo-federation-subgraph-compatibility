@@ -19,7 +19,7 @@ test("@link", async () => {
 
   let fedLinkCount = 0;
   sdl.match(linksRegex).forEach(element => {
-    const linkUrlSpecVersionRegex = /url:\s*"https:\/\/specs.apollo.dev\/federation\/v(.+?)"/;
+    const linkUrlSpecVersionRegex = /url\s*:\s*"https:\/\/specs.apollo.dev\/federation\/v(.+?)"/;
     // only verify federation spec @links
     if (linkUrlSpecVersionRegex.test(element)) {
       fedLinkCount++;
@@ -28,16 +28,16 @@ test("@link", async () => {
       // only federation v2.0 and v2.1 are supported
       expect(federationVersion).toMatch(/2\.0|2\.1/);
 
-      const linkImportsRegex = /import:\s*(\[.+?\])/;
+      const linkImportsRegex = /import\s*:\s*(\[.+?\])/;
       if (linkImportsRegex.test(sdl)) {
         // verify federation imports
         const expected = ["@composeDirective", "@extends", "@external", "@inaccessible", "@key", "@override", "@provides", "@requires", "@shareable", "@tag", "FieldSet"];
 
         const linkImportsMatch = sdl.match(linkImportsRegex);
-        const linkImports = JSON.parse(linkImportsMatch[1])
+        const linkImports = JSON.parse(linkImportsMatch[1]);
         linkImports.forEach(importedElement => {
           if (!expected.includes(importedElement)) {
-            fail('unexpected federation import ${element}')
+            expect('').toBe('unexpected federation import ${element}');
           }
         });
       }
@@ -45,10 +45,10 @@ test("@link", async () => {
   });
 
   if (fedLinkCount == 0) {
-    fail('missing federation spec @link imports')
+    expect('').toBe('missing federation spec @link imports');
   }
 
   if (fedLinkCount > 1) {
-    fail('schema @link imports multiple federation specs')
+    expect('').toBe('schema @link imports multiple federation specs');
   }
 });
