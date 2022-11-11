@@ -1,9 +1,11 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from '@apollo/server';
+import { printSubgraphSchema } from '@apollo/subgraph';
+import { startStandaloneServer } from '@apollo/server/standalone';
 import SchemaBuilder from '@pothos/core';
 import DirectivesPlugin from '@pothos/plugin-directives';
 import FederationPlugin from '@pothos/plugin-federation';
 
-const port = process.env.PRODUCTS_PORT || 4001;
+const serverPort = parseInt(process.env.PRODUCTS_PORT || "") || 4001;
 
 const builder = new SchemaBuilder<{
   DefaultFieldNullability: true;
@@ -255,12 +257,12 @@ builder.queryType({
 });
 
 export const schema = builder.toSubGraphSchema({});
+console.log(printSubgraphSchema(schema));
 
 const server = new ApolloServer({
   schema: builder.toSubGraphSchema({}),
 });
 
-server
-  .listen({ port })
-  .then(({ url }) => console.log(`Products subgraph ready at ${url}`))
-  .catch(console.error);
+startStandaloneServer(server, {
+  listen: { port: serverPort },
+}).then(({ url }) => console.log(`🚀  Products subgraph ready at ${url}`));
