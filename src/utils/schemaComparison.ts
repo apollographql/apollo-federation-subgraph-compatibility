@@ -9,8 +9,7 @@ import {
   NonNullTypeNode,
   ObjectTypeDefinitionNode,
   ObjectTypeExtensionNode,
-  TypeNode,
-  buildASTSchema
+  TypeNode
 } from "graphql";
 import { resolve } from "path";
 

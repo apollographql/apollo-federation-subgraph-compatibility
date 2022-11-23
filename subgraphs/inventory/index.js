@@ -46,4 +46,9 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
   listen: { port: serverPort },
-}).then(({ url }) => console.log(`🚀  Inventory subgraph ready at ${url}`));
+}).then(({ url }) => {
+  if (process.send) {
+    process.send("ready");
+  }
+  console.log(`🚀  Inventory subgraph ready at ${url}`)
+});

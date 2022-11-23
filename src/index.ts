@@ -6,10 +6,9 @@ import debug from "debug";
 import { Writable } from "stream";
 import { load } from "js-yaml";
 import { defaultsDeep } from "lodash";
-
-import { ping } from "./utils/client";
+import { healtcheckAll } from "./utils/client";
 import { generateMarkdown } from "./utils/markdown";
-import { runJest, TestResult, TESTS } from "./testRunner";
+import { runJest, TestResultDetails, TESTS } from "./testRunner";
 
 const dockerDebug = debug("docker");
 
@@ -66,7 +65,7 @@ async function main() {
   const librariesPath = resolve(__dirname, "..", "implementations");
   const implementationFolders = getFolderNamesFromPath(librariesPath);
   const libraryNames = libraries ? libraries.split(",") : implementationFolders;
-  const results: TestResult[] = [];
+  const results: TestResultDetails[] = [];
 
   for (const libraryName of libraryNames) {
     if (libraryName === "_template_hosted_" || libraryName === "_template_library_") continue;
@@ -77,7 +76,7 @@ async function main() {
       continue;
     }
 
-    const result: TestResult = { name: libraryName, started: false, tests: {} };
+    const result: TestResultDetails = { name: libraryName, started: false, tests: {} };
     results.push(result);
 
     const dockerComposeDown = await runDockerCompose(
@@ -86,7 +85,7 @@ async function main() {
     );
 
     try {
-      const startupSuccess = await ping();
+      const startupSuccess = await healtcheckAll(libraryName);
 
       if (startupSuccess) {
         console.log(`Library ${libraryName} started successfully`);
