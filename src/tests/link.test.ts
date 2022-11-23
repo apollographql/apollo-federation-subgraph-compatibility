@@ -1,7 +1,5 @@
 import { stripIgnoredCharacters } from "graphql";
 import { productsRequest } from "../utils/client";
-import { readFileSync } from "fs";
-import { url } from "inspector";
 
 test("@link", async () => {
   const response = await productsRequest({
@@ -15,8 +13,6 @@ test("@link", async () => {
   });
 
   const { sdl } = response.data._service;
-  console.log("sdl \n", sdl);
-  // const sdl = readFileSync("/Users/dkuc/Development/apollo-federation-subgraph-compatibility/implementations/_template_library_/products.graphql", { encoding: "utf-8" })
   const normalizedSDL = stripIgnoredCharacters(sdl);
 
   const linksRegex = /@link\(([\s\S]+?)\)/g;
@@ -25,16 +21,13 @@ test("@link", async () => {
 
   let fedLinkCount = 0;
   normalizedSDL.match(linksRegex).forEach(element => {
-    console.log("processing link\n", element);
     const urlRegex = /url:(\".+?\")/;
     // skip definitions
     if (urlRegex.test(element)) {
       const linkUrl = JSON.parse(element.match(urlRegex)[1]);
-      console.log("link url", linkUrl)
       const linkUrlSpecVersionRegex = /https:\/\/specs.apollo.dev\/federation\/v(.+)/;
       // only verify federation spec @links
       if (linkUrlSpecVersionRegex.test(linkUrl)) {
-        console.log("fed import!");
         fedLinkCount++;
   
         const federationVersion = linkUrl.match(linkUrlSpecVersionRegex)[1];
@@ -49,7 +42,6 @@ test("@link", async () => {
           const linkImportsMatch = element.match(linkImportsRegex);
           const linkImports = linkImportsMatch[1].split(" ");
           linkImports.forEach(importedElement => {
-            console.log("import:", importedElement);
             if (!expected.includes(importedElement.replaceAll("\"", ""))) {
               expect('').toBe('unexpected federation import ${element}');
             }
