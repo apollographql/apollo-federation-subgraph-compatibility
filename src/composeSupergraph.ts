@@ -1,8 +1,10 @@
 import execa from "execa";
 import debug from "debug";
-import { healthcheck } from "./utils/client";
+import { healtcheckRouter, healthcheck } from "./utils/client";
 import { logWithTimestamp, writeableDebugStream } from "./utils/logging";
 import { resolve } from "path";
+import { readFile, writeFile } from "fs/promises";
+import { createWriteStream } from "fs";
 
 const roverDebug = debug("rover");
 
@@ -11,27 +13,28 @@ const roverDebug = debug("rover");
  * 
  * @param productsUrl products schema URL 
  */
-export async function composeSupergraph(productsUrl: string, productsSchema?: string) {
+export async function composeDevSupergraph(productsUrl: string, productsSchema?: string): Promise<Boolean> {
     logWithTimestamp("composing supergraph...");
     roverDebug(`\n***********************\nComposing supergraph...\n***********************\n\n`);
-    const pm2Logs = execa("pm2", ["logs"]);
-    pm2Logs.stdout.pipe(writeableDebugStream(roverDebug));
-    pm2Logs.stderr.pipe(writeableDebugStream(roverDebug));
-
 
     // composing supergraph
     //   cannot use supergraph.config.js as we need to run rover dev sequentially for each subgraph
     //   this is a workaround to https://github.com/apollographql/rover/issues/1258
     // TODO cleanup once multiple subgraphs could be specified with single rover dev command
-    await composeSubgraph("products", productsUrl, productsSchema);
-    await composeSubgraph("users", "http://localhost:4002", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
-    await composeSubgraph("inventory", "http://localhost:4003", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
+    await composeDevSubgraph("products", productsUrl, productsSchema);
+    await composeDevSubgraph("users", "http://localhost:4002", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
+    await composeDevSubgraph("inventory", "http://localhost:4003", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
 
-    pm2Logs.cancel();
-    roverDebug(`\n***********************\nSupergraph composed...\n***********************\n\n`);
+    const started = await healtcheckRouter();
+    if (started) {
+        roverDebug(`\n***********************\nSupergraph composed...\n***********************\n\n`);
+        return true;
+    } else {
+        return false;
+    }
 }
 
-async function composeSubgraph(subgraphName: string, subgraphUrl: string, schemaFile?: string) {
+async function composeDevSubgraph(subgraphName: string, subgraphUrl: string, schemaFile?: string) {
     roverDebug(`Composing supergraph - loading ${subgraphName} schema`);
 
     const started = await healthcheck(subgraphName, subgraphUrl);
@@ -67,4 +70,32 @@ async function composeSubgraph(subgraphName: string, subgraphUrl: string, schema
     } else {
         throw new Error(`${subgraphName} failed to start`);
     }
+}
+
+export async function composeSupergraph(schemaFile: string, graphQLEndpoint: string = "", port: string = "4001") {
+    logWithTimestamp("composing supergraph...");
+    roverDebug(`\n***********************\nComposing supergraph...\n***********************\n\n`);
+
+    // generate supergraph config
+    const template = await readFile("supergraph-config.yaml.template", "utf-8");
+    const supergraphConfig = template.replace("${PORT}", port)
+        .replace("${GRAPHQL_PATH}", graphQLEndpoint)
+        .replace("${SCHEMA_FILE}", schemaFile);
+
+    await writeFile("supergraph-config.yaml", supergraphConfig);
+
+    // compose supergraph
+    const composeProcess = execa(
+        "npx",
+        ["rover", "supergraph", "compose", "--config", "supergraph-config.yaml"],
+        { env: { APOLLO_ELV2_LICENSE: "accept" } }
+    );
+    composeProcess.stdout.pipe(createWriteStream("supergraph.graphql"));
+    composeProcess.stderr.pipe(writeableDebugStream(roverDebug));
+    await composeProcess;
+
+    if (composeProcess.exitCode !== 0) {
+        throw new Error(`Failed to compose supergraph`);
+    }
+    roverDebug(`\n***********************\nSupergraph composed...\n***********************\n\n`);
 }

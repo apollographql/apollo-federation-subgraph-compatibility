@@ -25,9 +25,7 @@
     "test": "node dist/index.js",
     "test:jest": "jest src"
   },
-  "bin": {
-    "compatibility": "./dist/compatibilityTest.js"
-  },
+  "bin": "./dist/compatibilityTest.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {

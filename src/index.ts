@@ -3,23 +3,14 @@ import { readFile, writeFile } from "fs/promises";
 import { resolve } from "path";
 import execa from "execa";
 import debug from "debug";
-import { Writable } from "stream";
 import { load } from "js-yaml";
 import { defaultsDeep } from "lodash";
 import { healtcheckAll } from "./utils/client";
 import { generateMarkdown } from "./utils/markdown";
 import { runJest, TestResultDetails, TESTS } from "./testRunner";
+import { writeableDebugStream } from "./utils/logging";
 
 const dockerDebug = debug("docker");
-
-function dockerDebugStream() {
-  return new Writable({
-    write(chunk, _encoding, next) {
-      dockerDebug(chunk.toString());
-      next();
-    },
-  });
-}
 
 function getFolderNamesFromPath(path: string) {
   return readdirSync(path, {
@@ -42,8 +33,8 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
     "--detach",
   ]);
 
-  proc.stdout.pipe(dockerDebugStream());
-  proc.stderr.pipe(dockerDebugStream());
+  proc.stdout.pipe(writeableDebugStream(dockerDebug));
+  proc.stderr.pipe(writeableDebugStream(dockerDebug));
 
   await proc;
 

@@ -58,6 +58,15 @@ export function routerRequest(
 }
 
 export async function healtcheckAll(libraryName: string): Promise<boolean> {
+  const routerUp = await healtcheckRouter();
+  if (!routerUp) {
+    return false;
+  }
+
+  return healthcheck(libraryName, PRODUCTS_URL);
+}
+
+export async function healtcheckRouter(): Promise<Boolean> {
   console.log("router health check", ROUTER_HEALTH_URL)
   const routerHealthcheck = await fetch(ROUTER_HEALTH_URL, { retry: { retries: 10, maxTimeout: 1000 } });
 
@@ -65,8 +74,7 @@ export async function healtcheckAll(libraryName: string): Promise<boolean> {
     console.log("router failed to start");
     return false;
   }
-
-  return healthcheck(libraryName, PRODUCTS_URL);
+  return true;
 }
 
 export async function healthcheck(appName: string, url: string): Promise<boolean> {
