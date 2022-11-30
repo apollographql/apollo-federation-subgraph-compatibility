@@ -90,6 +90,7 @@ program
     .showHelpAfterError();
 
 program.command("pm2")
+    .description("Start supergraph using PM2")
     .requiredOption("--endpoint <endpoint>", "subgraph endpoint")
     .option("--schema <schema file>", "optional schema file, if omitted composition will fallback to introspection")
     .option("--config <PM2 configuration file>", "optional PM2 configuration file")
@@ -103,6 +104,7 @@ program.command("pm2")
     .configureHelp({ sortOptions: true });
 
 program.command("docker")
+    .description("Start supergraph using Docker Compose")
     .requiredOption("--compose <compose file>", "Docker compose file")
     .requiredOption("--schema <schema file>", "Schema file")
     .option("--path <endpoint>", "GraphQL endpoint path", "/graphql")
