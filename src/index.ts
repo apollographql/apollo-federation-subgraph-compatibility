@@ -5,7 +5,7 @@ import execa from "execa";
 import debug from "debug";
 import { load } from "js-yaml";
 import { defaultsDeep } from "lodash";
-import { healtcheckAll } from "./utils/client";
+import { healthcheckAll } from "./utils/client";
 import { generateMarkdown } from "./utils/markdown";
 import { runJest, TestResultDetails, TESTS } from "./testRunner";
 import { writeableDebugStream } from "./utils/logging";
@@ -76,7 +76,7 @@ async function main() {
     );
 
     try {
-      const startupSuccess = await healtcheckAll(libraryName);
+      const startupSuccess = await healthcheckAll(libraryName);
 
       if (startupSuccess) {
         console.log(`Library ${libraryName} started successfully`);

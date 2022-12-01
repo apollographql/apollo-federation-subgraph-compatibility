@@ -58,7 +58,7 @@ export function routerRequest(
 }
 
 export async function healthcheckAll(libraryName: string): Promise<boolean> {
-  const routerUp = await healtcheckRouter();
+  const routerUp = await healthcheckRouter();
   if (!routerUp) {
     return false;
   }

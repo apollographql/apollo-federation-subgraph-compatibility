@@ -1,6 +1,6 @@
 import execa from "execa";
 import debug from "debug";
-import { healtcheckRouter, healthcheck } from "./utils/client";
+import { healthcheckRouter, healthcheck } from "./utils/client";
 import { logWithTimestamp, writeableDebugStream } from "./utils/logging";
 import { resolve } from "path";
 import { readFile, writeFile } from "fs/promises";
@@ -25,7 +25,7 @@ export async function composeDevSupergraph(productsUrl: string, productsSchema?:
     await composeDevSubgraph("users", "http://localhost:4002", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
     await composeDevSubgraph("inventory", "http://localhost:4003", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
 
-    const started = await healtcheckRouter();
+    const started = await healthcheckRouter();
     if (started) {
         roverDebug(`\n***********************\nSupergraph composed...\n***********************\n\n`);
         return true;

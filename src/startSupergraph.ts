@@ -2,7 +2,7 @@ import execa from "execa";
 import debug from "debug";
 import { logWithTimestamp, writeableDebugStream } from "./utils/logging";
 import { composeDevSupergraph, composeSupergraph } from "./composeSupergraph";
-import { healtcheckRouter } from "./utils/client";
+import { healthcheckRouter } from "./utils/client";
 
 const pm2Debug = debug("pm2");
 const dockerDebug = debug("docker");
@@ -135,7 +135,7 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
         throw new Error("docker-compose did not start successfully");
     }
 
-    const started = await healtcheckRouter();
+    const started = await healthcheckRouter();
     if (started) {
         return async () => {
             pm2Debug(`\n***********************\nStopping supergraph...\n***********************\n\n`);
