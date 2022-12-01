@@ -57,7 +57,7 @@ export function routerRequest(
   return graphqlRequest(ROUTER_URL, req, headers);
 }
 
-export async function healtcheckAll(libraryName: string): Promise<boolean> {
+export async function healthcheckAll(libraryName: string): Promise<boolean> {
   const routerUp = await healtcheckRouter();
   if (!routerUp) {
     return false;
