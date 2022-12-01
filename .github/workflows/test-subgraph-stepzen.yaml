@@ -9,28 +9,9 @@ on:
 
 jobs:
   compatibility:
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Setup Environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm install
-      - name: Compile supergraph
-        run: npm run setup
-      - name: Compatibility test
-        run: npm run test stepzen
-        env:
-          DEBUG: docker,test
-          URL_STEPZEN: ${{ secrets.URL_STEPZEN }}
-      - name: Generate Results Summary
-        run: |
-          cat results.md
-          cat results.md >> $GITHUB_STEP_SUMMARY
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "stepzen"
+    secrets:
+      TEST_URL: ${{ secrets.URL_STEPZEN }}
+

@@ -4,6 +4,6 @@ services:
     build:
       context: implementations/stepzen
       args:
-        SUBGRAPH_URL: ${URL_STEPZEN}
+        SUBGRAPH_URL: ${TEST_URL}
     ports:
       - 4001:4001
