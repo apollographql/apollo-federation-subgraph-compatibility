@@ -57,10 +57,10 @@ async function compatibilityTests(runtime: TestRuntime, options: OptionValues) {
     logWithTimestamp("generating results...");
 
     if (options.format == "markdown") {
-        generateSimplifiedMarkdown(testResults, options.output);
+        generateSimplifiedMarkdown(testResults, `${options.output}.md`);
     } else {
         await writeFile(
-            options.output,
+            `${options.output}.json`,
             JSON.stringify(testResults, null, 2),
             "utf-8"
         );
@@ -75,7 +75,7 @@ async function compatibilityTests(runtime: TestRuntime, options: OptionValues) {
 class CompatibilityTestCommand extends Command {
     createCommand(name: string): Command {
         return new CompatibilityTestCommand(name)
-            .option("--output <test results file name>", "optional output file name", "results.md")
+            .option("--output <test results file name>", "optional output file name", "results")
             .addOption(new Option("--format <test results format>", "optional output file format").choices(["json", "markdown"]).default("markdown"))
             .option("--debug", "debug mode with extra log info")
             .showHelpAfterError()
