@@ -66,7 +66,7 @@ export async function healthcheckAll(libraryName: string): Promise<boolean> {
   return healthcheck(libraryName, PRODUCTS_URL);
 }
 
-export async function healtcheckRouter(): Promise<Boolean> {
+export async function healthcheckRouter(): Promise<Boolean> {
   console.log("router health check", ROUTER_HEALTH_URL)
   const routerHealthcheck = await fetch(ROUTER_HEALTH_URL, { retry: { retries: 10, maxTimeout: 1000 } });
 
