@@ -107,7 +107,7 @@ program.command("docker")
     .description("Start supergraph using Docker Compose")
     .requiredOption("--compose <compose file>", "Docker compose file")
     .requiredOption("--schema <schema file>", "Schema file")
-    .option("--path <endpoint>", "GraphQL endpoint path", "/graphql")
+    .option("--path <endpoint>", "GraphQL endpoint path", "")
     .option("--port <port>", "HTTP server port", "4001")
     .action((options) => {
         if (options.debug) {
