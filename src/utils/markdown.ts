@@ -74,7 +74,7 @@ class MarkdownFile {
     let headers = "<th>Federation 1 Support</th><th>Federation 2 Support</th>"
     if (result) {
       this.content.push("", `## ${result.language}`, "");
-      headers = "<th width=\"300\">Library</th>" + headers;
+      headers = '<th width="300">Library</th>' + headers;
     }
 
     this.content.push("<table>", 
