@@ -3,6 +3,7 @@ import debug from "debug";
 import { logWithTimestamp, writeableDebugStream } from "./utils/logging";
 import { composeDevSupergraph, composeSupergraph } from "./composeSupergraph";
 import { healthcheckRouter } from "./utils/client";
+import { resolve } from "path";
 
 const pm2Debug = debug("pm2");
 const dockerDebug = debug("docker");
@@ -45,14 +46,15 @@ export async function startSupergraph(config: DockerConfig | Pm2Config) {
 
 async function startSupergraphUsingPm2(config: Pm2Config) {
     pm2Debug(`\n***********************\nStarting supergraph using PM2...\n***********************\n\n`);
-    // start pm2 daemon to avoid race conditions
-    await execa("pm2", ["ping"]);
-
-    const pm2Logs = execa("pm2", ["logs"]);
-    pm2Logs.stdout.pipe(writeableDebugStream(pm2Debug));
-    pm2Logs.stderr.pipe(writeableDebugStream(pm2Debug));
-
     try {
+        // start pm2 daemon to avoid race conditions
+        await execa("pm2", ["ping"]);
+
+        const pm2Logs = execa("pm2", ["logs"]);
+        pm2Logs.stdout.pipe(writeableDebugStream(pm2Debug));
+        pm2Logs.stderr.pipe(writeableDebugStream(pm2Debug));
+
+    
         let productsSubgraph = null;
         if (config.configFile) {
             productsSubgraph = await startProductsSubgraphUsingPm2(config.configFile);
@@ -60,7 +62,7 @@ async function startSupergraphUsingPm2(config: Pm2Config) {
 
         const proc = execa("pm2", [
             "start",
-            "supergraph.config.js",
+            resolve(__dirname, "..", "supergraph.config.js"),
         ]);
         proc.stdout.pipe(writeableDebugStream(pm2Debug));
         proc.stderr.pipe(writeableDebugStream(pm2Debug));
@@ -95,8 +97,11 @@ async function startSupergraphUsingPm2(config: Pm2Config) {
  * Flushes PM2 logs and then stops all PM2 processes (including daemon).
  */
 async function shutdownSupergraphUsingPm2() {
-    await execa("pm2", ["flush"]);
-    await execa("pm2", ["kill"]);
+    const logsFlushed = await execa("pm2", ["flush"]);
+    const stopped = await execa("pm2", ["kill"]);
+    if (logsFlushed.exitCode !== 0 || stopped.exitCode !== 0) {
+        console.error("PM2 did not shutdown correctly");
+    }
 }
 
 async function startProductsSubgraphUsingPm2(configFile: string) {
@@ -116,32 +121,44 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
     await composeSupergraph(config.schemaFile, config.path ?? "", config.port ?? "4001");
     dockerDebug(`\n***********************\nStarting supergraph using Docker Compose...\n***********************\n\n`);
 
-    const proc = execa("docker", [
-        "compose",
-        "-f",
-        "docker-compose.yaml",
-        "-f",
-        config.composeFile,
-        "up",
-        "--build",
-        "--detach",
-    ]);
-
-    proc.stdout.pipe(writeableDebugStream(dockerDebug));
-    proc.stderr.pipe(writeableDebugStream(dockerDebug));
-
-    await proc;
-    if (proc.exitCode !== 0) {
-        throw new Error("docker-compose did not start successfully");
+    try {
+        const proc = execa("docker", [
+            "compose",
+            "-f",
+            resolve(__dirname, "..", "docker-compose.yaml"),
+            "-f",
+            config.composeFile,
+            "up",
+            "--build",
+            "--detach",
+        ]);
+    
+        proc.stdout.pipe(writeableDebugStream(dockerDebug));
+        proc.stderr.pipe(writeableDebugStream(dockerDebug));
+    
+        await proc;
+        if (proc.exitCode !== 0) {
+            throw new Error("docker-compose did not start successfully");
+        }
+    
+        const started = await healthcheckRouter();
+        if (started) {
+            return async () => {
+                pm2Debug(`\n***********************\nStopping supergraph...\n***********************\n\n`);
+                await shutdownSupergraphUsingDocker();
+            };
+        } else {
+            throw new Error("Supergraph did not start successfully");
+        }
+    } catch (err) {
+        await shutdownSupergraphUsingDocker();
+        throw err;
     }
+}
 
-    const started = await healthcheckRouter();
-    if (started) {
-        return async () => {
-            pm2Debug(`\n***********************\nStopping supergraph...\n***********************\n\n`);
-            await execa("docker-compose", ["down", "--remove-orphans", "-v"]);
-        };
-    } else {
-        throw new Error("Supergraph did not start successfully");
+async function shutdownSupergraphUsingDocker() {
+    const shutdown = await execa("docker", ["compose", "down", "--remove-orphans", "-v"]);
+    if (shutdown.exitCode !== 0) {
+        console.error("Docker compose did not shutdown correctly");
     }
 }

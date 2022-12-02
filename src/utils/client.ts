@@ -68,13 +68,18 @@ export async function healthcheckAll(libraryName: string): Promise<boolean> {
 
 export async function healthcheckRouter(): Promise<Boolean> {
   console.log("router health check", ROUTER_HEALTH_URL)
-  const routerHealthcheck = await fetch(ROUTER_HEALTH_URL, { retry: { retries: 10, maxTimeout: 1000 } });
+  try {
+    const routerHealthcheck = await fetch(ROUTER_HEALTH_URL, { retry: { retries: 10, maxTimeout: 1000 } });
 
-  if (!routerHealthcheck.ok) {
-    console.log("router failed to start");
+    if (!routerHealthcheck.ok) {
+      console.log("router failed to start");
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("router faield to start", err);
     return false;
   }
-  return true;
 }
 
 export async function healthcheck(appName: string, url: string): Promise<boolean> {

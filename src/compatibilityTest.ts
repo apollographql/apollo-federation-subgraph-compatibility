@@ -76,7 +76,7 @@ class CompatibilityTestCommand extends Command {
     createCommand(name: string): Command {
         return new CompatibilityTestCommand(name)
             .option("--output <test results file name>", "optional output file name", "results")
-            .addOption(new Option("--format <test results format>", "optional output file format").choices(["json", "markdown"]).default("markdown"))
+            .addOption(new Option("--format <json|markdown>", "optional output file format").choices(["json", "markdown"]).default("markdown"))
             .option("--debug", "debug mode with extra log info")
             .showHelpAfterError()
             .configureHelp({ sortOptions: true });
@@ -92,7 +92,7 @@ program
 program.command("pm2")
     .description("Start supergraph using PM2")
     .requiredOption("--endpoint <endpoint>", "subgraph endpoint")
-    .option("--schema <schema file>", "optional schema file, if omitted composition will fallback to introspection")
+    .option("--schema <schema file>", "optional path to schema file, if omitted composition will fallback to introspection")
     .option("--config <PM2 configuration file>", "optional PM2 configuration file")
     .action((options) => {
         if (options.debug) {
@@ -105,8 +105,8 @@ program.command("pm2")
 
 program.command("docker")
     .description("Start supergraph using Docker Compose")
-    .requiredOption("--compose <compose file>", "Docker compose file")
-    .requiredOption("--schema <schema file>", "Schema file")
+    .requiredOption("--compose <compose file>", "Path to docker compose file")
+    .requiredOption("--schema <schema file>", "Path to schema file")
     .option("--path <endpoint>", "GraphQL endpoint path", "")
     .option("--port <port>", "HTTP server port", "4001")
     .action((options) => {
