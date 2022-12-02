@@ -23,7 +23,7 @@ export async function composeDevSupergraph(productsUrl: string, productsSchema?:
     // TODO cleanup once multiple subgraphs could be specified with single rover dev command
     await composeDevSubgraph("products", productsUrl, productsSchema);
     await composeDevSubgraph("users", "http://localhost:4002", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
-    await composeDevSubgraph("inventory", "http://localhost:4003", resolve(__dirname, "..", "subgraphs", "users", "users.graphql"));
+    await composeDevSubgraph("inventory", "http://localhost:4003", resolve(__dirname, "..", "subgraphs", "inventory", "inventory.graphql"));
 
     const started = await healthcheckRouter();
     if (started) {
