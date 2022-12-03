@@ -57,10 +57,10 @@ async function compatibilityTests(runtime: TestRuntime, options: OptionValues) {
     logWithTimestamp("generating results...");
 
     if (options.format == "markdown") {
-        generateSimplifiedMarkdown(testResults, `${options.output}.md`);
+        generateSimplifiedMarkdown(testResults, `results.md`);
     } else {
         await writeFile(
-            `${options.output}.json`,
+            `results.json`,
             JSON.stringify(testResults, null, 2),
             "utf-8"
         );
@@ -75,7 +75,6 @@ async function compatibilityTests(runtime: TestRuntime, options: OptionValues) {
 class CompatibilityTestCommand extends Command {
     createCommand(name: string): Command {
         return new CompatibilityTestCommand(name)
-            .option("--output <test results file name>", "optional output file name", "results")
             .addOption(new Option("--format <json|markdown>", "optional output file format").choices(["json", "markdown"]).default("markdown"))
             .option("--debug", "debug mode with extra log info")
             .showHelpAfterError()
@@ -86,14 +85,14 @@ class CompatibilityTestCommand extends Command {
 const program = new CompatibilityTestCommand();
 
 program
-    .description(`Run Apollo Federation subgraph compatibility test`)
+    .description(`Run Apollo Federation subgraph compatibility tests`)
     .showHelpAfterError();
 
 program.command("pm2")
     .description("Start supergraph using PM2")
-    .requiredOption("--endpoint <endpoint>", "subgraph endpoint")
-    .option("--schema <schema file>", "optional path to schema file, if omitted composition will fallback to introspection")
-    .option("--config <PM2 configuration file>", "optional PM2 configuration file")
+    .requiredOption("--endpoint <url>", "subgraph endpoint")
+    .option("--schema <schema.graphql>", "optional path to schema file, if omitted composition will fallback to introspection")
+    .option("--config <subgraph.config.js>", "optional PM2 configuration file")
     .action((options) => {
         if (options.debug) {
             console.log("setting debug setting");
@@ -105,9 +104,9 @@ program.command("pm2")
 
 program.command("docker")
     .description("Start supergraph using Docker Compose")
-    .requiredOption("--compose <compose file>", "Path to docker compose file")
-    .requiredOption("--schema <schema file>", "Path to schema file")
-    .option("--path <endpoint>", "GraphQL endpoint path", "")
+    .requiredOption("--compose <docker-compose.yaml>", "Path to docker compose file")
+    .requiredOption("--schema <schema.graphql>", "Path to schema file")
+    .option("--path <path>", "GraphQL endpoint path", "")
     .option("--port <port>", "HTTP server port", "4001")
     .action((options) => {
         if (options.debug) {
