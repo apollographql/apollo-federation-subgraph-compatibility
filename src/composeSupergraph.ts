@@ -77,8 +77,9 @@ export async function composeSupergraph(schemaFile: string, graphQLEndpoint: str
     roverDebug(`\n***********************\nComposing supergraph...\n***********************\n\n`);
 
     // generate supergraph config
-    const template = await readFile("supergraph-config.yaml.template", "utf-8");
-    const supergraphConfig = template.replace("${PORT}", port)
+    const template = await readFile(resolve(__dirname, "..", "supergraph-config.yaml.template"), "utf-8");
+    const supergraphConfig = template.replaceAll("${SCRIPT_DIR}", resolve(__dirname, ".."))
+        .replace("${PORT}", port)
         .replace("${GRAPHQL_PATH}", graphQLEndpoint)
         .replace("${SCHEMA_FILE}", schemaFile);
 
@@ -87,7 +88,7 @@ export async function composeSupergraph(schemaFile: string, graphQLEndpoint: str
     // compose supergraph
     const composeProcess = execa(
         "npx",
-        ["rover", "supergraph", "compose", "--config", "supergraph-config.yaml"],
+        ["@apollo/rover", "supergraph", "compose", "--config", "supergraph-config.yaml"],
         { env: { APOLLO_ELV2_LICENSE: "accept" } }
     );
     composeProcess.stdout.pipe(createWriteStream("supergraph.graphql"));

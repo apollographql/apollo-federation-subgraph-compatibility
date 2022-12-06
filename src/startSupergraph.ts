@@ -4,6 +4,7 @@ import { logWithTimestamp, writeableDebugStream } from "./utils/logging";
 import { composeDevSupergraph, composeSupergraph } from "./composeSupergraph";
 import { healthcheckRouter } from "./utils/client";
 import { resolve } from "path";
+import { readFile, writeFile } from "fs/promises";
 
 const pm2Debug = debug("pm2");
 const dockerDebug = debug("docker");
@@ -60,9 +61,13 @@ async function startSupergraphUsingPm2(config: Pm2Config) {
             productsSubgraph = await startProductsSubgraphUsingPm2(config.configFile);
         }
 
+        const template = await readFile(resolve(__dirname, "..", "supergraph-config.js.template"), "utf-8");
+        const supergraphConfig = template.replaceAll("${SCRIPT_DIR}", resolve(__dirname, ".."));
+        await writeFile("supergraph.config.js", supergraphConfig);
+        
         const proc = execa("pm2", [
             "start",
-            resolve(__dirname, "..", "supergraph.config.js"),
+            "supergraph.config.js",
         ]);
         proc.stdout.pipe(writeableDebugStream(pm2Debug));
         proc.stderr.pipe(writeableDebugStream(pm2Debug));
@@ -121,11 +126,16 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
     await composeSupergraph(config.schemaFile, config.path ?? "", config.port ?? "4001");
     dockerDebug(`\n***********************\nStarting supergraph using Docker Compose...\n***********************\n\n`);
 
+    const template = await readFile(resolve(__dirname, "..", "supergraph-compose.yaml.template"), "utf-8");
+    const supergraphConfig = template.replaceAll("${SCRIPT_DIR}", resolve(__dirname, ".."));
+
+    await writeFile("supergraph-compose.yaml", supergraphConfig);
+
     try {
         const proc = execa("docker", [
             "compose",
             "-f",
-            resolve(__dirname, "..", "docker-compose.yaml"),
+            "supergraph-compose.yaml",
             "-f",
             config.composeFile,
             "up",
