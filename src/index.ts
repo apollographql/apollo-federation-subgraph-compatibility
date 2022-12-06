@@ -3,24 +3,14 @@ import { readFile, writeFile } from "fs/promises";
 import { resolve } from "path";
 import execa from "execa";
 import debug from "debug";
-import { Writable } from "stream";
 import { load } from "js-yaml";
 import { defaultsDeep } from "lodash";
-
-import { ping } from "./utils/client";
+import { healthcheckAll } from "./utils/client";
 import { generateMarkdown } from "./utils/markdown";
-import { runJest, TestResult, TESTS } from "./testRunner";
+import { runJest, TestResultDetails, TESTS } from "./testRunner";
+import { writeableDebugStream } from "./utils/logging";
 
 const dockerDebug = debug("docker");
-
-function dockerDebugStream() {
-  return new Writable({
-    write(chunk, _encoding, next) {
-      dockerDebug(chunk.toString());
-      next();
-    },
-  });
-}
 
 function getFolderNamesFromPath(path: string) {
   return readdirSync(path, {
@@ -43,8 +33,8 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
     "--detach",
   ]);
 
-  proc.stdout.pipe(dockerDebugStream());
-  proc.stderr.pipe(dockerDebugStream());
+  proc.stdout.pipe(writeableDebugStream(dockerDebug));
+  proc.stderr.pipe(writeableDebugStream(dockerDebug));
 
   await proc;
 
@@ -66,7 +56,7 @@ async function main() {
   const librariesPath = resolve(__dirname, "..", "implementations");
   const implementationFolders = getFolderNamesFromPath(librariesPath);
   const libraryNames = libraries ? libraries.split(",") : implementationFolders;
-  const results: TestResult[] = [];
+  const results: TestResultDetails[] = [];
 
   for (const libraryName of libraryNames) {
     if (libraryName === "_template_hosted_" || libraryName === "_template_library_") continue;
@@ -77,7 +67,7 @@ async function main() {
       continue;
     }
 
-    const result: TestResult = { name: libraryName, started: false, tests: {} };
+    const result: TestResultDetails = { name: libraryName, started: false, tests: {} };
     results.push(result);
 
     const dockerComposeDown = await runDockerCompose(
@@ -86,7 +76,7 @@ async function main() {
     );
 
     try {
-      const startupSuccess = await ping();
+      const startupSuccess = await healthcheckAll(libraryName);
 
       if (startupSuccess) {
         console.log(`Library ${libraryName} started successfully`);

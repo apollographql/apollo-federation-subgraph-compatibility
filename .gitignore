@@ -89,3 +89,7 @@ venv
 
 # GraphQL Mesh
 .mesh
+
+# ignore generated files
+supergraph-config.yaml
+supergraph-generated.yaml

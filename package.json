@@ -1,5 +1,6 @@
 {
-  "name": "apollo-federation-implementations",
+  "name": "@apollo/federation-subgraph-compatibility",
+  "version": "0.0.1",
   "workspaces": [
     "subgraphs/inventory",
     "subgraphs/users"
@@ -24,9 +25,14 @@
     "test": "node dist/index.js",
     "test:jest": "jest src"
   },
+  "bin": {
+    "fedtest": "./dist/compatibilityTest.js"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@apollo/rover": "^0.10.0",
+    "commander": "^9.4.1",
     "debug": "^4.3.4",
     "execa": "^5.1.1",
     "graphql": "^16.6.0",
@@ -34,10 +40,10 @@
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "make-fetch-happen": "^10.1.5",
+    "pm2": "^5.2.2",
     "ts-jest": "^28.0.3"
   },
   "devDependencies": {
-    "@apollo/rover": "^0.6.0",
     "@types/debug": "^4.1.7",
     "@types/jest": "^27.5.1",
     "@types/js-yaml": "^4.0.5",

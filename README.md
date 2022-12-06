@@ -1,405 +1,178 @@
-# Apollo Federation Subgraph Compatibility Testing Strategy
+# Apollo Federation Subgraph Compatibility Testing
 
-[![Latest Results](https://github.com/apollographql/apollo-federation-subgraph-compatibility/workflows/Release/badge.svg)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/actions?query=workflow%3ARelease)
+[![Release](https://github.com/apollographql/apollo-federation-subgraph-compatibility/workflows/Release/badge.svg)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/actions?query=workflow%3ARelease)
 [![Join the community forum](https://img.shields.io/badge/join%20the%20community-forum-blueviolet)](https://community.apollographql.com)
 
-The purpose of this repository is to provide a centralized strategy focused on understanding a given subgraph's compatibility against the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/).
+`@apollo/federation-compatibility-testing` script is an NPM package that allows you to test given subgraph's implementation for compatibility against the [Apollo Federation Subgraph Specification](https://www.apollographql.com/docs/federation/subgraph-spec/). This testing suite verifies various Federation features against subgraph implementation. See [compatibility testing docs](./COMPATIBILITY.md) for details on the expected schema and the data sets as well as information about the executed tests.
 
-The following open-source GraphQL server libraries and hosted subgraphs provide support for Apollo Federation and are included in our test suite. If you want to see additional implementations added to this list, feel free to open an [Issue](https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues) or check out our [Apollo Federation Library Maintainers Implementation Guide](./CONTRIBUTORS.md) to find information on how to submit a PR for your implementation!
+This repository contains number of [example subgraph implementations](https://github.com/apollographql/apollo-federation-subgraph-compatibility/tree/main/implementations) based on various libraries and other solutions. See [latest compatibility results](https://www.apollographql.com/docs/federation/building-supergraphs/supported-subgraphs) for a list of Apollo Federation compatibible subgraph implementations.
 
-* [C# / .NET](#c--net)
-* [Elixir](#elixir)
-* [Go](#go)
-* [Java / Kotlin](#java--kotlin)
-* [JavaScript / TypeScript](#javascript--typescript)
-* [PHP](#php)
-* [Python](#python)
-* [Ruby](#ruby)
-* [Rust](#rust)
-* [Scala](#scala)
-* [Other Solutions](#other-solutions)
+- [Apollo Federation Subgraph Compatibility Testing](#apollo-federation-subgraph-compatibility-testing)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [PM2](#pm2)
+    - [Docker Compose](#docker-compose)
+    - [Test Results](#test-results)
+    - [Debug Mode](#debug-mode)
+  - [Contact](#contact)
+  - [Contributing](#contributing)
+    - [Contributing A New Implementation To The Compatibility Test Suite](#contributing-a-new-implementation-to-the-compatibility-test-suite)
+  - [Security](#security)
+  - [License](#license)
 
-## Table Legend
+## Installation
 
-| Icon | Description |
-| ---- | ----------- |
-| 🟢 | Functionality is supported |
-| ❌ | Critical functionality is NOT supported |
-| 🔲 | Additional federation functionality is NOT supported |
+Apollo Federation subgraph compatibility test script is published to NPM.
 
-## C# / .NET
+```shell
+npm install @apollo/federation-subgraph-compatibility
+```
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://graphql-dotnet.github.io">GraphQL for .NET</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🔲</td></tr><tr><th>@key (composite)</th><td>🔲</td></tr><tr><th>repeatable @key</th><td>🔲</td></tr><tr><th>@requires</th><td>🔲</td></tr><tr><th>@provides</th><td>🔲</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
-<tr><td><a href="https://chillicream.com/docs/hotchocolate">Hot Chocolate</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
-</tbody>
-</table>
+You can execute the script using [NPX](https://docs.npmjs.com/cli/v7/commands/npx)
 
-## Elixir
+```shell
+# remote package
+npx @apollo/federation-subgraph-compatibility --help
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://github.com/DivvyPayHQ/absinthe_federation">Absinthe.Federation</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
+# package installed locally
+npx fedtest --help
 
-## Go
+# package installed globally
+fedtest --help
+```
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://github.com/graphql-go/graphql">GraphQL Go</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://gqlgen.com">gqlgen</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🔲</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
+## Usage
 
-## Java / Kotlin
+`@apollo/federation-subgraph-compatibility` test script starts a supergraph that consists of your subgraph implementation, two reference subgraphs and [Apollo Router](https://github.com/apollographql/router). Since script needs to manage multiple processes, you need to specify which process management technology should be used to run the tests. Currently script supports [PM2](https://pm2.keymetrics.io/) and [Docker Compose](https://docs.docker.com/compose/).
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://github.com/netflix/dgs-framework/">dgs-framework</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://github.com/apollographql/federation-jvm">Federation JVM</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://github.com/graphql-java-kickstart/graphql-spring-boot">GraphQL Java Kickstart (Spring Boot)</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://github.com/ExpediaGroup/graphql-kotlin">GraphQL Kotlin</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
+```shell
+npx fedtest --help
+Usage: fedtest [options] [command]
 
-## JavaScript / TypeScript
+Run Apollo Federation subgraph compatibility tests
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://www.apollographql.com/docs/federation/">Apollo Server</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://github.com/graphql/express-graphql">express-graphql</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://www.graphql-yoga.com/docs/features/apollo-federation">GraphQL Yoga</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://graphql-helix.vercel.app">GraphQL Helix</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://mercurius.dev/#/">Mercurius</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>  
-<tr><td><a href="https://nestjs.com">NestJS</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://pothos-graphql.dev/docs/plugins/federation">Pothos GraphQL</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
+Options:
+  -h, --help                display help for command
 
-## PHP
+Commands:
+  pm2 [options]             Start supergraph using PM2
+  docker [options]          Start supergraph using Docker Compose
+  help [options] [command]  display help for command
+```
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://lighthouse-php.com/">Lighthouse (Laravel)</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🔲</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
-<tr><td><a href="https://github.com/Skillshare/apollo-federation-php">Apollo Federation PHP</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
-</tbody>
-</table>
+### PM2
 
-## Python
+[PM2](https://pm2.keymetrics.io/) is a Node based process manager. When tests are run using `pm2` command, script will start the supergraph using [Apollo Rover](https://github.com/apollographql/rover) `dev` command.
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://ariadnegraphql.org/docs/apollo-federation">Ariadne</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://graphene-python.org/">Graphene</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🔲</td></tr><tr><th>@key (composite)</th><td>🔲</td></tr><tr><th>repeatable @key</th><td>🔲</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
-<tr><td><a href="https://strawberry.rocks">Strawberry</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
+```shell
+npx fedtest pm2 --help
+Usage: fedtest pm2 [options]
 
-## Ruby
+Start supergraph using PM2
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://graphql-ruby.org/">GraphQL Ruby</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
-</tbody>
-</table>
+Options:
+  --config <subgraph.config.js>  optional PM2 configuration file
+  --debug                        debug mode with extra log info
+  --endpoint <url>               subgraph endpoint
+  --format <json|markdown>       optional output file format (choices: "json", "markdown", default: "markdown")
+  -h, --help                     display help for command
+  --schema <schema.graphql>      optional path to schema file, if omitted composition will fallback to introspection
+```
 
-## Rust
+If your subgraph is already up and running, you can run compatibility tests using PM2 by specifying `--endpoint <url>` option. This will create supergraph that uses introspection to read subgraph schema.
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://async-graphql.github.io/async-graphql/en/apollo_federation.html">Async-graphql</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
+```shell
+npx fedtest pm2 --endpoint http://localhost:8080/graphql
+```
 
-## Scala
+If you have a subgraph schema available, you can also specify it on the command line. Schema path can be absolute or relative to the current directory.
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://ghostdogpr.github.io/caliban/docs/federation.html">Caliban</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://sangria-graphql.github.io/learn/#graphql-federation">Sangria</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
+```shell
+npx fedtest pm2 --endpoint http://localhost:8080/graphql --schema /path/to/schema.graphql
+```
 
-## Other Solutions
+PM2 can also be used to start your subgraph. You can specify an [ecosystem config file](https://pm2.keymetrics.io/docs/usage/application-declaration/) that contains information how to start your subgraph.
 
-<table>
-<thead>
-<tr><th width="300">Library</th><th>Federation 1 Support</th><th>Federation 2 Support</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://aws.amazon.com/appsync/">AWS AppSync</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://dgraph.io/docs/graphql/overview/">Dgraph</a></td><td><table><tr><th>_service</th><td>❌</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🔲</td></tr><tr><th>@key (composite)</th><td>🔲</td></tr><tr><th>repeatable @key</th><td>🔲</td></tr><tr><th>@requires</th><td>🔲</td></tr><tr><th>@provides</th><td>🔲</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>❌</td></tr><tr><th>@shareable</th><td>🔲</td></tr><tr><th>@tag</th><td>🔲</td></tr><tr><th>@override</th><td>🔲</td></tr><tr><th>@inaccessible</th><td>🔲</td></tr></table></td></tr>
-<tr><td><a href="https://www.the-guild.dev/graphql/mesh">GraphQL Mesh</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🟢</td></tr><tr><th>repeatable @key</th><td>🟢</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🟢</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-<tr><td><a href="https://stepzen.com/apollo-stepzen">StepZen</a></td><td><table><tr><th>_service</th><td>🟢</td></tr><tr><th>@key (single)</th><td>🟢</td></tr><tr><th>@key (multi)</th><td>🟢</td></tr><tr><th>@key (composite)</th><td>🔲</td></tr><tr><th>repeatable @key</th><td>🔲</td></tr><tr><th>@requires</th><td>🟢</td></tr><tr><th>@provides</th><td>🟢</td></tr><tr><th>federated tracing</th><td>🔲</td></tr></table></td><td><table><tr><th>@link</th><td>🟢</td></tr><tr><th>@shareable</th><td>🟢</td></tr><tr><th>@tag</th><td>🟢</td></tr><tr><th>@override</th><td>🟢</td></tr><tr><th>@inaccessible</th><td>🟢</td></tr></table></td></tr>
-</tbody>
-</table>
-
-## Testing Suite
-
-This repository contains a structured testing suite based on a federated schema that covers the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). The federated schema is constructued of 3 subgraphs (`users`, `inventory` and `products`) that will be started and used to test various libraries that support Apollo Federation. The `users` and `inventory` subgraphs are provided by this repository in addition to the graph router instance. Library implementors will each implement the `products` schema and provide a docker file that can be used with `docker compose`. Templates for these files are provided along with examples.
-
-### Subgraph Schemas
-
-#### Users
-
-```graphql
-type User @key(fields: "email") {
-  email: ID!
-  name: String
-  totalProductsCreated: Int
-  yearsOfEmployment: Int!
+```js
+// simple PM2 subgraph config that starts Node application
+module.exports = {
+    apps : [{
+      name   : "subgraph product",
+      script : "index.js",
+      cwd: "/path/to/your/implementation"
+    }]
 }
 ```
 
-#### Inventory
-
-```graphql
-extend type Product @key(fields: "id") {
-  id: ID! @external
-  dimensions: ProductDimension @external
-  delivery(zip: String): DeliveryEstimates
-    @requires(fields: "dimensions { size weight }")
-}
-
-type ProductDimension @shareable {
-  size: String
-  weight: Float
-}
-
-type DeliveryEstimates {
-  estimatedDelivery: String
-  fastestDelivery: String
-}
+```shell
+npx fedtest pm2 --endpoint http://localhost:8080/graphql --config /path/to/subgraph.config.js
 ```
 
-#### Products (schema to be implemented by library maintainers)
+### Docker Compose
 
-```graphql
-extend schema
-  @link(
-    url: "https://specs.apollo.dev/federation/v2.0",
-    import: [
-      "@extends",
-      "@external",
-      "@key",
-      "@inaccessible",
-      "@override",
-      "@provides",
-      "@requires",
-      "@shareable",
-      "@tag"
-    ]
-  )
+[Docker Compose](https://docs.docker.com/compose/) is a tool for running multi-container Docker applications. When tests are run using `docker` command, script will compose supergraph using [Apollo Rover](https://github.com/apollographql/rover) `supergraph compose` command and run standalone router image.
 
-type Product
-  @key(fields: "id")
-  @key(fields: "sku package")
-  @key(fields: "sku variation { id }") {
-    id: ID!
-    sku: String
-    package: String
-    variation: ProductVariation
-    dimensions: ProductDimension
-    createdBy: User @provides(fields: "totalProductsCreated")
-    notes: String @tag(name: "internal")
-    research: [ProductResearch!]!
-}
+```shell
+npx fedtest docker --help
+Usage: fedtest docker [options]
 
-type DeprecatedProduct @key(fields: "sku package") {
-  sku: String!
-  package: String!
-  reason: String
-  createdBy: User
-}
+Start supergraph using Docker Compose
 
-type ProductVariation {
-  id: ID!
-}
-
-type ProductResearch @key(fields: "study { caseNumber }") {
-  study: CaseStudy!
-  outcome: String
-}
-
-type CaseStudy {
-  caseNumber: ID!
-  description: String
-}
-
-type ProductDimension @shareable {
-  size: String
-  weight: Float
-  unit: String @inaccessible
-}
-
-extend type Query {
-  product(id: ID!): Product
-  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
-}
-
-extend type User @key(fields: "email") {
-  averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
-  email: ID! @external
-  name: String @override(from: "users")
-  totalProductsCreated: Int @external
-  yearsOfEmployment: Int! @external
-}
+Options:
+  --compose <docker-compose.yaml>  Path to docker compose file
+  --debug                          debug mode with extra log info
+  --format <json|markdown>         optional output file format (choices: "json", "markdown", default: "markdown")
+  -h, --help                       display help for command
+  --path <path>                    GraphQL endpoint path (default: "")
+  --port <port>                    HTTP server port (default: "4001")
+  --schema <schema.graphql>        Path to schema file
 ```
 
-### Testing Spec Compliance
+In order to run compatibility tests using `docker` command, you need to pass both compose file and subgraph schema file.
+Paths to files can be absolute or relative to the current working directory.
 
-Following tests are run to verify Federation Spec compliance.
-
-#### Minimum functionality to support Apollo Federation
-
-This is a minimum set of functionality to allow for API-side joins and use of entities in other subgraphs.
-
-- `_service` - support a `rover subgraph introspect` command (this is the Apollo Federation equivalent of Introspection for subgraphs)
-  - executes `query { _service { sdl } }` and verifies the contents of the SDL
-- `@key` and `_entities` - support defining a single `@key`
-  - Below is an example of the single `@key` query that is sent from the graph router to the implementing `products` subgraph:
-
-```graphql
-query {
-    _entities(representations: [{ "__typename": "User", "email": "support@apollographql.com" }]) {
-        ...on User { email name }
-      }
-    }
-}
+```shell
+npx fedtest docker --compose /path/to/docker-compose.yaml --schema /path/to/schema.graphql
 ```
 
-- `@link` (required for Federation v2)
-  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
+When creating supergraph using Docker, it will create network with default subgraph endpoint as `http://localhost:4001`. You can override the default endpoint by specifying custom GraphQL endpoint path and port.
 
-#### Additional functionality to fully support Apollo Federation
-
-- `@key` and `_entities` - multiple `@key` definitions, multiple-fields `@key` and a composite object fields `@key`
-  - Below is an example of a multiple fields `@key` query that is sent from the graph router to the implementing `products` subgraph:
-
-```graphql
-query {
-  _entities(representations: [{ "__typename": "DeprecatedProduct", "sku": "apollo-federation-v1", "package": "@apollo/federation-v1" }]) {
-    ...on DeprecatedProduct { sku package reason }
-  }
-}
+```shell
+# docker compose file starts subgraph exposing http://localhost:8080/graphql
+npx fedtest docker --compose /path/to/docker-compose.yaml --schema /path/to/schema.graphql --path /graphql --port 8080
 ```
-
-  - Below is an example of a composite object fields `@key` query that is sent from the graph router to the implementing `products` subgraph:
-
-```graphql
-query {
-  _entities(representations: [{ "__typename": "ProductResearch", "study": { "caseNumber": "1234" } }]) {
-    ...on ProductResearch { study { caseNumber description } }
-  }
-}
-```
-
-  - Below is an example of a multiple `@key` query that is sent from the graph router to the implementing `products` subgraph:
-
-```graphql
-query {
-  _entities(representations: [
-     { "__typename": "Product", "id: "apollo-federation" },
-     { "__typename": "Product", "sku": "federation", "package": "@apollo/federation" },
-     { "__typename": "Product", "sku": "studio", "variation": { "id": "platform" } }
-  ]) {
-    ...on Product { id sku }
-  }
-}
-```
-
-- `@requires` - directive used to provide additional non-key information from one subgraph to the computed fields in another subgraph, should support defining complex fields
-- - This will be covered by the subgraph implementors at `Product.createdBy` where they will be expected to provide the `User.averageProductsCreatedPerYear` using `yearsOfEmployment` value provided by the `user` graph and the `totalProductsCreated` value from the implementing `products` subgraph. Example query that will be sent directly to `products` subgraph.
-
-```graphql
-query ($id: ID!) {
-  product(id: $id) {
-    createdBy {
-      averageProductsCreatedPerYear
-      email
-    }
-  }
-}
-```
-
-- `@provides` - directive used for path denormalization
-  - This will be covered by the subgraph implementors at `Product.createdBy` where they will be expected to provide the `User.totalProductsCreated` to be _anything_ _other than 4_
-
-```graphql
-query ($id: ID!) {
-  product(id: $id) {
-    createdBy {
-      email
-      totalProductsCreated
-    }
-  }
-}
-```
-
-- `@external` - directive used to mark fields as external (defined in other subgraph). This is covered in the tests above.
-- `extends` or `@extends` - ability to extend the type that is defined in other subgraph
-  - This is covered in the `products` subgraph extension of the `User`
-- Federated Traces version 1 (`ftv1`)
-  - A query with the `apollo-federated-include-trace:ftv1` header will be sent to the `products` subgraph which should return a value for the `extensions.ftv1` in the result.
-  - _NOTE: In the initial release of this testing strategy, we will not be validating `ftv1` to ensure it's in the proper format_
-- `@tag` - directive used to add arbitrary metadata information to the schema elements. Used by [Apollo Contracts](https://www.apollographql.com/docs/studio/contracts/) to expose different variants of the schema.
-  - **Cannot be `@federation__` namespaced** - this directive has to be named consistently as `@tag` across all the subgraphs
-  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result.
-- `@shareable` - directive that provides ability to relax single source of truth for entity fields
-  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query shareable types.
-- `@override` - directive used for migrating fields between subgraphs
-  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to return the value of an overridden field.
-- `@inaccessible` - directive used to hide fields from the supergraph
-  - **Cannot be `@federation__` namespaced** - this directive has to be named consistently as `@inacessible` across all the subgraphs
-  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
-
-### Setting up the testing suite
-
-1. `npm install`
-2. `npm run setup`
-   - `npm run build` - compiles typescript code and composes supergraph SDL
-   - `npm run docker` - build docker images for `graph-router`, `users` and `inventory`
-
-### Running the Test
-
-`npm run test` will test all folders in the `implementations` folder. You can provide a comma separated string as an additional argument to test only specific implementations.
 
 ### Test Results
 
-A `results.md` file will be created that contains the testing results.
+Script logs the compatibility test results on the console and also generates corresponding results file. By default, script will generate results in a markdown format. You can change this behavior by specifying and `--format json` option.
 
-## Contributing a new library to this test suite
+```shell
+# generate results.json file
+npx fedtest pm2 --endpoint http://localhost:8080/graphql --format json
+```
+
+### Debug Mode
+
+In order to enable debug mode that provides more verbose logs, specify `--debug` option on the command line.
+
+```shell
+npx fedtest pm2 --endpoint http://localhost:8080/graphql --debug
+```
+
+## Contact
+
+If you have a specific question about the testing library or code, please start a discussion in the [Apollo community forums](https://community.apollographql.com/).
+
+## Contributing
+
+### Contributing A New Implementation To The Compatibility Test Suite
 
 Fork this repository and navigate to the [Apollo Federation Subgraph Maintainers Implementation Guide](./CONTRIBUTORS.md) for implementation instructions. Once you've completed the implementations instructions, feel free to create a PR and we'll review it. If you have any questions please open a GitHub issue on this repository.
+
+## Security
+
+For more info on how to contact the team for security issues, see our [Security Policy](https://github.com/apollographql/.github/blob/main/SECURITY.md).
+
+## License
+
+This library is licensed under [The MIT License (MIT)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/LICENSE).

@@ -57,28 +57,45 @@ export function routerRequest(
   return graphqlRequest(ROUTER_URL, req, headers);
 }
 
-export async function ping(): Promise<boolean> {
-  console.log("router health check", ROUTER_HEALTH_URL)
-  const routerPing = await fetch(ROUTER_HEALTH_URL, { retry: { retries: 10, maxTimeout: 1000 } });
-
-  if (!routerPing.ok) {
-    console.log("router failed to start");
+export async function healthcheckAll(libraryName: string): Promise<boolean> {
+  const routerUp = await healthcheckRouter();
+  if (!routerUp) {
     return false;
   }
 
+  return healthcheck(libraryName, PRODUCTS_URL);
+}
+
+export async function healthcheckRouter(): Promise<Boolean> {
+  console.log("router health check", ROUTER_HEALTH_URL)
+  try {
+    const routerHealthcheck = await fetch(ROUTER_HEALTH_URL, { retry: { retries: 10, maxTimeout: 1000 } });
+
+    if (!routerHealthcheck.ok) {
+      console.log("router failed to start");
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("router faield to start", err);
+    return false;
+  }
+}
+
+export async function healthcheck(appName: string, url: string): Promise<boolean> {
   let attempts = 100;
   let lastError = null;
   while (attempts--) {
-    console.log("products health check", PRODUCTS_URL)
+    console.log(`${appName} health check`, url)
     try {
-      const implementationPing = await graphqlRequest(PRODUCTS_URL, {
+      const subgraphHealthcheck = await graphqlRequest(url, {
         query: PING_QUERY,
       });
 
-      if (implementationPing.data?.__typename) {
+      if (subgraphHealthcheck.data?.__typename) {
         return true;
       } else {
-        lastError = implementationPing.errors;
+        lastError = subgraphHealthcheck.errors;
       }
     } catch (e) {
       lastError = e;
@@ -87,7 +104,7 @@ export async function ping(): Promise<boolean> {
     await new Promise((r) => setTimeout(r, 1000));
   }
 
-  console.log("implementation under test failed to start");
+  console.log(`${appName} failed to start`);
   console.log(lastError);
   return false;
 }

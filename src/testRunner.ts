@@ -1,16 +1,9 @@
 import { writeFileSync } from "fs";
 import execa from "execa";
 import debug from "debug";
-import { Writable } from "stream";
+import { writeableDebugStream } from "./utils/logging";
 
 const jestDebug = debug("test");
-const jestDebugStream = () =>
-  new Writable({
-    write(chunk, encoding, next) {
-      jestDebug(chunk.toString());
-      next();
-    },
-  });
 
 export const TESTS = [
   { assertion: "introspection", column: "_service", fedVersion: 1, required: true },
@@ -29,11 +22,14 @@ export const TESTS = [
 ];
 
 export async function runJest(libraryName: string): Promise<JestResults> {
+  console.log(new Date().toJSON(), "starting tests...");
+  jestDebug(`\n***********************\nStarting tests...\n***********************\n\n`);
+
   const jestBin = require.resolve("jest/bin/jest");
   const proc = execa(jestBin, ["src", "--ci", "--json"], { reject: false });
 
-  proc.stdout.pipe(jestDebugStream());
-  proc.stderr.pipe(jestDebugStream());
+  proc.stdout.pipe(writeableDebugStream(jestDebug));
+  proc.stderr.pipe(writeableDebugStream(jestDebug));
 
   const { stdout, stderr } = await proc;
 
@@ -65,7 +61,7 @@ export async function runJest(libraryName: string): Promise<JestResults> {
   };
 }
 
-export interface TestResult {
+export interface TestResultDetails {
   name: string;
   fullName?: string;
   version?: string;
@@ -77,11 +73,13 @@ export interface TestResult {
     version: string;
   }[];
   started: boolean;
-  tests: {
-    [name: string]: {
-      success: boolean;
-      caveat?: string;
-    };
+  tests: TestResults;
+}
+
+export interface TestResults {
+  [name: string]: {
+    success: boolean;
+    caveat?: string;
   };
 }
 
