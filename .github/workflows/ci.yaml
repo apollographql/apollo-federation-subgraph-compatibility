@@ -1,0 +1,18 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+
+jobs:
+  test-all:
+    uses: ./.github/workflows/test-all.yaml
+    secrets: inherit
+
+  # TODO download results
+  # TODO generate GH page
+  # TODO publish GH page

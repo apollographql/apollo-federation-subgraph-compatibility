@@ -4,7 +4,7 @@ services:
     build:
       context: implementations/appsync
       args:
-        SUBGRAPH_API_KEY: ${API_KEY_APPSYNC}
-        SUBGRAPH_URL: ${URL_APPSYNC}
+        SUBGRAPH_API_KEY: ${API_KEY}
+        SUBGRAPH_URL: ${TEST_URL}
     ports:
       - 4001:4001

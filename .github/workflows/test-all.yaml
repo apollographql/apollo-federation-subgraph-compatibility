@@ -10,6 +10,7 @@ on:
       - '*.json'
       - '*.yaml'
       - '*.graphql'
+  workflow_call:
 
 jobs:
   build-matrix:
@@ -23,33 +24,50 @@ jobs:
       - name: generate matrix
         id: matrix
         run: |
-          echo "matrix=$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]"))]')" >> $GITHUB_OUTPUT
+          echo "matrix=$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]") and . != "appsync" and . != "stepzen")]')" >> $GITHUB_OUTPUT
 
-  build:
-    timeout-minutes: 60
+  test:
     needs: build-matrix
     strategy:
       fail-fast: false
       matrix:
         name: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: ${{ matrix.name }}
+
+  # need secrets so appsync is configured separately
+  test-appsync:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "appsync"
+    secrets:
+      API_KEY: ${{ secrets.API_KEY_APPSYNC }}
+      TEST_URL: ${{ secrets.URL_APPSYNC }}
+  
+  # need secrets so stepzen is configured separately
+  test-stepzen:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "stepzen"
+    secrets:
+      TEST_URL: ${{ secrets.URL_STEPZEN }}
+
+  results:
+    timeout-minutes: 10
+    needs: [test, test-appsync, test-stepzen]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-      - run: npm install
-      - run: npm run setup
-      - run: npm run test ${{ matrix.name }}
-        env:
-          DEBUG: docker,test
-          API_KEY_APPSYNC: ${{ secrets.API_KEY_APPSYNC }}
-          URL_APPSYNC: ${{ secrets.URL_APPSYNC }}
-          URL_STEPZEN: ${{ secrets.URL_STEPZEN }}
-      - run: cat results.md
-      - name: results summary
-        run: cat results.md >> $GITHUB_STEP_SUMMARY
+      - name: Download results
+        uses: actions/download-artifact@v3
+      - run: |
+          echo "listing results"
+          ls results*/results*.json
+
+          echo "generating final results json"
+          jq -s 'add results*/results*.json > results.json
+
+          echo "results"
+          cat results.json
+      # TODO generate Markdown from merged JSON

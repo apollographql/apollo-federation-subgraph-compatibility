@@ -6,9 +6,15 @@ on:
       library:
         required: true
         type: string
+    secrets:
+      TEST_URL:
+        required: false
+      API_KEY:
+        required: false
 
 jobs:
   compatibility:
+    name: compatibility-${{ inputs.library }}
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
@@ -27,7 +33,15 @@ jobs:
         run: npm run test ${{ inputs.library }}
         env:
           DEBUG: docker,test
+          API_KEY: ${{ secrets.API_KEY }}
+          TEST_URL: ${{ secrets.TEST_URL }}
       - name: Generate Results Summary
         run: |
           cat results.md
           cat results.md >> $GITHUB_STEP_SUMMARY
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: results-${{ inputs.library }}.json
+          path: ./results.json
+          retention-days: 1
