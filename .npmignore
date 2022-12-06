@@ -1,0 +1,8 @@
+# exclude test subgraph implementations
+implementations
+
+# exclude test results
+tmp
+
+# exclude docs
+images
