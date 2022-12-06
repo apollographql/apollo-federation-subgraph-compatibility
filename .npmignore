@@ -6,3 +6,11 @@ tmp
 
 # exclude docs
 images
+
+.dockerignore
+.gitattributes
+.github
+.vscode
+
+jest.config.js
+tsconfig.json
