@@ -3,11 +3,11 @@ subgraphs:
   inventory:
     routing_url: http://inventory:4003
     schema:
-      file: ./subgraphs/inventory/inventory.graphql
+      file: ${SCRIPT_DIR}/subgraphs/inventory/inventory.graphql
   users:
     routing_url: http://users:4002
     schema:
-      file: ./subgraphs/users/users.graphql
+      file: ${SCRIPT_DIR}/subgraphs/users/users.graphql
   products:
     routing_url: http://products:${PORT}${GRAPHQL_PATH}
     schema:

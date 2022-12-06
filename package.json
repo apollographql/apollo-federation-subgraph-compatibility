@@ -12,7 +12,7 @@
     "build:supergraph": "APOLLO_ELV2_LICENSE=accept npx rover supergraph compose --config supergraph.yaml > supergraph.graphql",
     "build-local": "concurrently \"npm:build-local:*\"",
     "build-local:compile": "tsc",
-    "build-local:supergraph": "APOLLO_ELV2_LICENSE=accept npx rover supergraph compose --config supergraph-local.yaml > supergraph-local.graphql",
+    "build-local:supergraph": "APOLLO_ELV2_LICENSE=accept npx @apollo/rover supergraph compose --config supergraph-local.yaml > supergraph-local.graphql",
     "docker": "concurrently \"npm:docker:*\"",
     "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
     "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",

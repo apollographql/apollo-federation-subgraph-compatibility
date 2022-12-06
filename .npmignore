@@ -12,5 +12,5 @@ images
 .github
 .vscode
 
-jest.config.js
 tsconfig.json
+simple-schema.apollo-workbench
