@@ -25,7 +25,7 @@ This repository contains number of [example subgraph implementations](https://gi
 Apollo Federation subgraph compatibility test script is published to NPM.
 
 ```shell
-npm install @apollo/federation-subgraph-compatibility
+npm install --dev @apollo/federation-subgraph-compatibility
 ```
 
 You can execute the script using [NPX](https://docs.npmjs.com/cli/v7/commands/npx)
