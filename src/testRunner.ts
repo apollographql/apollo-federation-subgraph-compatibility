@@ -27,7 +27,7 @@ export async function runJest(libraryName: string): Promise<JestResults> {
   jestDebug(`\n***********************\nStarting tests...\n***********************\n\n`);
 
   const jestBin = require.resolve("jest/bin/jest");
-  const proc = execa(jestBin, [resolve(__dirname, "..", "src"), "--ci", "--json", "--config", resolve(__dirname, "..", "jest.config.js") ], { reject: false });
+  const proc = execa(jestBin, [__dirname, "--ci", "--json", "--config", resolve(__dirname, "..", "jest.config.js") ], { reject: false });
 
   proc.stdout.pipe(writeableDebugStream(jestDebug));
   proc.stderr.pipe(writeableDebugStream(jestDebug));
