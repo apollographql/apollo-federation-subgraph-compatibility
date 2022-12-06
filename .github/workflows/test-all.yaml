@@ -65,9 +65,8 @@ jobs:
           echo "listing results"
           ls results*/results*.json
 
-          echo "generating final results json"
-          jq -s 'add results*/results*.json > results.json
-
-          echo "results"
-          cat results.json
+      # echo "generating final results json"
+      # jq -s 'add results*/results*.json > results.json
+      # echo "results"
+      # cat results.json
       # TODO generate Markdown from merged JSON
