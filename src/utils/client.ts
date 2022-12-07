@@ -6,6 +6,9 @@ const PING_QUERY = "query { __typename }";
 const ROUTER_HEALTH_URL = "http://localhost:8088/health";
 const PRODUCTS_URL = "http://localhost:4001/";
 
+const INVENTORY_URL = "http://localhost:4003/";
+const USERS_URL = "http://localhost:4002/";
+
 export async function graphqlRequest(
   url: string,
   req: {
@@ -64,6 +67,13 @@ export async function healthcheckAll(libraryName: string): Promise<boolean> {
   }
 
   return healthcheck(libraryName, PRODUCTS_URL);
+}
+
+export async function healtcheckSupergraph(url: string): Promise<Boolean> {
+  const routerUp = await healthcheckRouter();
+  return routerUp && healthcheck("inventory", INVENTORY_URL)
+    && healthcheck("users", USERS_URL)
+    && healthcheck("products", url);
 }
 
 export async function healthcheckRouter(): Promise<Boolean> {

@@ -2,7 +2,7 @@ import execa from "execa";
 import debug from "debug";
 import { logWithTimestamp, writeableDebugStream } from "./utils/logging";
 import { composeDevSupergraph, composeSupergraph } from "./composeSupergraph";
-import { healthcheckRouter } from "./utils/client";
+import { healtcheckSupergraph } from "./utils/client";
 import { resolve } from "path";
 import { readFile, writeFile } from "fs/promises";
 
@@ -151,10 +151,10 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
             throw new Error("docker-compose did not start successfully");
         }
     
-        const started = await healthcheckRouter();
+        const started = await healtcheckSupergraph(`http://localhost:${config.port ?? "4001"}${config.path ?? ""}`);
         if (started) {
             return async () => {
-                pm2Debug(`\n***********************\nStopping supergraph...\n***********************\n\n`);
+                dockerDebug(`\n***********************\nStopping supergraph...\n***********************\n\n`);
                 await shutdownSupergraphUsingDocker();
             };
         } else {
@@ -167,8 +167,13 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
 }
 
 async function shutdownSupergraphUsingDocker() {
+    const logs = execa("docker", ["compose", "logs"]);
+    logs.stdout.pipe(writeableDebugStream(dockerDebug));
+    logs.stderr.pipe(writeableDebugStream(dockerDebug));
+
     const shutdown = await execa("docker", ["compose", "down", "--remove-orphans", "-v"]);
-    if (shutdown.exitCode !== 0) {
+    const logsCompleted = await logs;
+    if (logsCompleted.exitCode !== 0 || shutdown.exitCode !== 0) {
         console.error("Docker compose did not shutdown correctly");
     }
 }
