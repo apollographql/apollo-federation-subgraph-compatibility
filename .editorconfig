@@ -1,0 +1,25 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{js,ts}]
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[.prettierrc]
+indent_size = 2
+
+# ignore formatting in implementations folder
+[implementations/**]
+indent_size = unset

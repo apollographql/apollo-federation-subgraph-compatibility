@@ -16,6 +16,9 @@
     "docker": "concurrently \"npm:docker:*\"",
     "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
     "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",
+    "format": "prettier --write .",
+    "lint": "eslint . && prettier --check .",
+    "prepack": "tsc",
     "setup": "npm run build && npm run docker",
     "setup-local": "npm run setup-local:router && npm run build-local",
     "setup-local:router": "curl -sSL https://router.apollo.dev/download/nix/latest | sh",
@@ -58,7 +61,12 @@
     "@types/make-fetch-happen": "^9.0.2",
     "@types/node": "^17.0.35",
     "@types/yargs": "^17.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "concurrently": "^7.2.1",
+    "eslint": "^8.29.0",
+    "eslint-plugin-import": "^2.26.0",
+    "prettier": "^2.8.1",
     "typescript": "^4.7.2"
   }
 }

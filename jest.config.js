@@ -3,7 +3,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   haste: {
-    retainAllFiles: true
+    retainAllFiles: true,
   },
   testPathIgnorePatterns: [],
 };
