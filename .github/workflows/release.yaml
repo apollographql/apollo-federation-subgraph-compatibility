@@ -1,8 +1,11 @@
 name: Release Script
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
 
 jobs:
   release-code:
@@ -22,7 +25,7 @@ jobs:
       #   env:
       #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish Release
-        run: npx semantic-release
+        run: npx semantic-release --dry-run
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        
