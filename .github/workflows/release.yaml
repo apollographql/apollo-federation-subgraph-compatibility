@@ -6,6 +6,7 @@ on:
       - main
     paths-ignore:
       - '**.md'
+      - 'implementations/**'
 
 jobs:
   release-code:
@@ -19,6 +20,13 @@ jobs:
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
+      - name: Append NPM token to .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build and Test
         run: npm ci
       # - run: npm publish --access public
