@@ -13,6 +13,7 @@
     "build-local": "concurrently \"npm:build-local:*\"",
     "build-local:compile": "tsc",
     "build-local:supergraph": "APOLLO_ELV2_LICENSE=accept npx @apollo/rover supergraph compose --config supergraph-local.yaml > supergraph-local.graphql",
+    "changeset-publish": "changeset publish",
     "docker": "concurrently \"npm:docker:*\"",
     "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
     "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",
@@ -55,6 +56,7 @@
     "ts-jest": "^28.0.3"
   },
   "devDependencies": {
+    "@changesets/cli": "2.25.2",
     "@types/debug": "^4.1.7",
     "@types/jest": "^27.5.1",
     "@types/js-yaml": "^4.0.5",

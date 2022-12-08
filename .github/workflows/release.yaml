@@ -29,11 +29,11 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build and Test
         run: npm ci
-      # - run: npm publish --access public
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Publish Release
-        run: npx semantic-release --dry-run
+      - name: Create release and publish to NPM
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm run changeset-publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -8,6 +8,7 @@ tmp
 images
 
 # config files
+.changeset
 .dockerignore
 .editorconfig
 .eslintrc.js
