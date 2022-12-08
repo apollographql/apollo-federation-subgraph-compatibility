@@ -1,12 +1,8 @@
 name: Release Script
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**.md'
-      - 'implementations/**'
+  release:
+    types: [ published ]
 
 jobs:
   release-code:
@@ -20,20 +16,13 @@ jobs:
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
-      - name: Append NPM token to .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build and Test
         run: npm ci
-      # - run: npm publish --access public
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Publish Release
-        run: npx semantic-release --dry-run
+      - name: Update version
+        run: |
+          NEW_VERSION=$(echo "${GITHUB_REF}" | sed 's/.*\/v//')
+          echo "New version: ${NEW_VERSION}"
+          npm version ${NEW_VERSION} --message "script release: ${NEW_VERSION}"
+      - run: npm publish --access public
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
