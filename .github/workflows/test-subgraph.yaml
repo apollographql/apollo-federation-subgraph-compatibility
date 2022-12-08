@@ -34,21 +34,17 @@ jobs:
         env:
           API_KEY: ${{ secrets.API_KEY }}
           TEST_URL: ${{ secrets.TEST_URL }}
-      # - name: Compile supergraph
-      #   run: npm run setup
-      # - name: Compatibility test
-      #   run: npm run test ${{ inputs.library }}
-      #   env:
-      #     DEBUG: docker,test
-      #     API_KEY: ${{ secrets.API_KEY }}
-      #     TEST_URL: ${{ secrets.TEST_URL }}
+      - name: Generate Metadata
+        uses: mikefarah/yq@v4
+        with:
+          cmd: yq -p yaml -o json implementations/apollo-server/metadata.yaml > metadata.json
       - name: Generate Results Summary
         run: |
-          cat results.json
-          cat results.json >> $GITHUB_STEP_SUMMARY
+          jq -s '.[0] + {test: .[1]}' metadata.json results.json > results_${{ inputs.library }}.json
+          cat results_${{ inputs.library }}.json >> $GITHUB_STEP_SUMMARY
       - name: Upload Results
         uses: actions/upload-artifact@v3
         with:
           name: results-${{ inputs.library }}.json
-          path: ./results.json
+          path: ./results_${{ inputs.library }}.json
           retention-days: 1
