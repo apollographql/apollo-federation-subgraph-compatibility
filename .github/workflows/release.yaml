@@ -20,7 +20,7 @@ jobs:
         run: npm ci
       - name: Update version
         run: |
-          NEW_VERSION=$(echo "${GITHUB_REF}" | sed 's/.*\/v//')
+          NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
           echo "New version: ${NEW_VERSION}"
           npm version ${NEW_VERSION} --message "script release: ${NEW_VERSION}"
       - run: npm publish --access public
