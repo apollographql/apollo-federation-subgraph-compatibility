@@ -27,18 +27,25 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
-      - name: Compile supergraph
-        run: npm run setup
+      - name: Compile script
+        run: npm run build:compile
       - name: Compatibility test
-        run: npm run test ${{ inputs.library }}
+        run: npx @apollo/federation-subgraph-compatibility docker --debug --compose implementations/${{ inputs.library }}/docker-compose.yaml --schema implementations/_template_library_/schema.graphqls --format json
         env:
-          DEBUG: docker,test
           API_KEY: ${{ secrets.API_KEY }}
           TEST_URL: ${{ secrets.TEST_URL }}
+      # - name: Compile supergraph
+      #   run: npm run setup
+      # - name: Compatibility test
+      #   run: npm run test ${{ inputs.library }}
+      #   env:
+      #     DEBUG: docker,test
+      #     API_KEY: ${{ secrets.API_KEY }}
+      #     TEST_URL: ${{ secrets.TEST_URL }}
       - name: Generate Results Summary
         run: |
-          cat results.md
-          cat results.md >> $GITHUB_STEP_SUMMARY
+          cat results.json
+          cat results.json >> $GITHUB_STEP_SUMMARY
       - name: Upload Results
         uses: actions/upload-artifact@v3
         with:
