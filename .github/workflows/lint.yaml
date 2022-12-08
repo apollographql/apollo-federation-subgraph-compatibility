@@ -17,8 +17,10 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-      - name: ESLint
-        run: npx eslint .
+      - name: Install dependencies
+        run: npm install
+      - name: Run ESLint
+        run: npm run lint
 
   prettier:
     timeout-minutes: 30
@@ -31,5 +33,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-      - name: Prettier
-        run: npx prettier --check .
+      - name: Install dependencies
+        run: npm install
+      - name: Run Prettier
+        run: npm run prettier-check
