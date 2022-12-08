@@ -38,7 +38,7 @@ jobs:
         id: subgraph_metadata
         uses: mikefarah/yq@v4
         with:
-          cmd: yq -p yaml -o json implementations/apollo-server/metadata.yaml
+          cmd: yq -p yaml -o json 'implementations/apollo-server/metadata.yaml'
       - name: Generate Results Summary
         run: |
           echo ${{ steps.subgraph_metadata.outputs.result }} > metadata.json
