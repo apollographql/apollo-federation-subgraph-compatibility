@@ -1,7 +1,9 @@
 # Apollo Federation Subgraph Compatibility Testing
 
+[![NPM Version](https://img.shields.io/npm/v/@apollo/federation-subgraph-compatibility)](https://www.npmjs.com/package/@apollo/federation-subgraph-compatibility)
 [![Continuous Integration](https://github.com/apollographql/apollo-federation-subgraph-compatibility/workflows/Continuous%20Integration/badge.svg)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/actions?query=workflow%3A"Continuous+Integration")
-[![Join the community forum](https://img.shields.io/badge/join%20the%20community-forum-blueviolet)](https://community.apollographql.com)
+[![Join the community forum](https://img.shields.io/badge/Join%20The%20Community-Forum-blueviolet)](https://community.apollographql.com)
+[![MIT License](https://img.shields.io/github/license/apollographql/apollo-federation-subgraph-compatibility)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/LICENSE)
 
 `@apollo/federation-subgraph-compatibility` script is an NPM package that allows you to test given subgraph's implementation for compatibility against the [Apollo Federation Subgraph Specification](https://www.apollographql.com/docs/federation/subgraph-spec/). This testing suite verifies various Federation features against subgraph implementation. See [compatibility testing docs](./COMPATIBILITY.md) for details on the expected schema and the data sets as well as information about the executed tests.
 
