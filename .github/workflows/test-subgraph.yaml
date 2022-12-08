@@ -35,11 +35,13 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
           TEST_URL: ${{ secrets.TEST_URL }}
       - name: Generate Metadata
+        id: subgraph_metadata
         uses: mikefarah/yq@v4
         with:
-          cmd: yq -p yaml -o json implementations/apollo-server/metadata.yaml > metadata.json
+          cmd: yq -p yaml -o json implementations/apollo-server/metadata.yaml
       - name: Generate Results Summary
         run: |
+          echo ${{ steps.subgraph_metadata.outputs.result }} > metadata.json
           jq -s '.[0] + {test: .[1]}' metadata.json results.json > results_${{ inputs.library }}.json
           cat results_${{ inputs.library }}.json >> $GITHUB_STEP_SUMMARY
       - name: Upload Results
