@@ -7,10 +7,16 @@ tmp
 # exclude docs
 images
 
+# config files
 .dockerignore
+.editorconfig
+.eslintrc.js
+.eslintignore
 .gitattributes
 .github
+.prettierrc
+.prettierignore
 .vscode
-
 tsconfig.json
+
 simple-schema.apollo-workbench

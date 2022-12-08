@@ -1,16 +1,16 @@
-import { readdirSync } from "fs";
-import { readFile, writeFile } from "fs/promises";
-import { resolve } from "path";
-import execa from "execa";
-import debug from "debug";
-import { load } from "js-yaml";
-import { defaultsDeep } from "lodash";
-import { healthcheckAll } from "./utils/client";
-import { generateMarkdown } from "./utils/markdown";
-import { runJest, TestResultDetails, TESTS } from "./testRunner";
-import { writeableDebugStream } from "./utils/logging";
+import { readdirSync } from 'fs';
+import { readFile, writeFile } from 'fs/promises';
+import { resolve } from 'path';
+import execa from 'execa';
+import debug from 'debug';
+import { load } from 'js-yaml';
+import { defaultsDeep } from 'lodash';
+import { healthcheckAll } from './utils/client';
+import { generateMarkdown } from './utils/markdown';
+import { runJest, TestResultDetails, TESTS } from './testRunner';
+import { writeableDebugStream } from './utils/logging';
 
-const dockerDebug = debug("docker");
+const dockerDebug = debug('docker');
 
 function getFolderNamesFromPath(path: string) {
   return readdirSync(path, {
@@ -21,16 +21,18 @@ function getFolderNamesFromPath(path: string) {
 }
 
 async function runDockerCompose(libraryName: string, librariesPath: string) {
-  console.log(`Starting containers for testing ${libraryName} implementation...`);
-  const proc = execa("docker", [
-    "compose",
-    "-f",
-    "docker-compose.yaml",
-    "-f",
+  console.log(
+    `Starting containers for testing ${libraryName} implementation...`,
+  );
+  const proc = execa('docker', [
+    'compose',
+    '-f',
+    'docker-compose.yaml',
+    '-f',
     `${librariesPath}/${libraryName}/docker-compose.yaml`,
-    "up",
-    "--build",
-    "--detach",
+    'up',
+    '--build',
+    '--detach',
   ]);
 
   proc.stdout.pipe(writeableDebugStream(dockerDebug));
@@ -39,12 +41,12 @@ async function runDockerCompose(libraryName: string, librariesPath: string) {
   await proc;
 
   if (proc.exitCode !== 0) {
-    throw new Error("docker-compose did not start successfully");
+    throw new Error('docker-compose did not start successfully');
   }
 
   return async () => {
     console.log(`Stopping ${libraryName} and related containers...`);
-    await execa("docker-compose", ["down", "--remove-orphans", "-v"]);
+    await execa('docker-compose', ['down', '--remove-orphans', '-v']);
   };
 }
 
@@ -53,26 +55,34 @@ async function main() {
   const libraries =
     process.argv.length > 2 ? (process.argv[2] as string) : undefined;
 
-  const librariesPath = resolve(__dirname, "..", "implementations");
+  const librariesPath = resolve(__dirname, '..', 'implementations');
   const implementationFolders = getFolderNamesFromPath(librariesPath);
-  const libraryNames = libraries ? libraries.split(",") : implementationFolders;
+  const libraryNames = libraries ? libraries.split(',') : implementationFolders;
   const results: TestResultDetails[] = [];
 
   for (const libraryName of libraryNames) {
-    if (libraryName === "_template_hosted_" || libraryName === "_template_library_") continue;
+    if (
+      libraryName === '_template_hosted_' ||
+      libraryName === '_template_library_'
+    )
+      continue;
     if (!implementationFolders.includes(libraryName)) {
       console.log(
-        `Library ${libraryName} was not found in the implementations folder`
+        `Library ${libraryName} was not found in the implementations folder`,
       );
       continue;
     }
 
-    const result: TestResultDetails = { name: libraryName, started: false, tests: {} };
+    const result: TestResultDetails = {
+      name: libraryName,
+      started: false,
+      tests: {},
+    };
     results.push(result);
 
     const dockerComposeDown = await runDockerCompose(
       libraryName,
-      librariesPath
+      librariesPath,
     );
 
     try {
@@ -104,14 +114,14 @@ async function main() {
       const metadataFilePath = resolve(
         librariesPath,
         libraryName,
-        "metadata.yaml"
+        'metadata.yaml',
       );
-      const text = await readFile(metadataFilePath, "utf-8");
+      const text = await readFile(metadataFilePath, 'utf-8');
       const yaml = load(text);
       defaultsDeep(result, yaml);
     } catch (e) {
-      if (e.code !== "ENOENT") {
-        console.error("error loading metadata file");
+      if (e.code !== 'ENOENT') {
+        console.error('error loading metadata file');
         console.error(e);
       }
     }
@@ -120,12 +130,12 @@ async function main() {
   generateMarkdown(results);
 
   await writeFile(
-    resolve(__dirname, "..", "results.json"),
+    resolve(__dirname, '..', 'results.json'),
     JSON.stringify(results, null, 2),
-    "utf-8"
+    'utf-8',
   );
 
-  console.log("complete");
+  console.log('complete');
   process.exit();
 }
 

@@ -1,14 +1,14 @@
-import { stripIgnoredCharacters } from "graphql";
-import { productsRequest } from "../utils/client";
+import { stripIgnoredCharacters } from 'graphql';
+import { productsRequest } from '../utils/client';
 
-test("@link", async () => {
+test('@link', async () => {
   const response = await productsRequest({
-    query: "query { _service { sdl } }",
+    query: 'query { _service { sdl } }',
   });
 
   expect(response.data).toMatchObject({
     _service: {
-      sdl: expect.stringContaining("@link"),
+      sdl: expect.stringContaining('@link'),
     },
   });
 
@@ -20,29 +20,42 @@ test("@link", async () => {
   expect(linksRegex.test(normalizedSDL)).toBe(true);
 
   let fedLinkCount = 0;
-  normalizedSDL.match(linksRegex).forEach(element => {
+  normalizedSDL.match(linksRegex).forEach((element) => {
     const urlRegex = /url:(\".+?\")/;
     // skip definitions
     if (urlRegex.test(element)) {
       const linkUrl = JSON.parse(element.match(urlRegex)[1]);
-      const linkUrlSpecVersionRegex = /https:\/\/specs.apollo.dev\/federation\/v(.+)/;
+      const linkUrlSpecVersionRegex =
+        /https:\/\/specs.apollo.dev\/federation\/v(.+)/;
       // only verify federation spec @links
       if (linkUrlSpecVersionRegex.test(linkUrl)) {
         fedLinkCount++;
-  
+
         const federationVersion = linkUrl.match(linkUrlSpecVersionRegex)[1];
         // only federation v2.0 and v2.1 are supported
         expect(federationVersion).toMatch(/2\.0|2\.1/);
-  
+
         const linkImportsRegex = /import:\[(.+?)\]/;
         if (linkImportsRegex.test(element)) {
           // verify federation imports
-          const expected = ["@composeDirective", "@extends", "@external", "@inaccessible", "@key", "@override", "@provides", "@requires", "@shareable", "@tag", "FieldSet"];
-  
+          const expected = [
+            '@composeDirective',
+            '@extends',
+            '@external',
+            '@inaccessible',
+            '@key',
+            '@override',
+            '@provides',
+            '@requires',
+            '@shareable',
+            '@tag',
+            'FieldSet',
+          ];
+
           const linkImportsMatch = element.match(linkImportsRegex);
-          const linkImports = linkImportsMatch[1].split(" ");
-          linkImports.forEach(importedElement => {
-            if (!expected.includes(importedElement.replaceAll("\"", ""))) {
+          const linkImports = linkImportsMatch[1].split(' ');
+          linkImports.forEach((importedElement) => {
+            if (!expected.includes(importedElement.replaceAll('"', ''))) {
               expect('').toBe('unexpected federation import ${element}');
             }
           });

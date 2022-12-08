@@ -1,14 +1,14 @@
-import { productsRequest } from "../utils/client";
-import { compareSchemas } from "../utils/schemaComparison";
+import { productsRequest } from '../utils/client';
+import { compareSchemas } from '../utils/schemaComparison';
 
-test("introspection", async () => {
+test('introspection', async () => {
   const serviceSDLQuery = await productsRequest({
-    query: "query { _service { sdl } }",
+    query: 'query { _service { sdl } }',
   });
 
   expect(serviceSDLQuery.data).toMatchObject({
     _service: {
-      sdl: expect.stringContaining("type Query"),
+      sdl: expect.stringContaining('type Query'),
     },
   });
 

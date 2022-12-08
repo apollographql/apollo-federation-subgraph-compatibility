@@ -1,33 +1,100 @@
-import { writeFileSync } from "fs";
-import execa from "execa";
-import debug from "debug";
-import { resolve } from "path";
-import { writeableDebugStream } from "./utils/logging";
+import { writeFileSync } from 'fs';
+import execa from 'execa';
+import debug from 'debug';
+import { resolve } from 'path';
+import { writeableDebugStream } from './utils/logging';
 
-const jestDebug = debug("test");
+const jestDebug = debug('test');
 
 export const TESTS = [
-  { assertion: "introspection", column: "_service", fedVersion: 1, required: true },
-  { assertion: "@key single", column: "@key (single)", fedVersion: 1, required: true },
-  { assertion: "@key multiple", column: "@key (multi)", fedVersion: 1, required: false },
-  { assertion: "@key composite", column: "@key (composite)", fedVersion: 1, required: false },
-  { assertion: "repeatable @key", column: "repeatable @key", fedVersion: 1, required: false },
-  { assertion: "@requires", column: "@requires", fedVersion: 1, required: false },
-  { assertion: "@provides", column: "@provides", fedVersion: 1, required: false },
-  { assertion: "ftv1", column: "federated tracing", fedVersion: 1, required: false },
-  { assertion: "@link", column: "@link", fedVersion: 2, required: true },
-  { assertion: "@shareable", column: "@shareable", fedVersion: 2, required: false },
-  { assertion: "@tag", column: "@tag", fedVersion: 2, required: false },
-  { assertion: "@override", column: "@override", fedVersion: 2, required: false },
-  { assertion: "@inaccessible", column: "@inaccessible", fedVersion: 2, required: false },
+  {
+    assertion: 'introspection',
+    column: '_service',
+    fedVersion: 1,
+    required: true,
+  },
+  {
+    assertion: '@key single',
+    column: '@key (single)',
+    fedVersion: 1,
+    required: true,
+  },
+  {
+    assertion: '@key multiple',
+    column: '@key (multi)',
+    fedVersion: 1,
+    required: false,
+  },
+  {
+    assertion: '@key composite',
+    column: '@key (composite)',
+    fedVersion: 1,
+    required: false,
+  },
+  {
+    assertion: 'repeatable @key',
+    column: 'repeatable @key',
+    fedVersion: 1,
+    required: false,
+  },
+  {
+    assertion: '@requires',
+    column: '@requires',
+    fedVersion: 1,
+    required: false,
+  },
+  {
+    assertion: '@provides',
+    column: '@provides',
+    fedVersion: 1,
+    required: false,
+  },
+  {
+    assertion: 'ftv1',
+    column: 'federated tracing',
+    fedVersion: 1,
+    required: false,
+  },
+  { assertion: '@link', column: '@link', fedVersion: 2, required: true },
+  {
+    assertion: '@shareable',
+    column: '@shareable',
+    fedVersion: 2,
+    required: false,
+  },
+  { assertion: '@tag', column: '@tag', fedVersion: 2, required: false },
+  {
+    assertion: '@override',
+    column: '@override',
+    fedVersion: 2,
+    required: false,
+  },
+  {
+    assertion: '@inaccessible',
+    column: '@inaccessible',
+    fedVersion: 2,
+    required: false,
+  },
 ];
 
 export async function runJest(libraryName: string): Promise<JestResults> {
-  console.log(new Date().toJSON(), "starting tests...");
-  jestDebug(`\n***********************\nStarting tests...\n***********************\n\n`);
+  console.log(new Date().toJSON(), 'starting tests...');
+  jestDebug(
+    `\n***********************\nStarting tests...\n***********************\n\n`,
+  );
 
-  const jestBin = require.resolve("jest/bin/jest");
-  const proc = execa(jestBin, [`${__dirname}/tests`, "--ci", "--json", "--config", resolve(__dirname, "..", "jest.config.js") ], { reject: false });
+  const jestBin = require.resolve('jest/bin/jest');
+  const proc = execa(
+    jestBin,
+    [
+      `${__dirname}/tests`,
+      '--ci',
+      '--json',
+      '--config',
+      resolve(__dirname, '..', 'jest.config.js'),
+    ],
+    { reject: false },
+  );
 
   proc.stdout.pipe(writeableDebugStream(jestDebug));
   proc.stderr.pipe(writeableDebugStream(jestDebug));
@@ -35,24 +102,22 @@ export async function runJest(libraryName: string): Promise<JestResults> {
   const { stdout, stderr } = await proc;
 
   if (proc.exitCode > 1) {
-    throw new Error("jest failed to run");
+    throw new Error('jest failed to run');
   }
 
   const results = JSON.parse(stdout) as JestJSONOutput;
 
   if (results.numFailedTests > 0) {
-    writeFileSync(`tmp/${libraryName}-testfailures.txt`, stderr, "utf-8");
+    writeFileSync(`tmp/${libraryName}-testfailures.txt`, stderr, 'utf-8');
   }
 
   const assertions = results.testResults.flatMap((x) => x.assertionResults);
   const assertionPassed = (name: string) => {
-    return (
-      !assertions.some((a: any) => {
-        const assertionName =
-          a.ancestorTitles.length === 0 ? a.fullName : a.ancestorTitles[0];
-        return assertionName === name && a.status === "failed";
-      })
-    );
+    return !assertions.some((a: any) => {
+      const assertionName =
+        a.ancestorTitles.length === 0 ? a.fullName : a.ancestorTitles[0];
+      return assertionName === name && a.status === 'failed';
+    });
   };
 
   return {
@@ -87,7 +152,7 @@ export interface TestResults {
 export interface JestAssertionResult {
   failureMessages: string[];
   fullName: string;
-  status: "failed" | "passed";
+  status: 'failed' | 'passed';
   title: string;
 }
 
@@ -105,7 +170,7 @@ export interface JestJSONOutput {
   success: boolean;
   testResults: {
     name: string;
-    status: "failed" | "passed";
+    status: 'failed' | 'passed';
     summary: string;
     message: string;
     assertionResults: JestAssertionResult[];

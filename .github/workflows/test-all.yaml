@@ -10,6 +10,7 @@ on:
       - '*.json'
       - '*.yaml'
       - '*.graphql'
+      - '*.template'
   workflow_call:
 
 jobs:

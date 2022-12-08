@@ -1,9 +1,9 @@
-import { productsRequest } from "../utils/client";
-import { stripIgnoredCharacters } from "graphql";
+import { productsRequest } from '../utils/client';
+import { stripIgnoredCharacters } from 'graphql';
 
-test("@tag", async () => {
+test('@tag', async () => {
   const response = await productsRequest({
-    query: "query { _service { sdl } }",
+    query: 'query { _service { sdl } }',
   });
 
   const { sdl } = response.data._service;
