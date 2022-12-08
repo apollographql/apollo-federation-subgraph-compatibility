@@ -1,5 +1,5 @@
 ariadne==0.16.0b1
-certifi==2020.12.5
+certifi==2022.12.7
 click==7.1.2
 graphql-core==3.2.1
 h11==0.12.0
