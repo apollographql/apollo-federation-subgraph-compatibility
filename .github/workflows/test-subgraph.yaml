@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       format:
-        default: md
+        default: markdown
         type: string
     secrets:
       TEST_URL:
