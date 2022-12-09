@@ -37,7 +37,6 @@ jobs:
       - name: Generate Results Summary
         run: |
           jq -s '.[0] + {tests: .[1]}' implementations/${{ inputs.library }}/metadata.json results.json > results_${{ inputs.library }}.json
-          cat results_${{ inputs.library }}.json >> $GITHUB_STEP_SUMMARY
       - name: Upload Results
         uses: actions/upload-artifact@v3
         with:
