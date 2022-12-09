@@ -47,7 +47,7 @@ const user = {
   email: "support@apollographql.com",
   name: "Jane Smith",
   totalProductsCreated: 1337
- };
+};
 
 const sdl = readFileSync('products.graphql', 'utf-8');
 

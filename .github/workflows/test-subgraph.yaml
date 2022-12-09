@@ -6,6 +6,9 @@ on:
       library:
         required: true
         type: string
+      format:
+        default: markdown
+        type: string
     secrets:
       TEST_URL:
         required: false
@@ -27,21 +30,24 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
-      - name: Compile supergraph
-        run: npm run setup
+      - name: Compile script
+        run: npm run build
       - name: Compatibility test
-        run: npm run test ${{ inputs.library }}
+        run: npm run test:subgraph -- docker --debug --compose implementations/${{ inputs.library }}/docker-compose.yaml --schema implementations/_template_library_/products.graphql --format ${{ inputs.format }}
         env:
-          DEBUG: docker,test
           API_KEY: ${{ secrets.API_KEY }}
           TEST_URL: ${{ secrets.TEST_URL }}
       - name: Generate Results Summary
         run: |
-          cat results.md
-          cat results.md >> $GITHUB_STEP_SUMMARY
+          if [[ ${{ inputs.format }} == "json" ]]; then
+            jq -s '.[0] + {tests: .[1]}' implementations/${{ inputs.library }}/metadata.json results.json > results_${{ inputs.library }}.json
+          else
+            cat results.md >> $GITHUB_STEP_SUMMARY
+            mv results.md results-${{ inputs.library }}.md
+          fi
       - name: Upload Results
         uses: actions/upload-artifact@v3
         with:
-          name: results-${{ inputs.library }}.json
-          path: ./results.json
+          name: results-${{ inputs.library }}.${{ inputs.format }}
+          path: ./results_${{ inputs.library }}.${{ inputs.format }}
           retention-days: 1

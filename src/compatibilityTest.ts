@@ -89,7 +89,7 @@ class CompatibilityTestCommand extends Command {
 const program = new CompatibilityTestCommand();
 
 program
-  .description(`Run Apollo Federation subgraph compatibility tests`)
+  .description('Run Apollo Federation subgraph compatibility tests')
   .showHelpAfterError();
 
 program
