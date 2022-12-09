@@ -63,6 +63,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Compile script
+        run: npm run build
       - name: Download Individual Results
         uses: actions/download-artifact@v3
       - name: Generate Final Results
