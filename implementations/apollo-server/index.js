@@ -5,7 +5,6 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
-// test commit to trigger tests
 const serverPort = parseInt(process.env.PRODUCTS_PORT || "") || 4001;
 
 const deprecatedProduct = {

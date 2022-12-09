@@ -1,6 +1,6 @@
 {
   "name": "@apollo/federation-subgraph-compatibility",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "A CLI tool for checking a subgraph's compatibility with a federated gateway",
   "workspaces": [
     "subgraphs/inventory",
@@ -12,7 +12,9 @@
     "prettier-write": "prettier --write .",
     "lint": "eslint .",
     "prepack": "tsc",
-    "test:subgraph": "node dist/compatibilityTest.js"
+    "test:subgraph": "node dist/compatibilityTest.js",
+    "compatibility:report": "node dist/reportGenerator.js",
+    "compatibility:test": "node dist/compatibilityTest.js"
   },
   "bin": {
     "fedtest": "./dist/compatibilityTest.js"

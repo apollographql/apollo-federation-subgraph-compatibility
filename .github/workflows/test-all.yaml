@@ -60,14 +60,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download results
+      - name: Download Individual Results
         uses: actions/download-artifact@v3
-      - run: |
-          echo "listing results"
-          ls results*/results*.json
+      - name: Generate Final Results
+        run: |
+          echo "merging results"
+          jq -s . results*/results*.json > final_results.json
 
-      # echo "generating final results json"
-      # jq -s 'add results*/results*.json > results.json
-      # echo "results"
-      # cat results.json
-      # TODO generate Markdown from merged JSON
+          echo "generating markdown"
+          npm run compatibility:report -- final_results.json
+      - name: Generate Job Summary
+        run: |
+          cat results.md
+          cat results.md >> $GITHUB_STEP_SUMMARY
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: results.md
+          path: ./results.md
+          retention-days: 7
