@@ -193,13 +193,13 @@ async function shutdownSupergraphUsingDocker() {
   logs.stdout.pipe(writeableDebugStream(dockerDebug));
   logs.stderr.pipe(writeableDebugStream(dockerDebug));
 
+  const logsCompleted = await logs;
   const shutdown = await execa('docker', [
     'compose',
     'down',
     '--remove-orphans',
     '-v',
   ]);
-  const logsCompleted = await logs;
   if (logsCompleted.exitCode !== 0 || shutdown.exitCode !== 0) {
     console.error('Docker compose did not shutdown correctly');
   }
