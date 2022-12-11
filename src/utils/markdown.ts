@@ -1,12 +1,10 @@
 import { writeFileSync } from 'fs';
+import { StringChain } from 'lodash';
 import { resolve } from 'path';
 import { TestResultDetails, TestResults, TESTS } from '../testRunner';
 
 export function generateMarkdown(results: TestResultDetails[]) {
-  const markdownFile = new MarkdownFile(
-    'Subgraph libraries that support Apollo Federation',
-    'Supported subgraph libraries',
-  );
+  const markdownFile = new MarkdownFile(true);
 
   const resultsSortedByLanguage = results.sort((a, b) => {
     if (a.language === b.language) return 0;
@@ -55,17 +53,28 @@ export function generateSimplifiedMarkdown(
 class MarkdownFile {
   private content: string[] = [];
 
-  constructor(title?: string, sidebarTitle?: string) {
-    if (title && sidebarTitle) {
-      this.content.push(
-        '---',
-        `title: ${title}`,
-        `sidebar_title: ${sidebarTitle}`,
-        '---',
-        '',
-        'The following open-source GraphQL server libraries provide support for Apollo Federation and are included in our test suite.',
-        '',
-      );
+  constructor(includeLegend?: Boolean) {
+    if (includeLegend) {
+      let intro = `---
+title: Federation-compatible subgraph implementations
+
+hide:
+  - navigation
+---
+
+The following open-source GraphQL server libraries and other solutions support acting as a subgraph in a federated supergraph.
+
+## Table Legend
+
+| Icon | Description                                          |
+| ---- | ---------------------------------------------------- |
+| 🟢    | Functionality is supported                           |
+| ❌    | Critical functionality is NOT supported              |
+| 🔲    | Additional federation functionality is NOT supported |
+
+`;
+
+      this.content.push(intro);
     }
   }
 

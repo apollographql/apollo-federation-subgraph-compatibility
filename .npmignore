@@ -5,7 +5,8 @@ implementations
 tmp
 
 # exclude docs
-images
+docs
+mkdocs.yml
 
 # config files
 .dockerignore
