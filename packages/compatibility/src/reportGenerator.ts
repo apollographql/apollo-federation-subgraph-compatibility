@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command } from 'commander';
 import { readFile } from 'fs/promises';
 import { TestResultDetails } from './testRunner';

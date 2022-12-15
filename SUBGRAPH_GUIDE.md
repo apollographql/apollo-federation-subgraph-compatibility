@@ -22,7 +22,7 @@ any regressions.
 It's actually pretty easy! We have a `products` schema that you will need to
 implement to be used in the testing suite:
 
-1. Copy the `implementations/_template_library_` folder and rename it to the 
+1. Copy the `implementations/_template_library_` folder and rename it to the
    name of your library
    - You'll find 4 files that you need in the template folder: `metadata.yaml`,
      `docker-compose.yml`, `Dockerfile` and `products.graphql`
@@ -42,7 +42,7 @@ implement to be used in the testing suite:
 4. Modify the `docker-compose.yml` file and update the project name. If you do
    need to make additional edits to the `docker-compose.yml` file, your edits
    should only affect the `products` service defined.
-5. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
+5. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`
 6. Copy the `.github/workflows/templates/test-subgraph-library.yaml.template` and rename
    it to include the name of your library under `.github/workflows/test-subgraph-<library>.yaml`
@@ -52,8 +52,8 @@ implement to be used in the testing suite:
 ## How can I have my hosted subgraph included in this?
 
 Implement `products` schema and deploy it to your hosted environment. **Since the
-builds can trigger at any time and the tests are executed against your deployed 
-GraphQL service, your service should be generally available as otherwise 
+builds can trigger at any time and the tests are executed against your deployed
+GraphQL service, your service should be generally available as otherwise
 compatibility tests will fail.**
 
 1. Copy the `implementations/_template_hosted_` folder and rename it to the
@@ -73,10 +73,10 @@ compatibility tests will fail.**
 4. Modify the `docker-compose.yml` file and update project name as well API KEY
    and target URL secret names.
    - When you are ready to integrate, reach out to us at [Apollo Community Forums](https://community.apollographql.com/).
-     Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem) 
+     Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem)
      and we'll help you configure your API KEY and URL as a Github Secret. Those
      secrets will be used by Github Actions to communicate with your server.
-5. Test only your library by running `npm run setup` and `npm run test {YOUR_IMPLEMENTATION_FOLDER_NAME}`
+5. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`. Since NGINX proxy will
    require API KEY and URL, you will need to set it as environment variable prior
    running tests.
@@ -84,7 +84,7 @@ compatibility tests will fail.**
    ```bash
    export API_KEY_FOO=bar
    export URL_FOO=http://example.com
-   npm run test foo
+   make test subgraph=foo
    ```
 
 6. Copy the `.github/workflows/templates/test-subgraph-hosted.yaml.template` and rename
@@ -106,9 +106,9 @@ const dimension = {
 }
 
 const user = {
-  averageProductsCreatedPerYear: if (totalProductsCreated) { 
+  averageProductsCreatedPerYear: if (totalProductsCreated) {
     Math.round(totalProductsCreated / yearsOfEmployment)
-  } else { 
+  } else {
     null
   },
   email: "support@apollographql.com",
@@ -171,40 +171,8 @@ const products = [
 
 ## Debugging at the command line
 
-The simplest way to start up the federated graph for a single implementation is by using `docker compose`.
-This will start all subgraphs and router as `Docker` containers.
-
-Running the federated graph for a single implementation:
-
-```sh
-docker compose -f docker-compose.yaml -f implementations/${LIBRARY_NAME}/docker-compose.yaml up --build
-```
-
-Alternatively, you can also start your subgraph implementation locally (e.g. from IDE) and then run following
-to start other subgraphs and the router:
-
-```sh
-npm run setup-local
-npm run start
-```
-
-With all the subgraphs and router running, you can then execute the tests by running:
-
-```sh
-npm run test:jest
-```
-
-### Debug Information
-
-When running the test runner with `npm run test`, test failures are written to
-the `tmp` directory.
-
-To get verbose output when running the test runner, add a `DEBUG` flag like so:
-
-```sh
-DEBUG=docker,test npm run test
-DEBUG=docker,test npm run test <my_implementation>
-```
+You can test your subgraph implementation locally by using `@apollo/federation-subgraph-compatibility` NPX script.
+See [script documentation](packages/compatibility/README.md) for details.
 
 ## Debugging in VSCode
 

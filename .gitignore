@@ -91,7 +91,11 @@ venv
 .mesh
 
 # ignore generated files
+supergraph-compose.yaml
 supergraph-config.yaml
 supergraph-generated.yaml
 supergraph.graphql
 supergraph.yaml
+
+results*
+final_results.json

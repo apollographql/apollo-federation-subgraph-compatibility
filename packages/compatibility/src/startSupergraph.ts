@@ -176,25 +176,36 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
         dockerDebug(
           `\n***********************\nStopping supergraph...\n***********************\n\n`,
         );
-        await shutdownSupergraphUsingDocker();
+        await shutdownSupergraphUsingDocker(config.composeFile);
       };
     } else {
       throw new Error('Supergraph did not start successfully');
     }
   } catch (err) {
-    await shutdownSupergraphUsingDocker();
+    await shutdownSupergraphUsingDocker(config.composeFile);
     throw err;
   }
 }
 
-async function shutdownSupergraphUsingDocker() {
-  const logs = execa('docker', ['compose', 'logs']);
+async function shutdownSupergraphUsingDocker(composeFile: string) {
+  const logs = execa('docker', [
+    'compose',
+    '-f',
+    'supergraph-compose.yaml',
+    '-f',
+    composeFile,
+    'logs'
+  ]);
   logs.stdout.pipe(writeableDebugStream(dockerDebug));
   logs.stderr.pipe(writeableDebugStream(dockerDebug));
 
   const logsCompleted = await logs;
   const shutdown = await execa('docker', [
     'compose',
+    '-f',
+    'supergraph-compose.yaml',
+    '-f',
+    composeFile,
     'down',
     '--remove-orphans',
     '-v',

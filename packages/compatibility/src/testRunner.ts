@@ -107,10 +107,6 @@ export async function runJest(libraryName: string): Promise<JestResults> {
 
   const results = JSON.parse(stdout) as JestJSONOutput;
 
-  if (results.numFailedTests > 0) {
-    writeFileSync(`tmp/${libraryName}-testfailures.txt`, stderr, 'utf-8');
-  }
-
   const assertions = results.testResults.flatMap((x) => x.assertionResults);
   const assertionPassed = (name: string) => {
     return !assertions.some((a: any) => {

@@ -5,7 +5,7 @@
 [![Join the community forum](https://img.shields.io/badge/Join%20The%20Community-Forum-blueviolet)](https://community.apollographql.com)
 [![MIT License](https://img.shields.io/github/license/apollographql/apollo-federation-subgraph-compatibility)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/LICENSE)
 
-`@apollo/federation-subgraph-compatibility` script is an NPM package that allows you to test given subgraph's implementation for compatibility against the [Apollo Federation Subgraph Specification](https://www.apollographql.com/docs/federation/subgraph-spec/). This testing suite verifies various Federation features against subgraph implementation. See [compatibility testing docs](./COMPATIBILITY.md) for details on the expected schema and the data sets as well as information about the executed tests.
+`@apollo/federation-subgraph-compatibility` script is an NPM package that allows you to test given subgraph's implementation for compatibility against the [Apollo Federation Subgraph Specification](https://www.apollographql.com/docs/federation/subgraph-spec/). This testing suite verifies various Federation features against subgraph implementation. See [compatibility testing docs](../../COMPATIBILITY.md) for details on the expected schema and the data sets as well as information about the executed tests.
 
 This repository contains number of [example subgraph implementations](https://github.com/apollographql/apollo-federation-subgraph-compatibility/tree/main/implementations) based on various libraries and other solutions. See [latest compatibility results](https://www.apollographql.com/docs/federation/building-supergraphs/supported-subgraphs) for a list of Apollo Federation compatibible subgraph implementations.
 
@@ -169,4 +169,4 @@ For more info on how to contact the team for security issues, see our [Security 
 
 ## License
 
-This library is licensed under [The MIT License (MIT)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/LICENSE).
+This library is licensed under [The MIT License (MIT)](../../LICENSE).
