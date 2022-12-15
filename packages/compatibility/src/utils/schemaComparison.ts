@@ -16,8 +16,7 @@ import { resolve } from 'path';
 const productsRaw = readFileSync(
   resolve(
     __dirname,
-    '..',
-    '..',
+    '../../../..',
     'implementations',
     '_template_library_',
     'products.graphql',

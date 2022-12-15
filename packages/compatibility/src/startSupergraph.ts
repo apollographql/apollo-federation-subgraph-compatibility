@@ -67,8 +67,8 @@ async function startSupergraphUsingPm2(config: Pm2Config) {
       'utf-8',
     );
     const supergraphConfig = template.replaceAll(
-      '${SCRIPT_DIR}',
-      resolve(__dirname, '..'),
+      '${DIST_DIR}',
+      resolve(__dirname),
     );
     await writeFile('supergraph.config.js', supergraphConfig);
 
@@ -145,6 +145,9 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
   const supergraphConfig = template.replaceAll(
     '${SCRIPT_DIR}',
     resolve(__dirname, '..'),
+  ).replaceAll(
+    '${DIST_DIR}',
+    resolve(__dirname),
   );
 
   await writeFile('supergraph-compose.yaml', supergraphConfig);

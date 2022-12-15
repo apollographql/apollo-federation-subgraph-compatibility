@@ -4,6 +4,7 @@ import { GraphQLError } from 'graphql';
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { buildSubgraphSchema } from '@apollo/subgraph';
+import { resolve } from 'path';
 
 const serverPort = parseInt(process.env.INVENTORY_PORT || '') || 4003;
 
@@ -19,7 +20,7 @@ class DeliveryEstimates {
   }
 }
 
-const typeDefs = gql(readFileSync('inventory.graphql', 'utf-8'));
+const typeDefs = gql(readFileSync(resolve(__dirname, 'inventory.graphql'), 'utf-8'));
 
 const resolvers = {
   Product: {

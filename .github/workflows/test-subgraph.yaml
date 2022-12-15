@@ -33,7 +33,7 @@ jobs:
       - name: Compile script
         run: npm run build
       - name: Compatibility test
-        run: npm run test:subgraph -- docker --debug --compose implementations/${{ inputs.library }}/docker-compose.yaml --schema implementations/_template_library_/products.graphql --format ${{ inputs.format }}
+        run: npm run compatibility:test -- docker --debug --compose implementations/${{ inputs.library }}/docker-compose.yaml --schema implementations/_template_library_/products.graphql --format ${{ inputs.format }}
         env:
           API_KEY: ${{ secrets.API_KEY }}
           TEST_URL: ${{ secrets.TEST_URL }}

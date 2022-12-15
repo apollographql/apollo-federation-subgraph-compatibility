@@ -30,12 +30,12 @@ export async function composeDevSupergraph(
   await composeDevSubgraph(
     'users',
     'http://localhost:4002',
-    resolve(__dirname, '..', 'subgraphs', 'users', 'users.graphql'),
+    resolve(__dirname, 'subgraphs', 'users', 'users.graphql'),
   );
   await composeDevSubgraph(
     'inventory',
     'http://localhost:4003',
-    resolve(__dirname, '..', 'subgraphs', 'inventory', 'inventory.graphql'),
+    resolve(__dirname, 'subgraphs', 'inventory', 'inventory.graphql'),
   );
 
   const started = await healthcheckRouter();
@@ -109,7 +109,7 @@ export async function composeSupergraph(
     'utf-8',
   );
   const supergraphConfig = template
-    .replaceAll('${SCRIPT_DIR}', resolve(__dirname, '..'))
+    .replaceAll('${DIST_DIR}', resolve(__dirname))
     .replace('${PORT}', port)
     .replace('${GRAPHQL_PATH}', graphQLEndpoint)
     .replace('${SCHEMA_FILE}', schemaFile);
