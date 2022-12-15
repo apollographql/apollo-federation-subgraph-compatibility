@@ -1,64 +1,45 @@
 {
-  "name": "@apollo/federation-subgraph-compatibility",
-  "version": "0.0.10",
-  "description": "A CLI tool for checking a subgraph's compatibility with a federated gateway",
-  "workspaces": [
-    "subgraphs/inventory",
-    "subgraphs/users"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "prettier-check": "prettier --check .",
-    "prettier-write": "prettier --write .",
-    "lint": "eslint .",
-    "prepack": "tsc",
-    "test:subgraph": "node dist/compatibilityTest.js",
-    "compatibility:report": "node dist/reportGenerator.js",
-    "compatibility:test": "node dist/compatibilityTest.js"
-  },
-  "bin": {
-    "fedtest": "./dist/compatibilityTest.js"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "author": "Apollo <packages@apollographql.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues"
-  },
-  "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility#readme",
-  "dependencies": {
-    "@apollo/rover": "^0.10.0",
-    "commander": "^9.4.1",
-    "debug": "^4.3.4",
-    "execa": "^5.1.1",
-    "graphql": "^16.6.0",
-    "jest": "^28.1.0",
-    "js-yaml": "^4.1.0",
-    "lodash": "^4.17.21",
-    "make-fetch-happen": "^10.1.5",
-    "pm2": "^5.2.2",
-    "ts-jest": "^28.0.3"
-  },
-  "devDependencies": {
-    "@types/debug": "^4.1.7",
-    "@types/jest": "^27.5.1",
-    "@types/js-yaml": "^4.0.5",
-    "@types/lodash": "^4.14.182",
-    "@types/make-fetch-happen": "^9.0.2",
-    "@types/node": "^17.0.35",
-    "@types/yargs": "^17.0.10",
-    "@typescript-eslint/eslint-plugin": "^5.46.0",
-    "@typescript-eslint/parser": "^5.46.0",
-    "concurrently": "^7.2.1",
-    "eslint": "^8.29.0",
-    "eslint-plugin-import": "^2.26.0",
-    "prettier": "^2.8.1",
-    "typescript": "^4.7.2"
-  },
-  "release": {
-    "branches": [
-      "main"
-    ]
-  }
+    "name": "@apollo/federation-subgraph-compatibility-monorepo",
+    "description": "Monorepo for Apollo Federation Subgraph Compatibility Testing packages",
+    "bugs": {
+        "url": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues"
+    },
+    "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility#readme",
+    "author": "Apollo <packages@apollographql.com>",
+    "license": "MIT",
+    "workspaces": [
+        "packages/*",
+        "packages/subgraphs/*"
+    ],
+    "scripts": {
+        "build": "tsc --build tsconfig.json && npm run package-subgraphs",
+        "compatibility:report": "node packages/compatibility/dist/reportGenerator.js",
+        "compatibility:test": "node packages/compatibility/dist/compatibilityTest.js",
+        "lint": "eslint .",
+        "package-subgraphs": "concurrently \"npm:package-subgraphs:*\"",
+        "package-subgraphs:inventory": "ncc build packages/subgraphs/inventory/index.js --source-map --out packages/compatibility/dist/subgraphs/inventory && cp packages/subgraphs/inventory/Dockerfile packages/subgraphs/inventory/inventory.graphql packages/compatibility/dist/subgraphs/inventory",
+        "package-subgraphs:users": "ncc build packages/subgraphs/users/index.js --source-map --out packages/compatibility/dist/subgraphs/users && cp packages/subgraphs/users/Dockerfile packages/subgraphs/users/users.graphql packages/compatibility/dist/subgraphs/users",
+        "prettier-check": "prettier --check .",
+        "prettier-fix": "prettier --write .",
+        "postinstall": "npm run build"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/jest": "^27.5.1",
+        "@typescript-eslint/eslint-plugin": "^5.46.0",
+        "@typescript-eslint/parser": "^5.46.0",
+        "@vercel/ncc": "0.36.0",
+        "concurrently": "^7.2.1",
+        "eslint": "^8.29.0",
+        "eslint-plugin-import": "^2.26.0",
+        "prettier": "^2.8.1",
+        "typescript": "^4.7.2"
+    },
+    "release": {
+        "branches": [
+            "main"
+        ]
+    }
 }

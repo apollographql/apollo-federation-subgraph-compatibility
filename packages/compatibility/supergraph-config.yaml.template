@@ -1,0 +1,14 @@
+federation_version: 2
+subgraphs:
+  inventory:
+    routing_url: http://inventory:4003
+    schema:
+      file: ${DIST_DIR}/subgraphs/inventory/inventory.graphql
+  users:
+    routing_url: http://users:4002
+    schema:
+      file: ${DIST_DIR}/subgraphs/users/users.graphql
+  products:
+    routing_url: http://products:${PORT}${GRAPHQL_PATH}
+    schema:
+      file: ${SCHEMA_FILE}

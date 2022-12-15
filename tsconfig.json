@@ -1,17 +1,13 @@
 {
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "target": "esnext",
-    "module": "commonjs",
+    "compilerOptions": {
+        "composite": true
+    },
+    "files": [],
+    "include": [],
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "skipLibCheck": true
-  },
-  "include": [
-    "./src/**/*"
-  ]
+    "references": [
+        {
+            "path": "packages/compatibility/tsconfig.json"
+        }
+    ]
 }

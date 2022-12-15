@@ -1,8 +1,8 @@
 # Apollo Federation Spec Compliance
 
-This repository contains a structured testing suite based on a federated schema that covers the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). The federated supergraph is constructued of 3 subgraphs (`users`, `inventory` and `products`) that will be used to test various libraries that support Apollo Federation. The `users` and `inventory` subgraphs are provided by this repository in addition to the graph router instance. Subgraph implementors should implement the `products` schema with the expected data set. 
+This repository contains a structured testing suite based on a federated schema that covers the [Apollo Federation Specification](https://www.apollographql.com/docs/federation/federation-spec/). The federated supergraph is constructued of 3 subgraphs (`users`, `inventory` and `products`) that will be used to test various libraries that support Apollo Federation. The `users` and `inventory` subgraphs are provided by this repository in addition to the graph router instance. Subgraph implementors should implement the `products` schema with the expected data set.
 
-When adding subgraph implementation to be included in the compatibility results, implementations should provide a docker file that can be used with `docker compose`. Templates for these files are provided along with examples. See [Apollo Federation Subgraph Maintainers Implementation Guide](./CONTRIBUTORS.md) for details.
+When adding subgraph implementation to be included in the compatibility results, implementations should provide a docker file that can be used with `docker compose`. Templates for these files are provided along with examples. See [Apollo Federation Subgraph Maintainers Implementation Guide](./SUBGRAPH_GUIDE.md) for details.
 
 - [Supergraph Schemas](#subgraph-schemas)
 - [Expected Data Sets](#expected-data-sets)
@@ -130,9 +130,9 @@ const dimension = {
 }
 
 const user = {
-  averageProductsCreatedPerYear: if (totalProductsCreated) { 
+  averageProductsCreatedPerYear: if (totalProductsCreated) {
     Math.round(totalProductsCreated / yearsOfEmployment)
-  } else { 
+  } else {
     null
   },
   email: "support@apollographql.com",
