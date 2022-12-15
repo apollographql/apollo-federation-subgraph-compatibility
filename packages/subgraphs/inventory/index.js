@@ -20,7 +20,9 @@ class DeliveryEstimates {
   }
 }
 
-const typeDefs = gql(readFileSync(resolve(__dirname, 'inventory.graphql'), 'utf-8'));
+const typeDefs = gql(
+  readFileSync(resolve(__dirname, 'inventory.graphql'), 'utf-8'),
+);
 
 const resolvers = {
   Product: {

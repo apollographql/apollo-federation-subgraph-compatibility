@@ -142,13 +142,9 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
     resolve(__dirname, '..', 'supergraph-compose.yaml.template'),
     'utf-8',
   );
-  const supergraphConfig = template.replaceAll(
-    '${SCRIPT_DIR}',
-    resolve(__dirname, '..'),
-  ).replaceAll(
-    '${DIST_DIR}',
-    resolve(__dirname),
-  );
+  const supergraphConfig = template
+    .replaceAll('${SCRIPT_DIR}', resolve(__dirname, '..'))
+    .replaceAll('${DIST_DIR}', resolve(__dirname));
 
   await writeFile('supergraph-compose.yaml', supergraphConfig);
 

@@ -15,7 +15,9 @@ const users = [
   },
 ];
 
-const typeDefs = gql(readFileSync(resolve(__dirname, 'users.graphql'), 'utf-8'));
+const typeDefs = gql(
+  readFileSync(resolve(__dirname, 'users.graphql'), 'utf-8'),
+);
 
 const resolvers = {
   User: {
