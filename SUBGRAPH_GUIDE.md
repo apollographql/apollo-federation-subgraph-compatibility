@@ -24,12 +24,12 @@ implement to be used in the testing suite:
 
 1. Copy the `implementations/_template_library_` folder and rename it to the
    name of your library
-   - You'll find 4 files that you need in the template folder: `metadata.yaml`,
+   - You'll find 4 files that you need in the template folder: `metadata.json`,
      `docker-compose.yml`, `Dockerfile` and `products.graphql`
    - Creation of library `README.md` file is optional but highly encouraged. It
      should include some basic information about the library as well as the steps
      that describe how to build the example app and how to run it locally.
-1. Update the `metadata.yaml` file with your project details. These details are
+1. Update the `metadata.json` file with your project details. These details are
    used in the main results table in the `README.md` of this repo, and in our
    [subgraph-compatible libraries](https://www.apollographql.com/docs/federation/other-servers)
    documentation.
@@ -58,11 +58,11 @@ compatibility tests will fail.**
 
 1. Copy the `implementations/_template_hosted_` folder and rename it to the
    name of your solution.
-   - You'll find 4 files that you need in the template folder: `metadata.yaml`,
+   - You'll find 4 files that you need in the template folder: `metadata.json`,
      `docker-compose.yml`, `Dockerfile`, `proxy.conf.template` and `products.graphql`
    - Creation of project `README.md` file is optional but highly encouraged.
      It should include some basic information about the solution.
-2. Update `metadata.yaml` file with the project details. These details are
+2. Update `metadata.json` file with the project details. These details are
    used in the main results table in the `README.md` of this repo, and in our
    [subgraph-compatible libraries](https://www.apollographql.com/docs/federation/other-servers)
    documentation.
