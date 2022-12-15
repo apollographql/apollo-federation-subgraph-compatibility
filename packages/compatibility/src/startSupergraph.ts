@@ -194,7 +194,7 @@ async function shutdownSupergraphUsingDocker(composeFile: string) {
     'supergraph-compose.yaml',
     '-f',
     composeFile,
-    'logs'
+    'logs',
   ]);
   logs.stdout.pipe(writeableDebugStream(dockerDebug));
   logs.stderr.pipe(writeableDebugStream(dockerDebug));

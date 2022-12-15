@@ -137,12 +137,13 @@ The following open-source GraphQL server libraries and other solutions support a
     let cell = '<table>';
     TESTS.forEach((test) => {
       if (test.fedVersion === fedVersion) {
-        cell += `<tr><th>${test.column}</th><td>${testResults[test.assertion]?.success
-          ? '🟢'
-          : test.required
+        cell += `<tr><th>${test.column}</th><td>${
+          testResults[test.assertion]?.success
+            ? '🟢'
+            : test.required
             ? '❌'
             : '🔲'
-          }</td></tr>`;
+        }</td></tr>`;
       }
     });
     cell += '</table>';
