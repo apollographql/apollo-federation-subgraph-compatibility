@@ -2,14 +2,21 @@
 
 import debug from 'debug';
 import { Command, Option, OptionValues } from 'commander';
-import { compatibilityTest, DockerConfig, Pm2Config } from '@apollo/federation-subgraph-compatibility-tests';
+import {
+  compatibilityTest,
+  DockerConfig,
+  Pm2Config,
+} from '@apollo/federation-subgraph-compatibility-tests';
 
 enum TestRuntime {
   DOCKER,
   PM2,
 }
 
-function generateRuntimeConfig(runtime: TestRuntime, options: OptionValues): DockerConfig | Pm2Config {
+function generateRuntimeConfig(
+  runtime: TestRuntime,
+  options: OptionValues,
+): DockerConfig | Pm2Config {
   let runtimeConfig: DockerConfig | Pm2Config;
   if (runtime === TestRuntime.DOCKER) {
     runtimeConfig = {
@@ -18,7 +25,7 @@ function generateRuntimeConfig(runtime: TestRuntime, options: OptionValues): Doc
       composeFile: options.compose,
       path: options.path,
       port: options.port,
-      format: options.format
+      format: options.format,
     };
   } else {
     runtimeConfig = {
@@ -26,7 +33,7 @@ function generateRuntimeConfig(runtime: TestRuntime, options: OptionValues): Doc
       endpoint: options.endpoint,
       schemaFile: options.schema,
       configFile: options.config,
-      format: options.format
+      format: options.format,
     };
   }
   return runtimeConfig;

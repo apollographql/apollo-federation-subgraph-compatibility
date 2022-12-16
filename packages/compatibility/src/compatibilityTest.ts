@@ -4,7 +4,9 @@ import { writeFile } from 'fs/promises';
 import { generateSimplifiedMarkdown } from './utils/markdown';
 import { logResults, logWithTimestamp } from './utils/logging';
 
-export async function compatibilityTest(runtimeConfig: DockerConfig | Pm2Config) {
+export async function compatibilityTest(
+  runtimeConfig: DockerConfig | Pm2Config,
+) {
   logWithTimestamp('******************************************************');
   logWithTimestamp('Starting Apollo Federation Subgraph Compatibility Test');
   logWithTimestamp('******************************************************');

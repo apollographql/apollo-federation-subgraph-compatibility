@@ -20,7 +20,7 @@ export interface DockerConfig {
   /** HTTP server port */
   port?: string;
   /** Report format */
-  format: string
+  format: string;
 }
 
 export interface Pm2Config {
@@ -32,7 +32,7 @@ export interface Pm2Config {
   /** PM2 configuration file */
   configFile?: string;
   /** Report format */
-  format: string
+  format: string;
 }
 
 /**
