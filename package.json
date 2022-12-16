@@ -12,19 +12,18 @@
         "packages/subgraphs/*"
     ],
     "scripts": {
-        "build": "tsc --build tsconfig.json && npm run package-subgraphs",
-        "compatibility:report": "node packages/compatibility/dist/reportGenerator.js",
-        "compatibility:test": "node packages/compatibility/dist/compatibilityTest.js",
+        "build": "tsc --build tsconfig.json && npm run package",
+        "compatibility:report": "node packages/script/dist/generateReportCommand.js",
+        "compatibility:test": "node packages/script/dist/compatibilityTestCommand.js",
         "lint": "eslint .",
-        "package-subgraphs": "concurrently \"npm:package-subgraphs:*\"",
+        "package": "concurrently \"npm:package-subgraphs:*\" && npm run package:action",
+        "package:action": "ncc build packages/action/src/index.ts --source-map --out packages/action/dist",
         "package-subgraphs:inventory": "ncc build packages/subgraphs/inventory/index.js --source-map --out packages/compatibility/dist/subgraphs/inventory && cp packages/subgraphs/inventory/Dockerfile packages/subgraphs/inventory/inventory.graphql packages/compatibility/dist/subgraphs/inventory",
         "package-subgraphs:users": "ncc build packages/subgraphs/users/index.js --source-map --out packages/compatibility/dist/subgraphs/users && cp packages/subgraphs/users/Dockerfile packages/subgraphs/users/users.graphql packages/compatibility/dist/subgraphs/users",
         "prettier-check": "prettier --check .",
         "prettier-fix": "prettier --write .",
         "postinstall": "npm run build"
     },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "dependencies": {},
     "devDependencies": {
         "@types/jest": "^27.5.1",

@@ -1,4 +1,3 @@
-import { writeFileSync } from 'fs';
 import execa from 'execa';
 import debug from 'debug';
 import { resolve } from 'path';

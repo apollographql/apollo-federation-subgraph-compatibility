@@ -1,0 +1,30 @@
+{
+  "name": "federation-subgraph-compatibility",
+  "version": "0.0.11",
+  "description": "Github Action for checking a subgraph's compatibility with a federated gateway",
+  "main": "dist/index.js",
+  "author": "Apollo <packages@apollographql.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollographql/apollo-federation-subgraph-compatibility.git",
+    "directory": "packages/action/"
+  },
+  "keywords": [
+    "github",
+    "action",
+    "apollo",
+    "federation",
+    "compatibility"
+  ],
+  "bugs": {
+    "url": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues"
+  },
+  "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/packages/action/README.md",
+  "dependencies": {
+    "@actions/artifact": "^1.1.0",
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "@apollo/federation-subgraph-compatibility-tests": "^0.0.11"
+  }
+}

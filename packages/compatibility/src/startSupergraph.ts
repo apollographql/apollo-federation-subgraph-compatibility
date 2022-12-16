@@ -19,6 +19,8 @@ export interface DockerConfig {
   path?: string;
   /** HTTP server port */
   port?: string;
+  /** Report format */
+  format: string
 }
 
 export interface Pm2Config {
@@ -29,6 +31,8 @@ export interface Pm2Config {
   schemaFile?: string;
   /** PM2 configuration file */
   configFile?: string;
+  /** Report format */
+  format: string
 }
 
 /**
