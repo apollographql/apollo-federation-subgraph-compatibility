@@ -5,12 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'src/**'
-      - 'subgraphs/**'
-      - '*.json'
-      - '*.yaml'
-      - '*.graphql'
-      - '*.template'
+      - 'packages/**'
+      - '!**/README.md'
   workflow_call:
 
 jobs:
