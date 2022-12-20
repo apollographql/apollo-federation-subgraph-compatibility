@@ -19,6 +19,6 @@ jobs:
       - name: Build and Test
         run: npm ci
       - name: Publish to NPM
-        run: npm publish --access public
+        run: npm publish --access public --workspace packages/compatibility --workspace packages/script
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
