@@ -6,13 +6,13 @@ import { Command } from 'commander';
 const program = new Command();
 
 program
-    .description('Generate Apollo Federation Compatibility report.')
-    .argument('<result.json>', 'compatibility results in JSON format')
-    .action((resultsFile) => {
-        generateReport(resultsFile);
-    })
-    .showHelpAfterError();
+  .description('Generate Apollo Federation Compatibility report.')
+  .argument('<result.json>', 'compatibility results in JSON format')
+  .action((resultsFile) => {
+    generateReport(resultsFile);
+  })
+  .showHelpAfterError();
 
 program.parseAsync(process.argv).catch((error) => {
-    console.error(error);
+  console.error(error);
 });
