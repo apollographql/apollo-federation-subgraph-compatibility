@@ -8,8 +8,8 @@ const jestDebug = debug('test');
 
 export const TESTS = [
   {
-    assertion: 'service field',
-    column: 'service field',
+    assertion: 'federation specification',
+    column: 'specification',
     fedVersion: 2,
     required: false,
   },
