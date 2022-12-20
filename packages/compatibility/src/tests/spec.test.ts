@@ -1,6 +1,42 @@
 import { productsRequest } from '../utils/client';
 
 test('federation specification', async () => {
+  const serviceTypeQuery = await productsRequest({
+    query: `query {
+      __type(name: "_Service") {
+        kind
+        fields {
+          name
+          type {
+            kind
+            ofType {
+              name
+              kind
+            }
+          }
+        }
+      }
+    }`,
+  });
+
+  expect(serviceTypeQuery.data).toMatchObject({
+    __type: {
+      kind: 'OBJECT',
+      fields: [
+        {
+          name: 'sdl',
+          type: {
+            kind: 'NON_NULL',
+            ofType: {
+              name: 'String',
+              kind: 'SCALAR',
+            },
+          },
+        },
+      ],
+    },
+  });
+
   const entityTypeQuery = await productsRequest({
     query: `query {
       __type(name:"_Entity") {
@@ -60,42 +96,5 @@ test('federation specification', async () => {
     __type: { kind: 'ENUM' },
     // TODO: values
   });
-
-  const serviceTypeQuery = await productsRequest({
-    query: `query {
-      __type(name: "_Service") {
-        kind
-        fields {
-          name
-          type {
-            kind
-            ofType {
-              name
-              kind
-            }
-          }
-        }
-      }
-    }`,
-  });
-
-  expect(serviceTypeQuery.data).toMatchObject({
-    __type: {
-      kind: 'OBJECT',
-      fields: [
-        {
-          name: 'sdl',
-          type: {
-            kind: 'NON_NULL',
-            ofType: {
-              name: 'String',
-              kind: 'SCALAR',
-            },
-          },
-        },
-      ],
-    },
-  });
-
   // TODO: directives
 });
