@@ -1,13 +1,16 @@
 {
-    "compilerOptions": {
-        "composite": true
+  "compilerOptions": {
+    "composite": true
+  },
+  "files": [],
+  "include": [],
+  "moduleResolution": "node",
+  "references": [
+    {
+      "path": "packages/compatibility/tsconfig.json"
     },
-    "files": [],
-    "include": [],
-    "moduleResolution": "node",
-    "references": [
-        {
-            "path": "packages/compatibility/tsconfig.json"
-        }
-    ]
+    {
+      "path": "packages/script/tsconfig.json"
+    }
+  ]
 }

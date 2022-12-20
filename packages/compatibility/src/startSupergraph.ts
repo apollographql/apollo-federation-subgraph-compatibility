@@ -19,6 +19,8 @@ export interface DockerConfig {
   path?: string;
   /** HTTP server port */
   port?: string;
+  /** Report format */
+  format: string;
 }
 
 export interface Pm2Config {
@@ -29,6 +31,8 @@ export interface Pm2Config {
   schemaFile?: string;
   /** PM2 configuration file */
   configFile?: string;
+  /** Report format */
+  format: string;
 }
 
 /**
@@ -63,7 +67,7 @@ async function startSupergraphUsingPm2(config: Pm2Config) {
     }
 
     const template = await readFile(
-      resolve(__dirname, '..', 'supergraph-config.js.template'),
+      resolve(__dirname, '../supergraph-config.js.template'),
       'utf-8',
     );
     const supergraphConfig = template.replaceAll(
@@ -139,7 +143,7 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
   );
 
   const template = await readFile(
-    resolve(__dirname, '..', 'supergraph-compose.yaml.template'),
+    resolve(__dirname, '../supergraph-compose.yaml.template'),
     'utf-8',
   );
   const supergraphConfig = template

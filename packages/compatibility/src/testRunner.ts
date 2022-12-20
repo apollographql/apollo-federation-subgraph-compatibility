@@ -1,4 +1,3 @@
-import { writeFileSync } from 'fs';
 import execa from 'execa';
 import debug from 'debug';
 import { resolve } from 'path';
@@ -77,7 +76,7 @@ export const TESTS = [
   },
 ];
 
-export async function runJest(libraryName: string): Promise<JestResults> {
+export async function runJest(): Promise<JestResults> {
   console.log(new Date().toJSON(), 'starting tests...');
   jestDebug(
     `\n***********************\nStarting tests...\n***********************\n\n`,
@@ -91,7 +90,7 @@ export async function runJest(libraryName: string): Promise<JestResults> {
       '--ci',
       '--json',
       '--config',
-      resolve(__dirname, '..', 'jest.config.js'),
+      resolve(__dirname, '../federation-jest.config.js'),
     ],
     { reject: false },
   );

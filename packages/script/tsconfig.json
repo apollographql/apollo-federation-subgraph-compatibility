@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "composite": true,
     "rootDir": "src",
-    "outDir": "./dist",
+    "outDir": "dist",
     "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -14,5 +13,10 @@
   },
   "include": [
     "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../compatibility"
+    }
   ]
 }

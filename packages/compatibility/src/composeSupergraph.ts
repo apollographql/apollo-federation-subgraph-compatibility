@@ -105,7 +105,7 @@ export async function composeSupergraph(
 
   // generate supergraph config
   const template = await readFile(
-    resolve(__dirname, '..', 'supergraph-config.yaml.template'),
+    resolve(__dirname, '../supergraph-config.yaml.template'),
     'utf-8',
   );
   const supergraphConfig = template
