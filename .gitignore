@@ -99,3 +99,5 @@ supergraph.yaml
 
 results*
 final_results.json
+
+packages/compatibility/products.graphql

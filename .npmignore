@@ -18,6 +18,7 @@ mkdocs.yml
 .prettierrc
 .prettierignore
 .vscode
+*.tsbuildinfo
 tsconfig.json
 
 simple-schema.apollo-workbench

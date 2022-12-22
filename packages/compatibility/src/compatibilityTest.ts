@@ -44,5 +44,4 @@ export async function compatibilityTest(
   logWithTimestamp('compatibility test complete');
   // print results to console
   logResults(testResults);
-  process.exit(0);
 }

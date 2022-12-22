@@ -13,14 +13,9 @@ import {
 } from 'graphql';
 import { resolve } from 'path';
 
+// TODO -> this is not bundled in distribution!!!!!
 const productsRaw = readFileSync(
-  resolve(
-    __dirname,
-    '../../../..',
-    'implementations',
-    '_template_library_',
-    'products.graphql',
-  ),
+  resolve(__dirname, '../products.graphql'),
   'utf-8',
 );
 const productsReferenceSchema = parse(productsRaw);
