@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/packages/script/README.md",
   "dependencies": {
-    "@apollo/federation-subgraph-compatibility-tests": "^0.0.11",
+    "@apollo/federation-subgraph-compatibility-tests": "^0.0.12",
     "commander": "^9.4.1",
     "debug": "^4.3.4"
   },
