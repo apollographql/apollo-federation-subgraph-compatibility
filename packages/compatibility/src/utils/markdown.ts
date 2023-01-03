@@ -137,7 +137,7 @@ The following open-source GraphQL server libraries and other solutions support a
     let cell = '<table>';
     TESTS.forEach((test) => {
       if (test.fedVersion === fedVersion) {
-        cell += `<tr><th>${test.column}</th><td>${
+        cell += `<tr><th><code>${test.column}</code></th><td>${
           testResults[test.assertion]?.success
             ? '🟢'
             : test.required

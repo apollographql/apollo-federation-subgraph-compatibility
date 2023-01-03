@@ -3,8 +3,7 @@
   "version": "0.0.14",
   "description": "A CLI tool for checking a subgraph's compatibility with a federated gateway",
   "bin": {
-    "fedtest": "./dist/compatibilityTestCommand.js",
-    "fedReport": "./dist/generateReportCommand.js"
+    "fedtest": "./dist/compatibilityTestCommand.js"
   },
   "author": "Apollo <packages@apollographql.com>",
   "license": "MIT",
