@@ -91,7 +91,7 @@ jobs:
           retention-days: 7
 
   pr-comment:
-    needs: compatibility
+    needs: report
     uses: ./.github/workflows/comment.yaml
     if: ${{ github.event_name == 'pull_request_target' }}
     with:
