@@ -1,23 +1,23 @@
-name: Dgraph Test
+name: NestJS (SDL First) Test
 
 on:
   pull_request_target:
     branches:
       - main
     paths:
-      - 'implementations/dgraph/**'
+      - 'implementations/nestjs/**'
 
 jobs:
   compatibility:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
-      library: "dgraph"
+      library: "nestjs"
 
   pr-comment:
     needs: compatibility
     uses: ./.github/workflows/comment.yaml
     with:
-      libraryName: 'Dgraph'
-      resultsFile: "results-dgraph.md"
+      libraryName: 'Nest JS (SDL First)'
+      resultsFile: "results-nestjs.md"
     secrets:
       token: ${{ secrets.COMMENT_TOKEN }}
