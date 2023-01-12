@@ -1,7 +1,7 @@
 name: Lighthouse Test
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - main
     paths:
@@ -12,3 +12,12 @@ jobs:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
       library: "lighthouse"
+
+  pr-comment:
+    needs: compatibility
+    uses: ./.github/workflows/comment.yaml
+    with:
+      libraryName: 'Lighthouse'
+      resultsFile: "results-lighthouse.md"
+    secrets:
+      token: ${{ secrets.COMMENT_TOKEN }}

@@ -1,7 +1,7 @@
 name: Ariadne Test
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - main
     paths:
@@ -12,3 +12,12 @@ jobs:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
       library: "ariadne"
+
+  pr-comment:
+    needs: compatibility
+    uses: ./.github/workflows/comment.yaml
+    with:
+      libraryName: 'Ariadne'
+      resultsFile: "results-ariadne.md"
+    secrets:
+      token: ${{ secrets.COMMENT_TOKEN }}

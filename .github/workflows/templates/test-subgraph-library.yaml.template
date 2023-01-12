@@ -1,7 +1,7 @@
-name: <Implementation> Test
+name: <Implementation Name> Test
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - main
     paths:
@@ -11,4 +11,15 @@ jobs:
   compatibility:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
+      # should match folder name
       library: "<implementation>"
+
+  pr-comment:
+    needs: compatibility
+    uses: ./.github/workflows/comment.yaml
+    with:
+      # display name for library, e.g. Apollo Server
+      libraryName: '<Implementation Name>'
+      resultsFile: "results-<implementation>.md"
+    secrets:
+      token: ${{ secrets.COMMENT_TOKEN }}

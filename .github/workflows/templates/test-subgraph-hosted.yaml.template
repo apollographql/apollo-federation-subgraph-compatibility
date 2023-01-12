@@ -1,4 +1,4 @@
-name: <implementation> Test
+name: <Implementation Name> Test
 
 on:
   pull_request_target:
@@ -11,8 +11,19 @@ jobs:
   compatibility:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
-      library: "<implementation>>"
+      # should match folder name
+      library: "<implementation>"
     secrets:
       # secrets are optional
       API_KEY: ${{ secrets.API_KEY_<implementation> }}
       TEST_URL: ${{ secrets.URL_<implementation> }}
+
+  pr-comment:
+    needs: compatibility
+    uses: ./.github/workflows/comment.yaml
+    with:
+      # display name for library, e.g. Apollo Server
+      libraryName: '<Implementation Name>'
+      resultsFile: "results-<implementation>.md"
+    secrets:
+      token: ${{ secrets.COMMENT_TOKEN }}

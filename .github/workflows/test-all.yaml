@@ -89,3 +89,12 @@ jobs:
           name: results.md
           path: ./results.md
           retention-days: 7
+
+  pr-comment:
+    needs: compatibility
+    uses: ./.github/workflows/comment.yaml
+    if: ${{ github.event_name == 'pull_request_target' }}
+    with:
+      resultsFile: "results.md"
+    secrets:
+      token: ${{ secrets.COMMENT_TOKEN }}
