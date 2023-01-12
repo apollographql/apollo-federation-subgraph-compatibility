@@ -21,7 +21,7 @@ export async function compatibilityTest(
     // run tests
     const { assertionPassed } = await runJest();
     for (const { assertion, required } of TESTS) {
-      const testSuccessful = assertionPassed(assertion)
+      const testSuccessful = assertionPassed(assertion);
       testResults[assertion] = { success: testSuccessful };
 
       if (!testSuccessful) {
