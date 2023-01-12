@@ -26,6 +26,8 @@ function generateRuntimeConfig(
       path: options.path,
       port: options.port,
       format: options.format,
+      failOnRequired: options.failOnRequired,
+      failOnWarning: options.failOnWarning
     };
   } else {
     runtimeConfig = {
@@ -34,6 +36,8 @@ function generateRuntimeConfig(
       schemaFile: options.schema,
       configFile: options.config,
       format: options.format,
+      failOnRequired: options.failOnRequired,
+      failOnWarning: options.failOnWarning
     };
   }
   return runtimeConfig;
@@ -48,6 +52,8 @@ class CompatibilityTestCommand extends Command {
           .default('markdown'),
       )
       .option('--debug', 'debug mode with extra log info')
+      .option('--failOnRequired', 'boolean flag to indicate whether any failing required test should fail the script.')
+      .option('--failOnWarning', 'boolean flag to indicate whether any failing test should fail the script.')
       .showHelpAfterError()
       .configureHelp({ sortOptions: true });
   }
@@ -74,7 +80,11 @@ program
       debug.enable('debug,pm2,docker,rover,test');
     }
     let runtimeConfig = generateRuntimeConfig(TestRuntime.PM2, options);
-    compatibilityTest(runtimeConfig);
+    compatibilityTest(runtimeConfig).then(successful => {
+      if (!successful) {
+        process.exitCode = 1;
+      }
+    });
   })
   .configureHelp({ sortOptions: true });
 
@@ -94,7 +104,11 @@ program
       debug.enable('debug,pm2,docker,rover,test');
     }
     let runtimeConfig = generateRuntimeConfig(TestRuntime.DOCKER, options);
-    compatibilityTest(runtimeConfig);
+    compatibilityTest(runtimeConfig).then(successful => {
+      if (!successful) {
+        process.exitCode = 1;
+      }
+    });
   })
   .configureHelp({ sortOptions: true });
 
