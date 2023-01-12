@@ -39,7 +39,7 @@ jobs:
         run: |
           if [[ ${{ inputs.format }} == "json" ]]; then
             jq -s '.[0] + {tests: .[1]}' implementations/${{ inputs.library }}/metadata.json results.json > results-${{ inputs.library }}.json
-            echo "RESULTS_FILE=results_${{ inputs.library }}.json" >> $GITHUB_ENV
+            echo "RESULTS_FILE=results-${{ inputs.library }}.json" >> $GITHUB_ENV
           else
             cat results.md >> $GITHUB_STEP_SUMMARY
             mv results.md results-${{ inputs.library }}.md
