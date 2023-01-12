@@ -13,6 +13,7 @@ enum TestRuntime {
   PM2,
 }
 
+// TESTING COMMENTS FROM ACTION
 function generateRuntimeConfig(
   runtime: TestRuntime,
   options: OptionValues,
