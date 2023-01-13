@@ -21,6 +21,10 @@ export interface DockerConfig {
   port?: string;
   /** Report format */
   format: string;
+  /** Boolean flag to indicate whether any failing required test should fail the script. */
+  failOnRequired: boolean;
+  /** Boolean flag to indicate whether any failing test should fail the script. */
+  failOnWarning: boolean;
 }
 
 export interface Pm2Config {
@@ -33,6 +37,10 @@ export interface Pm2Config {
   configFile?: string;
   /** Report format */
   format: string;
+  /** Boolean flag to indicate whether any failing required test should fail the script. */
+  failOnRequired: boolean;
+  /** Boolean flag to indicate whether any failing test should fail the script. */
+  failOnWarning: boolean;
 }
 
 /**

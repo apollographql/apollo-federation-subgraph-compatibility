@@ -72,6 +72,8 @@ Options:
   --config <subgraph.config.js>  optional PM2 configuration file
   --debug                        debug mode with extra log info
   --endpoint <url>               subgraph endpoint
+  --failOnRequired               boolean flag to indicate whether any failing required test should fail the script.
+  --failOnWarning                boolean flag to indicate whether any failing test should fail the script.
   --format <json|markdown>       optional output file format (choices: "json", "markdown", default: "markdown")
   -h, --help                     display help for command
   --schema <schema.graphql>      optional path to schema file, if omitted composition will fallback to introspection
@@ -119,6 +121,8 @@ Start supergraph using Docker Compose
 Options:
   --compose <docker-compose.yaml>  Path to docker compose file
   --debug                          debug mode with extra log info
+  --failOnRequired                 boolean flag to indicate whether any failing required test should fail the script.
+  --failOnWarning                  boolean flag to indicate whether any failing test should fail the script.
   --format <json|markdown>         optional output file format (choices: "json", "markdown", default: "markdown")
   -h, --help                       display help for command
   --path <path>                    GraphQL endpoint path (default: "")
