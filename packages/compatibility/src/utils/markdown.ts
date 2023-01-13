@@ -55,12 +55,6 @@ class MarkdownFile {
   constructor(includeLegend?: Boolean) {
     if (includeLegend) {
       let intro = `---
-title: Federation-compatible subgraph implementations
-
-hide:
-  - navigation
----
-
 The following open-source GraphQL server libraries and other solutions support acting as a subgraph in a federated supergraph.
 
 ## Table Legend
