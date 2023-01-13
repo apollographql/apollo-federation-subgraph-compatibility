@@ -54,8 +54,7 @@ class MarkdownFile {
 
   constructor(includeLegend?: Boolean) {
     if (includeLegend) {
-      let intro = `---
-The following open-source GraphQL server libraries and other solutions support acting as a subgraph in a federated supergraph.
+      let intro = `The following open-source GraphQL server libraries and other solutions support acting as a subgraph in a federated supergraph.
 
 ## Table Legend
 
