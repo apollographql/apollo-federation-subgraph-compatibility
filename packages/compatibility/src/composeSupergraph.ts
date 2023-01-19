@@ -2,6 +2,7 @@ import execa from 'execa';
 import debug from 'debug';
 import { healthcheckRouter, healthcheck } from './utils/client';
 import { logWithTimestamp, writeableDebugStream } from './utils/logging';
+import { normalizePath } from './utils/path';
 import { resolve } from 'path';
 import { readFile, writeFile } from 'fs/promises';
 import { createWriteStream } from 'fs';
@@ -109,7 +110,7 @@ export async function composeSupergraph(
     'utf-8',
   );
   const supergraphConfig = template
-    .replaceAll('${DIST_DIR}', resolve(__dirname))
+    .replaceAll('${DIST_DIR}', normalizePath(resolve(__dirname)))
     .replace('${PORT}', port)
     .replace('${GRAPHQL_PATH}', graphQLEndpoint)
     .replace('${SCHEMA_FILE}', schemaFile);
