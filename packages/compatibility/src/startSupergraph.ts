@@ -3,6 +3,7 @@ import debug from 'debug';
 import { logWithTimestamp, writeableDebugStream } from './utils/logging';
 import { composeDevSupergraph, composeSupergraph } from './composeSupergraph';
 import { healtcheckSupergraph } from './utils/client';
+import { normalizePath } from './utils/path';
 import { resolve } from 'path';
 import { readFile, writeFile } from 'fs/promises';
 
@@ -80,7 +81,7 @@ async function startSupergraphUsingPm2(config: Pm2Config) {
     );
     const supergraphConfig = template.replaceAll(
       '${DIST_DIR}',
-      resolve(__dirname),
+      normalizePath(resolve(__dirname)),
     );
     await writeFile('supergraph.config.js', supergraphConfig);
 
@@ -155,8 +156,8 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
     'utf-8',
   );
   const supergraphConfig = template
-    .replaceAll('${SCRIPT_DIR}', resolve(__dirname, '..'))
-    .replaceAll('${DIST_DIR}', resolve(__dirname));
+    .replaceAll('${SCRIPT_DIR}', normalizePath(resolve(__dirname, '..')))
+    .replaceAll('${DIST_DIR}', normalizePath(resolve(__dirname)));
 
   await writeFile('supergraph-compose.yaml', supergraphConfig);
 
