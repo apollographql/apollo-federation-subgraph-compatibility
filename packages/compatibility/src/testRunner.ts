@@ -76,7 +76,7 @@ export const TESTS = [
   },
 ];
 
-export async function runJest(): Promise<JestResults> {
+export async function runJest(productsUrl: string): Promise<JestResults> {
   console.log(new Date().toJSON(), 'starting tests...');
   jestDebug(
     `\n***********************\nStarting tests...\n***********************\n\n`,
@@ -92,7 +92,10 @@ export async function runJest(): Promise<JestResults> {
       '--config',
       resolve(__dirname, '../federation-jest.config.js'),
     ],
-    { reject: false },
+    {
+      reject: false,
+      env: { 'PRODUCTS_URL': productsUrl }
+    },
   );
 
   proc.stdout.pipe(writeableDebugStream(jestDebug));

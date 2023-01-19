@@ -87,6 +87,9 @@ router
 # Python - ignore virtual env
 venv
 
+# C#
+app
+
 # GraphQL Mesh
 .mesh
 
@@ -94,6 +97,7 @@ venv
 supergraph-compose.yaml
 supergraph-config.yaml
 supergraph-generated.yaml
+supergraph.config.js
 supergraph.graphql
 supergraph.yaml
 
