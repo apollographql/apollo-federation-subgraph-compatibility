@@ -94,7 +94,7 @@ export async function runJest(productsUrl: string): Promise<JestResults> {
     ],
     {
       reject: false,
-      env: { 'PRODUCTS_URL': productsUrl }
+      env: { PRODUCTS_URL: productsUrl },
     },
   );
 

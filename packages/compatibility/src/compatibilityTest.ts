@@ -73,6 +73,6 @@ function calculateProductSubgraphUrl(config: DockerConfig | Pm2Config): string {
   } else {
     const graphQLPath = config.path ?? '';
     const graphqlPort = config.port ?? '4001';
-    return `http://localhost:${graphqlPort}${graphQLPath}`
+    return `http://localhost:${graphqlPort}${graphQLPath}`;
   }
 }
