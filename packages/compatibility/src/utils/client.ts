@@ -4,7 +4,7 @@ export const ROUTER_URL = 'http://localhost:4000/';
 const PING_QUERY = 'query { __typename }';
 
 const ROUTER_HEALTH_URL = 'http://localhost:8088/health';
-const PRODUCTS_URL = 'http://localhost:4001/';
+const PRODUCTS_URL = process.env['PRODUCTS_URL'] ?? 'http://localhost:4001/';
 
 const INVENTORY_URL = 'http://localhost:4003/';
 const USERS_URL = 'http://localhost:4002/';

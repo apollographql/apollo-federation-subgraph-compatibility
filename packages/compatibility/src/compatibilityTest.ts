@@ -18,8 +18,9 @@ export async function compatibilityTest(
   // start supergraph
   const stopSupergraph = await startSupergraph(runtimeConfig);
   try {
+    const productUrl = calculateProductSubgraphUrl(runtimeConfig);
     // run tests
-    const { assertionPassed } = await runJest();
+    const { assertionPassed } = await runJest(productUrl);
     for (const { assertion, required } of TESTS) {
       const testSuccessful = assertionPassed(assertion);
       testResults[assertion] = { success: testSuccessful };
@@ -63,5 +64,15 @@ export async function compatibilityTest(
     return allSuccessful;
   } else {
     return true;
+  }
+}
+
+function calculateProductSubgraphUrl(config: DockerConfig | Pm2Config): string {
+  if (config.kind === 'pm2') {
+    return config.endpoint;
+  } else {
+    const graphQLPath = config.path ?? '';
+    const graphqlPort = config.port ?? '4001';
+    return `http://localhost:${graphqlPort}${graphQLPath}`;
   }
 }
