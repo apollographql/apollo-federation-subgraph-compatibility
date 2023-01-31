@@ -137,12 +137,27 @@ Paths to files can be absolute or relative to the current working directory.
 npx fedtest docker --compose /path/to/docker-compose.yaml --schema /path/to/schema.graphql
 ```
 
-When creating supergraph using Docker, it will create network with default subgraph endpoint as `http://localhost:4001`. You can override the default endpoint by specifying custom GraphQL endpoint path and port.
+Docker Compose file is a YAML configuration file that defines all services, networks and volumes necessary for running your application. For Apollo Federation compatibility tests we require you to define a service called `products` which should expose your GraphQL endpoint at `http://localhost:4001`.
+
+```yaml
+services:
+  products:
+    # must be a relative path to the directory that will be used to run the tests
+    # if you are going to run the tests from the same directory as your docker file, then you can specify .
+    build: path/to/my-implementation
+    # expose ports
+    ports:
+      - 4001:4001
+```
+
+If your application exposes custom path (e.g. `/graphql`) or use different port, make sure to also specify those values as command line arguments.
 
 ```shell
 # docker compose file starts subgraph exposing http://localhost:8080/graphql
 npx fedtest docker --compose /path/to/docker-compose.yaml --schema /path/to/schema.graphql --path /graphql --port 8080
 ```
+
+For compose file examples, see the example implementations in this repository. For additional details, please refer to the [Docker compose documentation](https://docs.docker.com/compose/compose-file/).
 
 ### Test Results
 
