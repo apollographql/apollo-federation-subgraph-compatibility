@@ -256,11 +256,14 @@ builder.queryType({
   }),
 });
 
-export const schema = builder.toSubGraphSchema({});
+export const schema = builder.toSubGraphSchema({
+  linkUrl: "https://specs.apollo.dev/federation/v2.1"
+});
+
 console.log(printSubgraphSchema(schema));
 
 const server = new ApolloServer({
-  schema: builder.toSubGraphSchema({}),
+  schema,
 });
 
 startStandaloneServer(server, {
