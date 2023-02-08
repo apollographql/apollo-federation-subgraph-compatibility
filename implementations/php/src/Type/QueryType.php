@@ -24,6 +24,17 @@ class QueryType extends ObjectType {
                         return DataSource::findProduct($args['id']);
                     }
                 ],
+                'deprecatedProduct' => [
+                    'type' => Types::deprecatedProduct(),
+                    'args' => [
+                        'sku' => Types::nonNull(Types::string()),
+                        'package' => Types::nonNull(Types::string()),
+                    ],
+                    'deprecationReason' => 'Use product query instead',
+                    'resolve' => static function ($_, $args) {
+                        return DataSource::findDeprecatedProductBySkuAndPackage($args['sku'], $args['package']);
+                    }
+                ]
             ],
         ]);
     }
