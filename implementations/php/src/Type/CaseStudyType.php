@@ -7,15 +7,14 @@ namespace GraphQL\Compatibility\Type;
 use GraphQL\Compatibility\Types;
 use GraphQL\Type\Definition\ObjectType;
 
-class ProductDimensionType extends ObjectType {
+class CaseStudyType extends ObjectType {
     public function __construct()
     {
         parent::__construct([
-            'name'   => 'ProductDimension',
+            'name'   => 'CaseStudy',
             'fields' => [
-                'size'   => [ 'type' => Types::string() ],
-                'weight' => [ 'type' => Types::float() ],
-                'unit' => [ 'type' => Types::string() ]
+                'caseNumber' => [ 'type' => Types::nonNull(Types::id()) ],
+                'description' => [ 'type' => Types::string() ]
             ]
         ]);
     }

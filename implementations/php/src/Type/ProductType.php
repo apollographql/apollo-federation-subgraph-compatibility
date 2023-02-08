@@ -35,28 +35,55 @@ class ProductType extends EntityObjectType {
                     'resolve' => static fn (): array => [
                         'size'   => 'small',
                         'weight' => 1,
+                        'unit'   => "kg"
                     ]
                 ],
                 'createdBy' => [
                     'type'     => Types::user(),
                     'provides' => 'totalProductsCreated',
-                    'resolve'  => static fn (): array => [
+                    'resolve'  => static fn (): array =>  [
                         'email' => 'support@apollographql.com',
+                        'name' => 'Jane Smith',
                         'totalProductsCreated' => 1337,
                     ]
+                ],
+                'notes' => [ 'type'    => Types::string() ],
+                'research' => [
+                    'type' => Types::nonNull(Types::list(Types::nonNull(Types::productResearch()))),
+                    'resolve' => static function ($ref): array {
+                        return DataSource::findResearchForProduct($ref->id);
+                    }
                 ]
             ],
             '__resolveReference' => function ($ref) {
-                $id =        $ref['id'];
-                $sku =       $ref['sku'];
-                $package =   $ref['package'];
-                $variation = $ref['variation'] !== NULL ? $ref['variation']['id'] : NULL;
+                $id = NULL;
+                $sku = NULL;
+                $package = NULL;
+                $variation = NULL;
+
+                if (array_key_exists('id', $ref)) {
+                    $id = $ref['id'];
+                }
+                if (array_key_exists('sku', $ref)) {
+                    $sku = $ref['sku'];
+                }
+
+                if (array_key_exists('package', $ref)) {
+                    $package = $ref['package'];
+                }
+
+                if (array_key_exists('variation', $ref)) {
+                    $tmp = $ref['variation'];
+                    if (array_key_exists('id', $tmp)) {
+                        $variation = $tmp['id'];
+                    }
+                }
 
                 if($id !== null) {
                     return DataSource::findProduct($id);
                 } else if ($sku !== null && $package !== null) {
                     return DataSource::findProductBySkuAndPackage($sku, $package);
-                } else {
+                } else if ($sku !== null && $variation !== null) {
                     return DataSource::findProductBySkuAndVariation($sku, $variation);
                 }
             },
