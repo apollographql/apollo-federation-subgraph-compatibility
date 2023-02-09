@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+// turn off deprecation notices
+error_reporting(E_ALL ^ E_DEPRECATED);
+
 define('LARAVEL_START', microtime(true));
 
 /*

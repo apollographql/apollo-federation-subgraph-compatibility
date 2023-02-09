@@ -1,7 +1,7 @@
 {
     "require": {
         "php": "^8",
-        "laravel/framework": "^8",
+        "laravel/framework": "^9",
         "nuwave/lighthouse": "^5"
     },
     "autoload": {
