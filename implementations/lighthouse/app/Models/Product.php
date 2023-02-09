@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Primary key
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $package
  * @property string|null $variation
  * @property array{size: string|null, weight: float|null}|null $dimensions
+ * @property string|null $notes
+ * @property array{array{study:array{caseNumber: string, description: string|null}, outcome: string|null}} $research
  *
  * Foreign keys
  * @property string|null $createdByUserEmail
@@ -26,6 +29,8 @@ class Product extends Model
     public $timestamps = false;
 
     public $incrementing = false;
+
+    protected $primaryKey = 'id';
 
     protected $casts = [
         'dimensions' => 'array',
@@ -44,5 +49,10 @@ class Product extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'createdByUserEmail');
+    }
+
+    public function research(): HasMany
+    {
+        return $this->hasMany(ProductResearch::class);
     }
 }
