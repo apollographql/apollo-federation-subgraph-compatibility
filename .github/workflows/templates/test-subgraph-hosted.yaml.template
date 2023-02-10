@@ -17,3 +17,8 @@ jobs:
       # secrets are optional
       API_KEY: ${{ secrets.API_KEY_<implementation> }}
       TEST_URL: ${{ secrets.URL_<implementation> }}
+
+  pr-info:
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}

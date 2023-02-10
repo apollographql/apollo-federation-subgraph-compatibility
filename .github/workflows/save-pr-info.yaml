@@ -1,9 +1,11 @@
 name: Save PR info
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      pr_number:
+        required: true
+        type: string
 
 jobs:
   save-pr-info:
@@ -13,7 +15,7 @@ jobs:
       - name: Save PR number
         run: |
           mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/pr_info
+          echo ${{ inputs.pr_number }} > ./pr/pr_info
       - uses: actions/upload-artifact@v2
         with:
           name: pr
