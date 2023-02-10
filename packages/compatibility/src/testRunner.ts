@@ -74,6 +74,18 @@ export const TESTS = [
     fedVersion: 2,
     required: false,
   },
+  {
+    assertion: '@composeDirective',
+    column: '@composeDirective',
+    fedVersion: 2,
+    required: false,
+  },
+  {
+    assertion: '@interfaceObject',
+    column: '@interfaceObject',
+    fedVersion: 2,
+    required: false,
+  },
 ];
 
 export async function runJest(productsUrl: string): Promise<JestResults> {

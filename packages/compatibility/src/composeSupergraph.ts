@@ -127,7 +127,11 @@ export async function composeSupergraph(
       '--config',
       'supergraph-config.yaml',
     ],
-    { env: { APOLLO_ELV2_LICENSE: 'accept' } },
+    {
+      env: {
+        APOLLO_ELV2_LICENSE: 'accept',
+      },
+    },
   );
   composeProcess.stdout.pipe(createWriteStream('supergraph.graphql'));
   composeProcess.stderr.pipe(writeableDebugStream(roverDebug));

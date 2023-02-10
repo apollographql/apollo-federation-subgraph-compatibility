@@ -16,9 +16,10 @@ When adding subgraph implementation to be included in the compatibility results,
 type User @key(fields: "email") {
   email: ID!
   name: String
-  totalProductsCreated: Int
+  totalProductsCreated: Int @shareable
   yearsOfEmployment: Int!
 }
+
 ```
 
 ### Inventory
@@ -40,6 +41,20 @@ type DeliveryEstimates {
   estimatedDelivery: String
   fastestDelivery: String
 }
+
+interface Inventory @key(fields: "id") {
+  id: ID!
+  products: [Product!]!
+}
+
+type OpenSourceInventory implements Inventory @key(fields: "id") {
+  id: ID!
+  products: [Product!]!
+}
+
+type Query {
+  inventory(id: ID!): Inventory
+}
 ```
 
 ### Products (schema to be implemented by library maintainers)
@@ -47,12 +62,14 @@ type DeliveryEstimates {
 ```graphql
 extend schema
   @link(
-    url: "https://specs.apollo.dev/federation/v2.0",
+    url: "https://specs.apollo.dev/federation/v2.3",
     import: [
+      "@composeDirective",
       "@extends",
       "@external",
-      "@key",
       "@inaccessible",
+      "@interfaceObject",
+      "@key",
       "@override",
       "@provides",
       "@requires",
@@ -60,8 +77,13 @@ extend schema
       "@tag"
     ]
   )
+  @link(url: "https://myspecs.dev/myCustomDirective/v1.0", import: ["@custom")
+  @composeDirective(name: "@custom")
+
+directive @custom on OBJECT
 
 type Product
+  @custom
   @key(fields: "id")
   @key(fields: "sku package")
   @key(fields: "sku variation { id }") {
@@ -113,6 +135,11 @@ extend type User @key(fields: "email") {
   name: String @override(from: "users")
   totalProductsCreated: Int @external
   yearsOfEmployment: Int! @external
+}
+
+type Inventory @interfaceObject @key(fields: "id") {
+  id: ID!
+  deprecatedProducts: [DeprecatedProduct!]!
 }
 ```
 
@@ -191,6 +218,11 @@ const products = [
     notes: null
   },
 ];
+
+const inventory = {
+  id: "apollo-oss",
+  deprecatedProducts: [deprecatedProduct]
+}
 ```
 
 ## Testing Spec Compliance

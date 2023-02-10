@@ -1,6 +1,6 @@
 extend schema
   @link(
-    url: "https://specs.apollo.dev/federation/v2.0"
+    url: "https://specs.apollo.dev/federation/v2.3"
     import: [
       "@key"
       "@requires"
@@ -26,4 +26,18 @@ type ProductDimension @shareable {
 type DeliveryEstimates {
   estimatedDelivery: String
   fastestDelivery: String
+}
+
+interface Inventory @key(fields: "id") {
+  id: ID!
+  products: [Product!]!
+}
+
+type OpenSourceInventory implements Inventory @key(fields: "id") {
+  id: ID!
+  products: [Product!]!
+}
+
+type Query {
+  inventory(id: ID!): Inventory
 }
