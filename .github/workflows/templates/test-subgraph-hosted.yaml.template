@@ -17,13 +17,3 @@ jobs:
       # secrets are optional
       API_KEY: ${{ secrets.API_KEY_<implementation> }}
       TEST_URL: ${{ secrets.URL_<implementation> }}
-
-  pr-comment:
-    needs: compatibility
-    uses: ./.github/workflows/comment.yaml
-    with:
-      # display name for library, e.g. Apollo Server
-      libraryName: '<Implementation Name>'
-      resultsFile: "results-<implementation>.md"
-    secrets:
-      token: ${{ secrets.COMMENT_TOKEN }}
