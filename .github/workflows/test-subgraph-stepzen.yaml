@@ -12,14 +12,6 @@ jobs:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
       library: "stepzen"
+      fork: true
     secrets:
       TEST_URL: ${{ secrets.URL_STEPZEN }}
-
-  pr-comment:
-    needs: compatibility
-    uses: ./.github/workflows/comment.yaml
-    with:
-      libraryName: 'StepZen'
-      resultsFile: "results-stepzen.md"
-    secrets:
-      token: ${{ secrets.COMMENT_TOKEN }}

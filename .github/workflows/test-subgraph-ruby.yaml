@@ -1,7 +1,7 @@
 name: GraphQL Ruby Test
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
     paths:
@@ -12,12 +12,3 @@ jobs:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
       library: "ruby"
-
-  pr-comment:
-    needs: compatibility
-    uses: ./.github/workflows/comment.yaml
-    with:
-      libraryName: 'GraphQL Ruby'
-      resultsFile: "results-ruby.md"
-    secrets:
-      token: ${{ secrets.COMMENT_TOKEN }}

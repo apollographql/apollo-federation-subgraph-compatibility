@@ -1,7 +1,7 @@
 name: Async GraphQL Test
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
     paths:
@@ -12,12 +12,3 @@ jobs:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
       library: "async-graphql"
-
-  pr-comment:
-    needs: compatibility
-    uses: ./.github/workflows/comment.yaml
-    with:
-      libraryName: 'Async GraphQL'
-      resultsFile: "results-async-graphql.md"
-    secrets:
-      token: ${{ secrets.COMMENT_TOKEN }}

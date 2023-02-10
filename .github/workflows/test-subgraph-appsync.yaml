@@ -12,15 +12,7 @@ jobs:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
       library: "appsync"
+      fork: true
     secrets:
       API_KEY: ${{ secrets.API_KEY_APPSYNC }}
       TEST_URL: ${{ secrets.URL_APPSYNC }}
-
-  pr-comment:
-    needs: compatibility
-    uses: ./.github/workflows/comment.yaml
-    with:
-      libraryName: 'AWS AppSync'
-      resultsFile: "results-appsync.md"
-    secrets:
-      token: ${{ secrets.COMMENT_TOKEN }}

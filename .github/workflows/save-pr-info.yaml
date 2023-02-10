@@ -1,0 +1,21 @@
+name: Save PR info
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  save-pr-info:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/pr_info
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pr
+          path: pr/
+          retention-days: 1
