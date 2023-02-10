@@ -7,6 +7,7 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 
 const serverPort = parseInt(process.env.PRODUCTS_PORT || "") || 4001;
 
+// just testing PR
 const deprecatedProduct = {
   sku: "apollo-federation-v1",
   package: "@apollo/federation-v1",
