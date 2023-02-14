@@ -7,7 +7,7 @@ import { resolve } from 'path';
 import { readFile, writeFile } from 'fs/promises';
 import { createWriteStream } from 'fs';
 
-const COMPOSITION_VERSION = process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.3.1';
+const COMPOSITION_VERSION = process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.3.2';
 const roverDebug = debug('rover');
 
 /**
