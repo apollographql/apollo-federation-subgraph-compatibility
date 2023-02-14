@@ -7,6 +7,7 @@ import { resolve } from 'path';
 import { readFile, writeFile } from 'fs/promises';
 import { createWriteStream } from 'fs';
 
+const COMPOSITION_VERSION = process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.3.1';
 const roverDebug = debug('rover');
 
 /**
@@ -78,7 +79,7 @@ async function composeDevSubgraph(
       params.push('--schema', schemaFile);
     }
 
-    const proc = execa('pm2', params);
+    const proc = execa('pm2', params, { env: { APOLLO_ROVER_DEV_COMPOSITION_VERSION: `v${COMPOSITION_VERSION}` } });
     proc.stdout.pipe(writeableDebugStream(roverDebug));
     proc.stderr.pipe(writeableDebugStream(roverDebug));
 
@@ -110,6 +111,7 @@ export async function composeSupergraph(
     'utf-8',
   );
   const supergraphConfig = template
+    .replace('${COMPOSITION_VERSION', COMPOSITION_VERSION)
     .replaceAll('${DIST_DIR}', normalizePath(resolve(__dirname)))
     .replace('${PORT}', port)
     .replace('${GRAPHQL_PATH}', graphQLEndpoint)
