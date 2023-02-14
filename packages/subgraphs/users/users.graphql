@@ -1,6 +1,12 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@shareable"]
+  )
+
 type User @key(fields: "email") {
   email: ID!
   name: String
-  totalProductsCreated: Int
+  totalProductsCreated: Int @shareable
   yearsOfEmployment: Int!
 }

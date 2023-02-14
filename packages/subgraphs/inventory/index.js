@@ -8,23 +8,33 @@ import { resolve } from 'path';
 
 const serverPort = parseInt(process.env.INVENTORY_PORT || '') || 4003;
 
-class DeliveryEstimates {
-  /** @type {string} */
-  estimatedDelivery;
-  /** @type {string} */
-  fastestDelivery;
+const deliveryEstimate = {
+  estimatedDelivery: '5/1/2019',
+  fastestDelivery: '5/1/2019',
+};
 
-  constructor() {
-    this.estimatedDelivery = '5/1/2019';
-    this.fastestDelivery = '5/1/2019';
-  }
-}
+const inventory = [
+  {
+    id: 'apollo-oss',
+    products: [
+      {
+        id: 'apollo-federation',
+      },
+    ],
+  },
+];
 
 const typeDefs = gql(
   readFileSync(resolve(__dirname, 'inventory.graphql'), 'utf-8'),
 );
 
 const resolvers = {
+  Query: {
+    /** @type {(_: any, args: any, context: any) => any} */
+    inventory: (_, args, context) => {
+      return inventory.find((i) => i.id == args.id);
+    },
+  },
   Product: {
     /** @type {(product: import('./typings').ProductReference, args: any, context: any) => any} */
     delivery: (product, args, context) => {
@@ -38,7 +48,17 @@ const resolvers = {
       if (args.zip != '94111')
         throw new GraphQLError("product.delivery input zip was not '94111'");
 
-      return new DeliveryEstimates();
+      return deliveryEstimate;
+    },
+  },
+  Inventory: {
+    /** @type {(inv: any, contextValue: any, info: any) => any} */
+    __resolveType(inv, contextValue, info) {
+      // Only Author has a name field
+      if (inv.id === 'apollo-oss') {
+        return 'OpenSourceInventory';
+      }
+      return null; // GraphQLError is thrown
     },
   },
 };
