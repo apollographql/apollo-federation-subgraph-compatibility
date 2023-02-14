@@ -111,7 +111,7 @@ export async function composeSupergraph(
     'utf-8',
   );
   const supergraphConfig = template
-    .replace('${COMPOSITION_VERSION', COMPOSITION_VERSION)
+    .replace('${COMPOSITION_VERSION}', COMPOSITION_VERSION)
     .replaceAll('${DIST_DIR}', normalizePath(resolve(__dirname)))
     .replace('${PORT}', port)
     .replace('${GRAPHQL_PATH}', graphQLEndpoint)
