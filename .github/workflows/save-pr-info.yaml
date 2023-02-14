@@ -16,7 +16,7 @@ jobs:
         run: |
           mkdir -p ./pr
           echo ${{ inputs.pr_number }} > ./pr/pr_info
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: pr
           path: pr/
