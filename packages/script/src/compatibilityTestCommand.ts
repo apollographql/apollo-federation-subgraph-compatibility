@@ -69,6 +69,7 @@ const program = new CompatibilityTestCommand();
 
 program
   .description('Run Apollo Federation subgraph compatibility tests')
+  .version(require('../package.json').version)
   .showHelpAfterError();
 
 program

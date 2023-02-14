@@ -7,7 +7,8 @@ import { resolve } from 'path';
 import { readFile, writeFile } from 'fs/promises';
 import { createWriteStream } from 'fs';
 
-const COMPOSITION_VERSION = process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.3.1';
+const COMPOSITION_VERSION =
+  process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.3.1';
 const roverDebug = debug('rover');
 
 /**
@@ -79,7 +80,9 @@ async function composeDevSubgraph(
       params.push('--schema', schemaFile);
     }
 
-    const proc = execa('pm2', params, { env: { APOLLO_ROVER_DEV_COMPOSITION_VERSION: `v${COMPOSITION_VERSION}` } });
+    const proc = execa('pm2', params, {
+      env: { APOLLO_ROVER_DEV_COMPOSITION_VERSION: `v${COMPOSITION_VERSION}` },
+    });
     proc.stdout.pipe(writeableDebugStream(roverDebug));
     proc.stderr.pipe(writeableDebugStream(roverDebug));
 

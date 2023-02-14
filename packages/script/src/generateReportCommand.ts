@@ -7,6 +7,7 @@ const program = new Command();
 
 program
   .description('Generate Apollo Federation Compatibility report.')
+  .version(require('../package.json').version)
   .argument('<result.json>', 'compatibility results in JSON format')
   .action((resultsFile) => {
     generateReport(resultsFile);

@@ -50,6 +50,7 @@ Usage: fedtest [options] [command]
 Run Apollo Federation subgraph compatibility tests
 
 Options:
+  -V, --version             output the version number
   -h, --help                display help for command
 
 Commands:
