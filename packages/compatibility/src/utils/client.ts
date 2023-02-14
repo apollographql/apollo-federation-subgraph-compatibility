@@ -60,22 +60,17 @@ export function routerRequest(
   return graphqlRequest(ROUTER_URL, req, headers);
 }
 
-export async function healthcheckAll(libraryName: string): Promise<boolean> {
+export async function healthcheckSupergraph(url: string): Promise<Boolean> {
   const routerUp = await healthcheckRouter();
-  if (!routerUp) {
-    return false;
-  }
+  const inventoryUpPromise = healthcheck('inventory', INVENTORY_URL);
+  const usersUpPromise = healthcheck('users', USERS_URL);
+  const productsUpPromise = healthcheck('products', url);
 
-  return healthcheck(libraryName, PRODUCTS_URL);
-}
-
-export async function healtcheckSupergraph(url: string): Promise<Boolean> {
-  const routerUp = await healthcheckRouter();
   return (
     routerUp &&
-    healthcheck('inventory', INVENTORY_URL) &&
-    healthcheck('users', USERS_URL) &&
-    healthcheck('products', url)
+    (await inventoryUpPromise) &&
+    (await usersUpPromise) &&
+    (await productsUpPromise)
   );
 }
 

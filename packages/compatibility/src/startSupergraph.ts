@@ -2,7 +2,7 @@ import execa from 'execa';
 import debug from 'debug';
 import { logWithTimestamp, writeableDebugStream } from './utils/logging';
 import { composeDevSupergraph, composeSupergraph } from './composeSupergraph';
-import { healtcheckSupergraph } from './utils/client';
+import { healthcheckSupergraph } from './utils/client';
 import { normalizePath } from './utils/path';
 import { resolve } from 'path';
 import { readFile, writeFile } from 'fs/promises';
@@ -181,7 +181,7 @@ async function startSupergraphUsingDocker(config: DockerConfig) {
       throw new Error('docker-compose did not start successfully');
     }
 
-    const started = await healtcheckSupergraph(
+    const started = await healthcheckSupergraph(
       `http://localhost:${config.port ?? '4001'}${config.path ?? ''}`,
     );
     if (started) {
