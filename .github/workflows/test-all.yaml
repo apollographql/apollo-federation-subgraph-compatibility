@@ -91,7 +91,7 @@ jobs:
           retention-days: 7
 
   pr-info:
-    if: ${{ github.event_name == 'pull_request_target' }}
+    if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/save-pr-info.yaml
     with:
       pr_number: ${{ github.event.number }}
