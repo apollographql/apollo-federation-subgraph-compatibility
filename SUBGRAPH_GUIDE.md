@@ -72,29 +72,27 @@ compatibility tests will fail.**
    deploy it to your hosted environment, this is the reference implementation
    that will be tested. Calls should be authenticated with basic `x-api-key` header.
    - You can modify the `proxy.conf.template` to specify different authentication header.
-4. Modify the `docker-compose.yml` file and update project name as well API KEY
-   and target URL secret names.
-   - When you are ready to integrate, reach out to us at [Apollo Community Forums](https://community.apollographql.com/).
-     Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem)
-     and we'll help you configure your API KEY and URL as a Github Secret. Those
-     secrets will be used by Github Actions to communicate with your server.
-5. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
+4. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`. Since NGINX proxy will
    require API KEY and URL, you will need to set it as environment variable prior
    running tests.
 
    ```bash
-   export API_KEY_FOO=bar
-   export URL_FOO=http://example.com
+   export API_KEY=bar
+   export TEST_URL=http://example.com
    make test subgraph=foo
    ```
 
-6. Copy the `.github/workflows/templates/test-subgraph-hosted.yaml.template` and rename
+5. Copy the `.github/workflows/templates/test-subgraph-hosted.yaml.template` and rename
    it to include the name of your implementation under `.github/workflows/test-subgraph-<hosted>.yaml`
    - This is a workflow that will be triggered for PRs opened against your implementation.
    - Modify the template so it only triggers for your implementation.
-7. Update `.github/workflows/comment.yaml` workflow to include name of your newly created workflow (
+6. Update `.github/workflows/comment.yaml` workflow to include name of your newly created workflow (
    this will enable automatic compatibility comments on PRs against your implementation).
+7. When you are ready to integrate, reach out to us at [Apollo Community Forums](https://community.apollographql.com/).
+   Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem)
+   and we'll help you configure your API KEY and URL as a Github Secret. Those secrets will be used
+   by Github Actions to communicate with your server.
 
 ### Expected Data Sets
 
