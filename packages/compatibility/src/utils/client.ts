@@ -68,9 +68,9 @@ export async function healthcheckSupergraph(url: string): Promise<Boolean> {
 
   return (
     routerUp &&
-    await inventoryUpPromise &&
-    await usersUpPromise &&
-    await productsUpPromise
+    (await inventoryUpPromise) &&
+    (await usersUpPromise) &&
+    (await productsUpPromise)
   );
 }
 
