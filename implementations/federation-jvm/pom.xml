@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.4</version>
+        <version>3.0.2</version>
     </parent>
 
     <groupId>com.apollographql.federation.compatibility</groupId>
@@ -17,11 +17,11 @@
     <properties>
         <java.version>17</java.version>
 
-        <federation-graphql-java-support.version>2.1.0</federation-graphql-java-support.version>
+        <federation-graphql-java-support.version>2.3.1</federation-graphql-java-support.version>
         <graphql-java.version>19.2</graphql-java.version>
 
-        <jetbrains-annotations>23.0.0</jetbrains-annotations>
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <jetbrains-annotations>24.0.0</jetbrains-annotations>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     </properties>
 
     <dependencies>

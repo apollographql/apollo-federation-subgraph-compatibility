@@ -1,6 +1,7 @@
 package com.apollographql.federation.compatibility;
 
 import com.apollographql.federation.compatibility.model.DeprecatedProduct;
+import com.apollographql.federation.compatibility.model.Inventory;
 import com.apollographql.federation.compatibility.model.Product;
 import com.apollographql.federation.compatibility.model.ProductResearch;
 import com.apollographql.federation.compatibility.model.User;
@@ -34,6 +35,7 @@ public class GraphQLConfiguration {
                                     case "Product" -> Product.resolveReference(reference);
                                     case "ProductResearch" -> ProductResearch.resolveReference(reference);
                                     case "User" -> User.resolveReference(reference);
+                                    case "Inventory" -> Inventory.resolveReference(reference);
                                     default -> null;
                                 };
                             }).collect(Collectors.toList())
@@ -48,6 +50,8 @@ public class GraphQLConfiguration {
                                 return env.getSchema().getObjectType("ProductResearch");
                             } else if (src instanceof User) {
                                 return env.getSchema().getObjectType("User");
+                            } else if (src instanceof Inventory) {
+                                return env.getSchema().getObjectType("Inventory");
                             } else {
                                 return null;
                             }
