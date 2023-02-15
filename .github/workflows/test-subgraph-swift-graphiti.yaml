@@ -1,0 +1,19 @@
+name: Swift Graphiti Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/swift-graphiti/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "swift-graphiti"
+
+  pr-info:
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}
