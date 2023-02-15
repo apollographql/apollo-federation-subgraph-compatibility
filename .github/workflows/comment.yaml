@@ -33,6 +33,7 @@ on:
       - "Sangria Test"
       - "StepZen Test"
       - "Strawberry GraphQL Test"
+      - "Swift Graphiti Test"
     types:
       - completed
 
