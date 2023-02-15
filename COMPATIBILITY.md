@@ -77,7 +77,7 @@ extend schema
       "@tag"
     ]
   )
-  @link(url: "https://myspecs.dev/myCustomDirective/v1.0", import: ["@custom")
+  @link(url: "https://myspecs.dev/myCustomDirective/v1.0", import: ["@custom"])
   @composeDirective(name: "@custom")
 
 directive @custom on OBJECT
