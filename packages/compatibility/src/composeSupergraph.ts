@@ -63,7 +63,7 @@ async function composeDevSubgraph(
 
   const started = await healthcheck(subgraphName, subgraphUrl);
   if (started) {
-    const routerConfigPath = resolve(__dirname, '../router.yaml')
+    const routerConfigPath = resolve(__dirname, '../router.yaml');
     const params = [
       'start',
       'rover',
@@ -86,7 +86,7 @@ async function composeDevSubgraph(
     const proc = execa('pm2', params, {
       env: {
         APOLLO_ROVER_DEV_COMPOSITION_VERSION: COMPOSITION_VERSION,
-        APOLLO_ROVER_DEV_ROUTER_VERSION: ROUTER_VERSION
+        APOLLO_ROVER_DEV_ROUTER_VERSION: ROUTER_VERSION,
       },
     });
     proc.stdout.pipe(writeableDebugStream(roverDebug));
