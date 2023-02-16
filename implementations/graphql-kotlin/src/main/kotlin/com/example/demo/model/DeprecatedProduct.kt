@@ -4,7 +4,6 @@ import com.expediagroup.graphql.generator.annotations.GraphQLName
 import com.expediagroup.graphql.generator.federation.directives.FieldSet
 import com.expediagroup.graphql.generator.federation.directives.KeyDirective
 import com.expediagroup.graphql.generator.federation.execution.FederatedTypeResolver
-import com.expediagroup.graphql.generator.federation.execution.FederatedTypeSuspendResolver
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
 
@@ -46,11 +45,13 @@ data class DeprecatedProduct(
 }
 
 @Component
-class DeprecatedProductResolver : FederatedTypeSuspendResolver<DeprecatedProduct> {
+class DeprecatedProductResolver : FederatedTypeResolver<DeprecatedProduct> {
     override val typeName: String = "DeprecatedProduct"
 
     override suspend fun resolve(
         environment: DataFetchingEnvironment,
-        representation: Map<String, Any>
-    ): DeprecatedProduct? = DeprecatedProduct.byReference(representation)
+        representations: List<Map<String, Any>>
+    ): List<DeprecatedProduct?> {
+        return representations.map { DeprecatedProduct.byReference(it) }
+    }
 }
