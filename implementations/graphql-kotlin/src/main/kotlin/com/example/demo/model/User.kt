@@ -2,7 +2,6 @@ package com.example.demo.model
 
 import com.expediagroup.graphql.generator.federation.directives.*
 import com.expediagroup.graphql.generator.federation.execution.FederatedTypeResolver
-import com.expediagroup.graphql.generator.federation.execution.FederatedTypeSuspendResolver
 import com.expediagroup.graphql.generator.scalars.ID
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Component
@@ -40,21 +39,23 @@ data class User(
 }
 
 @Component
-class UserResolver : FederatedTypeSuspendResolver<User> {
+class UserResolver : FederatedTypeResolver<User> {
     override val typeName: String = "User"
 
     override suspend fun resolve(
         environment: DataFetchingEnvironment,
-        representation: Map<String, Any>
-    ): User? {
-        val email = representation["email"]?.toString() ?: throw RuntimeException("invalid entity reference")
-        val user = User(email = ID(email), name = "Jane Smith", totalProductsCreated = 1337)
-        representation["totalProductsCreated"]?.toString()?.toIntOrNull()?.let { totalProductsCreated ->
-            user.totalProductsCreated = totalProductsCreated
+        representations: List<Map<String, Any>>
+    ): List<User?> {
+        return representations.map {
+            val email = it["email"]?.toString() ?: throw RuntimeException("invalid entity reference")
+            val user = User(email = ID(email), name = "Jane Smith", totalProductsCreated = 1337)
+            it["totalProductsCreated"]?.toString()?.toIntOrNull()?.let { totalProductsCreated ->
+                user.totalProductsCreated = totalProductsCreated
+            }
+            it["yearsOfEmployment"]?.toString()?.toIntOrNull()?.let { yearsOfEmployment ->
+                user.yearsOfEmployment = yearsOfEmployment
+            }
+            user
         }
-        representation["yearsOfEmployment"]?.toString()?.toIntOrNull()?.let { yearsOfEmployment ->
-            user.yearsOfEmployment = yearsOfEmployment
-        }
-        return user
     }
 }
