@@ -39,7 +39,7 @@ const products: Product[] = [
 
 @Resolver("Product")
 export class ProductsResolver {
-  constructor() {}
+  constructor() { }
 
   @Query()
   product(@Args("id") id: string) {
@@ -60,6 +60,31 @@ export class ProductsResolver {
   @ResolveField("createdBy")
   getCreatedBy() {
     return { email: "support@apollographql.com", totalProductsCreated: 1337 };
+  }
+
+  @ResolveField("research")
+  getResearch(@Parent() parent: Product) {
+    if (parent.id === "apollo-federation") {
+      return [
+        {
+          study: {
+            caseNumber: "1234",
+            description: "Federation Study"
+          }
+        }
+      ];
+    } else if (parent.id === "apollo-studio") {
+      return [
+        {
+          study: {
+            caseNumber: "1235",
+            description: "Studio Study"
+          }
+        }
+      ];
+    } else {
+      return [];
+    }
   }
 
   @ResolveReference()
