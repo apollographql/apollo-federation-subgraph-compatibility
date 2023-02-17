@@ -9,6 +9,7 @@ import { UsersResolver } from "./users.resolver";
 import { ProductsResolver } from "./products.resolver";
 import { ProductResearchResolver } from "./product-research.resolver";
 import { DeprecatedProductsResolver } from "./deprecated-products.resolver";
+import { InventoryResolver } from "./inventory.resolver";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DeprecatedProductsResolver } from "./deprecated-products.resolver";
     ProductsResolver,
     ProductResearchResolver,
     DeprecatedProductsResolver,
+    InventoryResolver
   ],
 })
-export class AppModule {}
+export class AppModule { }
