@@ -50,6 +50,11 @@ const user = {
   totalProductsCreated: 1337,
 };
 
+const inventory = {
+  id: "apollo-oss",
+  deprecatedProducts: [deprecatedProduct]
+}
+
 const sdl = readFileSync("products.graphql", "utf-8");
 
 const typeDefs = gql(sdl);
@@ -151,6 +156,15 @@ const resolvers = {
       }
     },
   },
+  Inventory: {
+    __resolveReference: (reference: any) => {
+      if (inventory.id === reference.id) {
+        return inventory;
+      } else {
+        return null;
+      }
+    }
+  }
 };
 
 const app = express();
