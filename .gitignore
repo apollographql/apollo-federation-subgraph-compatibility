@@ -86,6 +86,7 @@ router
 
 # Python - ignore virtual env
 venv
+__pycache__
 
 # C#
 app
