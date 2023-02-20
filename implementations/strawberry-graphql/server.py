@@ -287,11 +287,15 @@ class Product:
 @strawberry.federation.interface_object(keys=["id"])
 class Inventory:
     id: strawberry.ID
+    deprecated_products: List[DeprecatedProduct]
 
     @classmethod
     def resolve_reference(cls, **data) -> Optional["Inventory"]:
         if inventory["id"] == data.get("id"):
-            return inventory
+            return Inventory(
+                id=inventory["id"],
+                deprecated_products=[DeprecatedProduct(**deprecated_product)]
+            )
 
         return None
 
@@ -305,4 +309,4 @@ class Query:
         return None
 
 
-schema = strawberry.federation.Schema(query=Query, enable_federation_2=True)
+schema = strawberry.federation.Schema(query=Query, enable_federation_2=True, types=[Inventory])
