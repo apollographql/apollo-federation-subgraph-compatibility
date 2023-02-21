@@ -1,5 +1,15 @@
 {
-  "fullName": "GraphQL Ruby",
+  "name": "GraphQL Ruby",
   "language": "Ruby",
-  "documentation": "https://graphql-ruby.org/"
+  "documentation": "https://graphql-ruby.org/",
+  "type": "Code first",
+  "repository": {
+    "name": "graphql-ruby",
+    "owner": "rmosolgo",
+    "link": "https://github.com/rmosolgo/graphql-ruby"
+  },
+  "federationlibrary": {
+    "name": "Gusto/apollo-federation-ruby",
+    "link": "https://github.com/Gusto/apollo-federation-ruby/"
+  }
 }

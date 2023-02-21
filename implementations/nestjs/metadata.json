@@ -1,5 +1,19 @@
 {
-  "fullName": "NestJS",
+  "name": "NestJS (SDL First)",
   "language": "JavaScript / TypeScript",
-  "documentation": "https://nestjs.com"
+  "documentation": "https://nestjs.com",
+  "type": "SDL first",
+  "repository": {
+    "name": "graphql",
+    "owner": "nestjs",
+    "link": "https://github.com/nestjs/graphql"
+  },
+  "coreLibrary": {
+    "name:": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  },
+  "federationlibrary": {
+    "name": "Apollo Subgraph",
+    "link": "https://www.npmjs.com/package/@apollo/subgraph"
+  }
 }

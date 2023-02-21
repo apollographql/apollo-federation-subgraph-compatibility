@@ -1,5 +1,12 @@
 {
-  "fullName": "GraphQL Go",
+  "name": "GraphQL Go (fork)",
   "language": "Go",
-  "documentation": "https://github.com/graphql-go/graphql"
+  "documentation": "https://github.com/dariuszkuc/graphql#this-is-fork-of-graphql-gographql-that-adds-apollo-federation-support",
+  "description": "This is a fork of GraphQL implementation for Go / Golang that adds Federation support",
+  "type": "Code first",
+  "repository": {
+    "name": "graphql",
+    "owner": "dariuszkuc",
+    "link": "https://github.com/dariuszkuc/graphql"
+  }
 }

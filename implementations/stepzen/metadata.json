@@ -1,5 +1,6 @@
 {
-  "fullName": "StepZen",
+  "name": "StepZen",
   "language": "Other Solutions",
-  "documentation": "https://stepzen.com/apollo-stepzen"
+  "documentation": "https://stepzen.com/apollo-stepzen",
+  "description": "Build GraphQL Easily. Optimize & Scale GraphQL Automatically"
 }

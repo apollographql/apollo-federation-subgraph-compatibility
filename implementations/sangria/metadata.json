@@ -1,5 +1,15 @@
 {
-  "fullName": "Sangria",
+  "name": "Sangria",
   "language": "Scala",
-  "documentation": "https://sangria-graphql.github.io/learn/#graphql-federation"
+  "documentation": "https://sangria-graphql.github.io/learn/#graphql-federation",
+  "type": "Code first",
+  "repository": {
+    "name": "sangria",
+    "owner": "sangria-graphql",
+    "link": "https://github.com/sangria-graphql/sangria"
+  },
+  "federationlibrary": {
+    "name": "Sangria Federated",
+    "link": "https://github.com/sangria-graphql/sangria-federated"
+  }
 }

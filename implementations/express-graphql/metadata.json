@@ -1,5 +1,19 @@
 {
-  "fullName": "express-graphql",
+  "name": "express-graphql",
   "language": "JavaScript / TypeScript",
-  "documentation": "https://github.com/graphql/express-graphql"
+  "documentation": "https://github.com/graphql/express-graphql",
+  "type": "SDL first",
+  "repository": {
+    "name": "express-graphql",
+    "owner": "graphql",
+    "link": "https://github.com/graphql/express-graphql"
+  },
+  "coreLibrary": {
+    "name:": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  },
+  "federationlibrary": {
+    "name": "Apollo Subgraph",
+    "link": "https://www.npmjs.com/package/@apollo/subgraph"
+  }
 }

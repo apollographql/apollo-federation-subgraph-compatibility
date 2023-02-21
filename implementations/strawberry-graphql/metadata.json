@@ -1,5 +1,15 @@
 {
-  "fullName": "Strawberry",
+  "name": "Strawberry",
   "language": "Python",
-  "documentation": "https://strawberry.rocks"
+  "documentation": "https://strawberry.rocks",
+  "type": "Code first",
+  "repository": {
+    "name": "strawberry",
+    "owner": "strawberry-graphql",
+    "link": "https://github.com/strawberry-graphql/strawberry"
+  },
+  "coreLibrary": {
+    "name:": "GraphQL-core 3",
+    "link": "https://github.com/graphql-python/graphql-core"
+  }
 }

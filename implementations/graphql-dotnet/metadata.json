@@ -1,5 +1,11 @@
 {
   "fullName": "GraphQL for .NET",
   "language": "C# / .NET",
-  "documentation": "https://graphql-dotnet.github.io"
+  "documentation": "https://graphql-dotnet.github.io",
+  "type": "Code first | SDL first",
+  "repository": {
+    "name": "graphql-dotnet",
+    "owner": "graphql-dotnet",
+    "link": "https://github.com/graphql-dotnet/graphql-dotnet"
+  }
 }
