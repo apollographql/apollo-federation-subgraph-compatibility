@@ -47,7 +47,7 @@ jobs:
       - name: Generate Results Summary
         run: |
           if [[ ${{ inputs.format }} == "json" ]]; then
-            jq -s '.[0] + {tests: .[1]}' implementations/${{ inputs.library }}/metadata.json results.json > results-${{ inputs.library }}.json
+            jq -s '.[0] + .[1] + {tests: .[2]}' implementations/${{ inputs.library }}/github_metadata.json implementations/${{ inputs.library }}/metadata.json results.json > results-${{ inputs.library }}.json
             echo "RESULTS_FILE=results-${{ inputs.library }}.json" >> $GITHUB_ENV
           else
             cat results.md >> $GITHUB_STEP_SUMMARY

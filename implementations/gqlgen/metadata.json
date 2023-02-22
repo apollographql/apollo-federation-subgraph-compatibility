@@ -1,5 +1,5 @@
 {
-  "name": "gqlgen",
+  "fullName": "gqlgen",
   "language": "Go",
   "documentation": "https://gqlgen.com",
   "type": "SDL first",

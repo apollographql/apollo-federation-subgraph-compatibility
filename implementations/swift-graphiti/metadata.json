@@ -1,5 +1,5 @@
 {
-  "name": "Graphiti",
+  "fullName": "Graphiti",
   "language": "Swift",
   "documentation": "https://github.com/GraphQLSwift/Graphiti",
   "type": "SDL first",

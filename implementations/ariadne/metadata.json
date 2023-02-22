@@ -1,5 +1,5 @@
 {
-  "name": "Ariadne",
+  "fullName": "Ariadne",
   "language": "Python",
   "documentation": "https://ariadnegraphql.org/docs/apollo-federation",
   "type": "SDL first",

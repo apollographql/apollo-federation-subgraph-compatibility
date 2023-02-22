@@ -1,5 +1,5 @@
 {
-  "name": "async-graphql",
+  "fullName": "async-graphql",
   "language": "Rust",
   "documentation": "https://async-graphql.github.io/async-graphql/en/apollo_federation.html",
   "type": "Code first",

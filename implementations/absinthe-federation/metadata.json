@@ -1,5 +1,5 @@
 {
-  "name": "Absinthe",
+  "fullName": "Absinthe",
   "language": "Elixir",
   "documentation": "https://hexdocs.pm/absinthe_federation/readme.html",
   "type": "Code first",

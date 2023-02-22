@@ -1,5 +1,5 @@
 {
-  "name": "Dgraph",
+  "fullName": "Dgraph",
   "language": "Other Solutions",
   "documentation": "https://dgraph.io/docs/graphql/",
   "description": "Dgraph is the native GraphQL database with a graph backend. It is open-source, scalable, distributed, highly available and lightning fast."

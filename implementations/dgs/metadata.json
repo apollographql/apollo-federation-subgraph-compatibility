@@ -1,5 +1,5 @@
 {
-  "name": "dgs-framework",
+  "fullName": "dgs-framework",
   "language": "Java / Kotlin",
   "documentation": "https://netflix.github.io/dgs/federation/",
   "type": "SDL first",

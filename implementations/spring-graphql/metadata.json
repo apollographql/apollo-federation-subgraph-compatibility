@@ -1,5 +1,5 @@
 {
-  "name": "Spring GraphQL",
+  "fullName": "Spring GraphQL",
   "language": "Java / Kotlin",
   "documentation": "https://docs.spring.io/spring-graphql/docs/current/reference/html/",
   "type": "Schema first",

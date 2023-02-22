@@ -1,5 +1,5 @@
 {
-  "name": "express-graphql",
+  "fullName": "express-graphql",
   "language": "JavaScript / TypeScript",
   "documentation": "https://github.com/graphql/express-graphql",
   "type": "SDL first",

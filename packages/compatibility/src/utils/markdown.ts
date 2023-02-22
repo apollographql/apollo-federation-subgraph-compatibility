@@ -92,16 +92,16 @@ class MarkdownFile {
 
   addFrameworkResultToTable(result: TestResultDetails) {
     const name = result.fullName || result.name;
-    const rows = [
-      result.documentation
-        ? `<a href="${result.documentation}">${name}</a>`
-        : name,
+    this.content.push(`<tr><th colspan="3"><big><a href="${result.documentation}">${name}</a></big></th></tr>`)
+
+    const columns = [
+      this.renderSubgraphDetailsCell(result),
       this.renderTestResultsCell({ fedVersion: 1, testResults: result.tests }),
       this.renderTestResultsCell({ fedVersion: 2, testResults: result.tests }),
     ];
     let tableRow = '<tr>';
-    rows.forEach((row) => {
-      tableRow += `<td>${row}</td>`;
+    columns.forEach((column) => {
+      tableRow += `<td>${column}</td>`;
     });
     tableRow += '</tr>';
     this.content.push(tableRow);
@@ -120,23 +120,52 @@ class MarkdownFile {
     this.content.push(tableRow);
   }
 
+  renderSubgraphDetailsCell(result: TestResultDetails): String {
+    let content = `${result.description}</br></br>`;
+
+    if (result.repository.link) {
+      const starCount = Number(result.stargazerCount)
+      let stars = null;
+      if (starCount > 1000) {
+        stars = (starCount / 1000).toFixed(1);
+      } else {
+        stars = starCount;
+      }
+      const lastReleaseDate = result.language.substring(0, 10);
+
+      content += `Github: <a href="${result.repository.link}">${result.repository.owner}/${result.repository.name}</a></br>
+Type: ${result.type}</br>
+Stars: ${stars} ⭐</br>
+Last Release: ${lastReleaseDate}</br></br>`;
+    }
+
+    if (result.coreLibrary.link) {
+      content += `Core Library: <a href="${result.coreLibrary.link}">${result.coreLibrary.name}</a></br>`;
+    }
+
+    if (result.federationlibrary.link) {
+      content += `Federation Library: <a href="${result.federationlibrary.link}">${result.federationlibrary.link}</a></br>`;
+    }
+
+    return content;
+  }
+
   renderTestResultsCell({
     fedVersion,
     testResults,
   }: {
     fedVersion: number;
     testResults: TestResults;
-  }) {
+  }): String {
     let cell = '<table>';
     TESTS.forEach((test) => {
       if (test.fedVersion === fedVersion) {
-        cell += `<tr><th><code>${test.column}</code></th><td>${
-          testResults[test.assertion]?.success
-            ? '🟢'
-            : test.required
+        cell += `<tr><th><code>${test.column}</code></th><td>${testResults[test.assertion]?.success
+          ? '🟢'
+          : test.required
             ? '❌'
             : '🔲'
-        }</td></tr>`;
+          }</td></tr>`;
       }
     });
     cell += '</table>';

@@ -1,5 +1,5 @@
 {
-  "name": "Hot Chocolate",
+  "fullName": "Hot Chocolate",
   "language": "C# / .NET",
   "documentation": "https://chillicream.com/docs/hotchocolate",
   "type": "Code first | SDL first",
