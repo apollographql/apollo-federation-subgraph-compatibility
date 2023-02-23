@@ -92,7 +92,9 @@ class MarkdownFile {
 
   addFrameworkResultToTable(result: TestResultDetails) {
     const name = result.fullName || result.name;
-    this.content.push(`<tr><th colspan="3"><big><a href="${result.documentation}">${name}</a></big></th></tr>`)
+    this.content.push(
+      `<tr><th colspan="3"><big><a href="${result.documentation}">${name}</a></big></th></tr>`,
+    );
 
     const columns = [
       this.renderSubgraphDetailsCell(result),
@@ -124,7 +126,7 @@ class MarkdownFile {
     let content = `${result.description}</br></br>`;
 
     if (result.repository?.link) {
-      const starCount = Number(result.stargazerCount)
+      const starCount = Number(result.stargazerCount);
       let stars = null;
       if (starCount > 1000) {
         stars = `${(starCount / 1000).toFixed(1)}k`;
@@ -160,12 +162,13 @@ Last Release: ${lastReleaseDate}</br></br>`;
     let cell = '<table>';
     TESTS.forEach((test) => {
       if (test.fedVersion === fedVersion) {
-        cell += `<tr><th><code>${test.column}</code></th><td>${testResults[test.assertion]?.success
-          ? '🟢'
-          : test.required
+        cell += `<tr><th><code>${test.column}</code></th><td>${
+          testResults[test.assertion]?.success
+            ? '🟢'
+            : test.required
             ? '❌'
             : '🔲'
-          }</td></tr>`;
+        }</td></tr>`;
       }
     });
     cell += '</table>';
