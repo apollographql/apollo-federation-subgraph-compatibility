@@ -1,5 +1,19 @@
 {
   "fullName": "GraphQL Java Kickstart (Spring Boot)",
   "language": "Java / Kotlin",
-  "documentation": "https://github.com/graphql-java-kickstart/graphql-spring-boot"
+  "documentation": "https://github.com/graphql-java-kickstart/graphql-spring-boot",
+  "type": "Schema first",
+  "repository": {
+    "name": "graphql-spring-boot",
+    "owner": "graphql-java-kickstart",
+    "link": "https://github.com/graphql-java-kickstart/graphql-spring-boot"
+  },
+  "coreLibrary": {
+    "name": "GraphQL Java",
+    "link": "https://github.com/graphql-java/graphql-java"
+  },
+  "federationlibrary": {
+    "name": "Federation JVM",
+    "link": "https://github.com/apollographql/federation-jvm"
+  }
 }

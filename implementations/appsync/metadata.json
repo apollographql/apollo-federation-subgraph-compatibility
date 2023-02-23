@@ -1,5 +1,6 @@
 {
   "fullName": "AWS AppSync",
   "language": "Other Solutions",
-  "documentation": "https://aws.amazon.com/appsync/"
+  "documentation": "https://aws.amazon.com/appsync/",
+  "description": "Serverless GraphQL and Pub/Sub APIs"
 }

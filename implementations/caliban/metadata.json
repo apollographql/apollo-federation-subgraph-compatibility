@@ -1,5 +1,11 @@
 {
   "fullName": "Caliban",
   "language": "Scala",
-  "documentation": "https://ghostdogpr.github.io/caliban/docs/federation.html"
+  "documentation": "https://ghostdogpr.github.io/caliban/docs/federation.html",
+  "type": "SDL first",
+  "repository": {
+    "name": "caliban",
+    "owner": "ghostdogpr",
+    "link": "https://github.com/ghostdogpr/caliban"
+  }
 }

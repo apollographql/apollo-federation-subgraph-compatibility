@@ -142,14 +142,27 @@ export interface TestResultDetails {
   fullName?: string;
   version?: string;
   language?: string;
-  documentation?: string;
+  documentation: string;
+  description?: string;
+  type?: string;
+  stargazerCount?: string;
+  lastRelease?: string;
   dependencies?: {
     name: string;
     url: string;
     version: string;
   }[];
+  repository?: RepositoryInformation;
+  coreLibrary?: RepositoryInformation;
+  federationlibrary?: RepositoryInformation;
   started: boolean;
   tests: TestResults;
+}
+
+export interface RepositoryInformation {
+  name: string;
+  owner?: string;
+  link: string;
 }
 
 export interface TestResults {

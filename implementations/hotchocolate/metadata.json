@@ -1,5 +1,11 @@
 {
   "fullName": "Hot Chocolate",
   "language": "C# / .NET",
-  "documentation": "https://chillicream.com/docs/hotchocolate"
+  "documentation": "https://chillicream.com/docs/hotchocolate",
+  "type": "Code first | SDL first",
+  "repository": {
+    "name": "graphql-platform",
+    "owner": "ChilliCream",
+    "link": "https://github.com/ChilliCream/graphql-platform"
+  }
 }

@@ -1,5 +1,15 @@
 {
   "fullName": "Ariadne",
   "language": "Python",
-  "documentation": "https://ariadnegraphql.org/docs/apollo-federation"
+  "documentation": "https://ariadnegraphql.org/docs/apollo-federation",
+  "type": "SDL first",
+  "repository": {
+    "name": "ariadne",
+    "owner": "mirumee",
+    "link": "https://github.com/mirumee/ariadne"
+  },
+  "coreLibrary": {
+    "name": "GraphQL-core 3",
+    "link": "https://github.com/graphql-python/graphql-core"
+  }
 }

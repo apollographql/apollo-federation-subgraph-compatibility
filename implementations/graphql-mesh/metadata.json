@@ -1,5 +1,10 @@
 {
   "fullName": "GraphQL Mesh",
   "language": "Other Solutions",
-  "documentation": "https://www.the-guild.dev/graphql/mesh"
+  "documentation": "https://www.the-guild.dev/graphql/mesh",
+  "repository": {
+    "name": "graphql-mesh",
+    "owner": "Urigo",
+    "link": "https://github.com/Urigo/graphql-mesh"
+  }
 }
