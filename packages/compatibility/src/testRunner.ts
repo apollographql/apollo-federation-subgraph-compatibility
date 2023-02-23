@@ -1,7 +1,7 @@
 import execa from 'execa';
 import debug from 'debug';
 import { resolve } from 'path';
-import { writeableDebugStream } from './utils/logging';
+import { infoLog, writeableDebugStream } from './utils/logging';
 
 const jestDebug = debug('test');
 
@@ -89,7 +89,7 @@ export const TESTS = [
 ];
 
 export async function runJest(productsUrl: string): Promise<JestResults> {
-  console.log(new Date().toJSON(), 'starting tests...');
+  infoLog(new Date().toJSON(), 'starting tests...');
   jestDebug(
     `\n***********************\nStarting tests...\n***********************\n\n`,
   );
@@ -111,7 +111,7 @@ export async function runJest(productsUrl: string): Promise<JestResults> {
   );
 
   proc.stdout.pipe(writeableDebugStream(jestDebug));
-  proc.stderr.pipe(writeableDebugStream(jestDebug));
+  proc.stderr.pipe(writeableDebugStream(infoLog));
 
   const { stdout, stderr } = await proc;
 

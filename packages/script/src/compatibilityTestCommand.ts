@@ -52,6 +52,7 @@ class CompatibilityTestCommand extends Command {
           .default('markdown'),
       )
       .option('--debug', 'debug mode with extra log info')
+      .option('--quiet', 'suppress logging to minimum')
       .option(
         '--failOnRequired',
         'boolean flag to indicate whether any failing required test should fail the script.',
@@ -82,10 +83,14 @@ program
   )
   .option('--config <subgraph.config.js>', 'optional PM2 configuration file')
   .action((options) => {
-    if (options.debug) {
-      console.log('setting debug setting');
-      debug.enable('debug,pm2,docker,rover,test');
+    if (options.quiet) {
+      debug.disable();
+    } else if (options.debug) {
+      debug.enable('info,pm2,docker,rover,test');
+    } else {
+      debug.enable('info');
     }
+
     let runtimeConfig = generateRuntimeConfig(TestRuntime.PM2, options);
     compatibilityTest(runtimeConfig).then((successful) => {
       if (!successful) {
@@ -106,10 +111,14 @@ program
   .option('--path <path>', 'GraphQL endpoint path', '')
   .option('--port <port>', 'HTTP server port', '4001')
   .action((options) => {
-    if (options.debug) {
-      console.log('setting debug setting');
-      debug.enable('debug,pm2,docker,rover,test');
+    if (options.quiet) {
+      debug.disable();
+    } else if (options.debug) {
+      debug.enable('info,pm2,docker,rover,test');
+    } else {
+      debug.enable('info');
     }
+
     let runtimeConfig = generateRuntimeConfig(TestRuntime.DOCKER, options);
     compatibilityTest(runtimeConfig).then((successful) => {
       if (!successful) {

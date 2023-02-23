@@ -4,7 +4,7 @@ setup:
 
 .PHONY: test
 test:
-	npm run compatibility:test -- docker --debug --compose implementations/$(subgraph)/docker-compose.yaml --schema implementations/_template_library_/products.graphql
+	npm run compatibility:test -- docker --compose implementations/$(subgraph)/docker-compose.yaml --schema implementations/_template_library_/products.graphql
 
 .PHONY: test-all
 test-all:
