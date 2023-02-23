@@ -123,7 +123,7 @@ class MarkdownFile {
   renderSubgraphDetailsCell(result: TestResultDetails): String {
     let content = `${result.description}</br></br>`;
 
-    if (result.repository.link) {
+    if (result.repository?.link) {
       const starCount = Number(result.stargazerCount)
       let stars = null;
       if (starCount > 1000) {
@@ -139,11 +139,11 @@ Stars: ${stars} ⭐</br>
 Last Release: ${lastReleaseDate}</br></br>`;
     }
 
-    if (result.coreLibrary.link) {
+    if (result.coreLibrary?.link) {
       content += `Core Library: <a href="${result.coreLibrary.link}">${result.coreLibrary.name}</a></br>`;
     }
 
-    if (result.federationlibrary.link) {
+    if (result.federationlibrary?.link) {
       content += `Federation Library: <a href="${result.federationlibrary.link}">${result.federationlibrary.link}</a></br>`;
     }
 

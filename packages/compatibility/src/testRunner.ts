@@ -152,9 +152,9 @@ export interface TestResultDetails {
     url: string;
     version: string;
   }[];
-  repository: RepositoryInformation;
-  coreLibrary: RepositoryInformation;
-  federationlibrary: RepositoryInformation;
+  repository?: RepositoryInformation;
+  coreLibrary?: RepositoryInformation;
+  federationlibrary?: RepositoryInformation;
   started: boolean;
   tests: TestResults;
 }
