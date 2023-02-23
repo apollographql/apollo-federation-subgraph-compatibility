@@ -9,7 +9,7 @@
     "link": "https://github.com/nuwave/lighthouse"
   },
   "coreLibrary": {
-    "name:": "graphql-php",
+    "name": "graphql-php",
     "link": "https://github.com/webonyx/graphql-php"
   }
 }

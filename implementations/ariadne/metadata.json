@@ -9,7 +9,7 @@
     "link": "https://github.com/mirumee/ariadne"
   },
   "coreLibrary": {
-    "name:": "GraphQL-core 3",
+    "name": "GraphQL-core 3",
     "link": "https://github.com/graphql-python/graphql-core"
   }
 }

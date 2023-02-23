@@ -9,7 +9,7 @@
     "link": "https://github.com/dotansimha/graphql-yoga/"
   },
   "coreLibrary": {
-    "name:": "GraphQL.js",
+    "name": "GraphQL.js",
     "link": "https://www.npmjs.com/package/graphql"
   },
   "federationlibrary": {

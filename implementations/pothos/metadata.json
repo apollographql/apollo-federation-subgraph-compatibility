@@ -9,7 +9,7 @@
     "link": "https://github.com/hayes/pothos"
   },
   "coreLibrary": {
-    "name:": "GraphQL.js",
+    "name": "GraphQL.js",
     "link": "https://www.npmjs.com/package/graphql"
   }
 }

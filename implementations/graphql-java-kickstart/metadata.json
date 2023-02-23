@@ -9,7 +9,7 @@
     "link": "https://github.com/graphql-java-kickstart/graphql-spring-boot"
   },
   "coreLibrary": {
-    "name:": "GraphQL Java",
+    "name": "GraphQL Java",
     "link": "https://github.com/graphql-java/graphql-java"
   },
   "federationlibrary": {

@@ -2,7 +2,7 @@
   "fullName": "GraphQL Go (fork)",
   "language": "Go",
   "documentation": "https://github.com/dariuszkuc/graphql#this-is-fork-of-graphql-gographql-that-adds-apollo-federation-support",
-  "description": "This is a fork of GraphQL implementation for Go / Golang that adds Federation support",
+  "description": "This is a fork of graphql-go/graphql that adds Federation support",
   "type": "Code first",
   "repository": {
     "name": "graphql",
