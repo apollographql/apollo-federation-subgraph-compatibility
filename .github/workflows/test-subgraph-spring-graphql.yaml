@@ -1,17 +1,17 @@
-name: Federation JVM Test
+name: Spring GraphQL Test
 
 on:
   pull_request:
     branches:
       - main
     paths:
-      - 'implementations/federation-jvm/**'
+      - 'implementations/spring-graphql/**'
 
 jobs:
   compatibility:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
-      library: "federation-jvm"
+      library: "spring-graphql"
 
   pr-info:
     uses: ./.github/workflows/save-pr-info.yaml
