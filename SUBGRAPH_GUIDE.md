@@ -30,25 +30,24 @@ implement to be used in the testing suite:
      should include some basic information about the library as well as the steps
      that describe how to build the example app and how to run it locally.
 1. Update the `metadata.json` file with your project details. These details are
-   used in the main results table in the `README.md` of this repo, and in our
-   [subgraph-compatible libraries](https://www.apollographql.com/docs/federation/other-servers)
+   used in our [federation-compatible subgraph](https://www.apollographql.com/docs/federation/building-supergraphs/supported-subgraphs/)
    documentation.
-2. You'll need to implement the `products.graphql` file in your server, this is
+1. You'll need to implement the `products.graphql` file in your server, this is
    the reference implementation that will be tested.
-3. Once you have the schema implemented, you'll need to modify the `Dockerfile`
+2. Once you have the schema implemented, you'll need to modify the `Dockerfile`
    to make your server a Docker image and expose it on port 4001
    - We will send traffic to `http://products:4001`, if your server has
      `/graphql` required you'll need to change it
-4. Modify the `docker-compose.yml` file and update the project name. If you do
+3. Modify the `docker-compose.yml` file and update the project name. If you do
    need to make additional edits to the `docker-compose.yml` file, your edits
    should only affect the `products` service defined.
-5. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
+4. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
    and the results will be outputted to `results.md`
-6. Copy the `.github/workflows/templates/test-subgraph-library.yaml.template` and rename
+5. Copy the `.github/workflows/templates/test-subgraph-library.yaml.template` and rename
    it to include the name of your library under `.github/workflows/test-subgraph-<library>.yaml`
    - This is a workflow that will be triggered for PRs opened against your implementation.
    - Modify the template so it only triggers for your implementation.
-7. Update `.github/workflows/comment.yaml` workflow to include name of your newly created workflow (
+6. Update `.github/workflows/comment.yaml` workflow to include name of your newly created workflow (
    this will enable automatic compatibility comments on PRs against your implementation).
 
 ## How can I have my hosted subgraph included in this?
@@ -60,13 +59,12 @@ compatibility tests will fail.**
 
 1. Copy the `implementations/_template_hosted_` folder and rename it to the
    name of your solution.
-   - You'll find 4 files that you need in the template folder: `metadata.json`,
+   - You'll find 4 files that you need in the template folder: `metadata.json`, `github_metadata.json` (empty JSON file),
      `docker-compose.yml`, `Dockerfile`, `proxy.conf.template` and `products.graphql`
    - Creation of project `README.md` file is optional but highly encouraged.
      It should include some basic information about the solution.
 2. Update `metadata.json` file with the project details. These details are
-   used in the main results table in the `README.md` of this repo, and in our
-   [subgraph-compatible libraries](https://www.apollographql.com/docs/federation/other-servers)
+   used in our [federation-compatible subgraph](https://www.apollographql.com/docs/federation/building-supergraphs/supported-subgraphs/)
    documentation.
 3. You'll need to implement the `products.graphql` file in your server and
    deploy it to your hosted environment, this is the reference implementation
