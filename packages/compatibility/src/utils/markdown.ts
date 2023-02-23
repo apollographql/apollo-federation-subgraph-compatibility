@@ -127,9 +127,9 @@ class MarkdownFile {
       const starCount = Number(result.stargazerCount)
       let stars = null;
       if (starCount > 1000) {
-        stars = (starCount / 1000).toFixed(1);
+        stars = `${(starCount / 1000).toFixed(1)}k`;
       } else {
-        stars = starCount;
+        stars = `${starCount}`;
       }
       const lastReleaseDate = result.lastRelease.substring(0, 10);
 
