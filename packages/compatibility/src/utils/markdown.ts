@@ -131,7 +131,7 @@ class MarkdownFile {
       } else {
         stars = starCount;
       }
-      const lastReleaseDate = result.language.substring(0, 10);
+      const lastReleaseDate = result.lastRelease.substring(0, 10);
 
       content += `Github: <a href="${result.repository.link}">${result.repository.owner}/${result.repository.name}</a></br>
 Type: ${result.type}</br>
@@ -144,7 +144,7 @@ Last Release: ${lastReleaseDate}</br></br>`;
     }
 
     if (result.federationlibrary?.link) {
-      content += `Federation Library: <a href="${result.federationlibrary.link}">${result.federationlibrary.link}</a></br>`;
+      content += `Federation Library: <a href="${result.federationlibrary.link}">${result.federationlibrary.name}</a></br>`;
     }
 
     return content;
