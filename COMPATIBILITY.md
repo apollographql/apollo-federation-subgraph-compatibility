@@ -331,3 +331,19 @@ query ($id: ID!) {
 - `@inaccessible` - directive used to hide fields from the supergraph
   - **Cannot be `@federation__` namespaced** - this directive has to be named consistently as `@inacessible` across all the subgraphs
   - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result. Must also be able to query inaccessible fields from the Products schema.
+- `@composeDirective` - directive used to specify custom directives that should be exposed in the Supergraph schema (by default, supergraph schema excludes all custom directives)
+  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking whether it is applied on the schema object in the `query { service { sdl } }` result and whether the composed directive is applied on the `Product` type.
+- `@interfaceObject` - this directive provides meta information to the router that this entity type defined within this subgraph is an interface in the supergraph
+  - Must be seen as a valid schema directive in the SDL returned by the subgraph. Is verified by checking for its inclusion in the `query { _service { sdl } }` result and whether it is applied on a federated `Inventory` type.
+  - `Inventory` should be a valid entity and functionality will be tested through the following query sent to the router.
+
+```graphql
+query ($id: ID!) {
+  inventory(id: $id) {
+    deprecatedProducts {
+      sku
+      reason
+    }
+  }
+}
+```
