@@ -77,6 +77,7 @@ Options:
   --failOnWarning                boolean flag to indicate whether any failing test should fail the script.
   --format <json|markdown>       optional output file format (choices: "json", "markdown", default: "markdown")
   -h, --help                     display help for command
+  --quiet                        suppress logging to minimum
   --schema <schema.graphql>      optional path to schema file, if omitted composition will fallback to introspection
 ```
 
@@ -128,6 +129,7 @@ Options:
   -h, --help                       display help for command
   --path <path>                    GraphQL endpoint path (default: "")
   --port <port>                    HTTP server port (default: "4001")
+  --quiet                          suppress logging to minimum
   --schema <schema.graphql>        Path to schema file
 ```
 

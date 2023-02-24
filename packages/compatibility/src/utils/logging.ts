@@ -1,12 +1,14 @@
-import { Debugger } from 'debug';
+import debug, { Debugger } from 'debug';
 import { Writable } from 'stream';
 import { TestResults, TESTS } from '../testRunner';
+
+export const infoLog = debug('info');
 
 /**
  * Log message with a timestamp.
  */
 export function logWithTimestamp(message: string) {
-  console.log(new Date().toJSON(), message);
+  infoLog(new Date().toJSON(), message);
 }
 
 /**

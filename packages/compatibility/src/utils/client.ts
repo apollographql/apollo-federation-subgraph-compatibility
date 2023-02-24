@@ -1,4 +1,5 @@
 import fetch from 'make-fetch-happen';
+import { infoLog } from './logging';
 
 export const ROUTER_URL = 'http://localhost:4000/';
 const PING_QUERY = 'query { __typename }';
@@ -75,7 +76,7 @@ export async function healthcheckSupergraph(url: string): Promise<Boolean> {
 }
 
 export async function healthcheckRouter(): Promise<Boolean> {
-  console.log('router health check', ROUTER_HEALTH_URL);
+  infoLog('health check - router', ROUTER_HEALTH_URL);
   try {
     const routerHealthcheck = await fetch(ROUTER_HEALTH_URL, {
       retry: { retries: 10, maxTimeout: 1000 },
@@ -85,6 +86,7 @@ export async function healthcheckRouter(): Promise<Boolean> {
       console.log('router failed to start');
       return false;
     }
+    infoLog('health check - router OK');
     return true;
   } catch (err) {
     console.error('router faield to start', err);
@@ -99,13 +101,14 @@ export async function healthcheck(
   let attempts = 100;
   let lastError = null;
   while (attempts--) {
-    console.log(`${appName} health check`, url);
+    infoLog(`health check - ${appName}`, url);
     try {
       const subgraphHealthcheck = await graphqlRequest(url, {
         query: PING_QUERY,
       });
 
       if (subgraphHealthcheck.data?.__typename) {
+        infoLog(`health check - ${appName} OK`);
         return true;
       } else {
         lastError = subgraphHealthcheck.errors;
