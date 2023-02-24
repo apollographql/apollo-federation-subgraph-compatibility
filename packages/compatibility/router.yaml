@@ -15,3 +15,6 @@ sandbox:
 supergraph:
   listen: 0.0.0.0:4000
   introspection: true
+
+include_subgraph_errors:
+  all: true
