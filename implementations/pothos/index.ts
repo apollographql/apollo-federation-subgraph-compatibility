@@ -4,11 +4,17 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import SchemaBuilder from '@pothos/core';
 import DirectivesPlugin from '@pothos/plugin-directives';
 import FederationPlugin from '@pothos/plugin-federation';
+import { DirectiveLocation, GraphQLDirective } from 'graphql';
 
 const serverPort = parseInt(process.env.PRODUCTS_PORT || "") || 4001;
 
 const builder = new SchemaBuilder<{
   DefaultFieldNullability: true;
+  Directives: {
+    custom: {
+      locations: 'OBJECT'
+    }
+  }
 }>({
   plugins: [DirectivesPlugin, FederationPlugin],
   useGraphQLToolsUnorderedDirectives: true,
@@ -152,6 +158,9 @@ const ProductDimension = builder
   });
 
 const ProductType = builder.objectRef<Product>('Product').implement({
+  directives: {
+    custom: {},
+  },
   fields: (t) => ({
     id: t.exposeID('id', {
       nullable: false,
@@ -256,8 +265,35 @@ builder.queryType({
   }),
 });
 
+const Inventory = builder.objectRef<{id: string}>('Inventory').implement({
+  fields: (t) => ({
+    id: t.exposeID('id', { nullable: false }),
+    deprecatedProducts: t.field({
+      nullable: false,
+      type: [DeprecatedProduct],
+      resolve: () => [deprecatedProduct]
+    }),
+  }),
+});
+
+builder.asEntity(Inventory, {
+  key: builder.selection<{ id: string }>('id'),
+  interfaceObject: true,
+  resolveReference: (key) => ({ id: key.id })
+});
+
 export const schema = builder.toSubGraphSchema({
-  linkUrl: "https://specs.apollo.dev/federation/v2.1"
+  linkUrl: "https://specs.apollo.dev/federation/v2.3",
+  composeDirectives: ['@custom'],
+  schemaDirectives: {
+    link: { url: 'https://myspecs.dev/myCustomDirective/v1.0', import: ['@custom'] },
+  },
+  directives: [
+    new GraphQLDirective({
+      locations: [DirectiveLocation.OBJECT],
+      name: 'custom',
+    }),
+  ],
 });
 
 console.log(printSubgraphSchema(schema));
