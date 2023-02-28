@@ -7,7 +7,7 @@ sources:
   - name: GraphQL API
     handler:
       graphql:
-        schema: ./src/schema.ts
+        source: ./src/schema.ts
     transforms:
       - federation:
           types:
