@@ -1,5 +1,6 @@
 {
   "fullName": "GraphQL Mesh",
+  "description": "Executable GraphQL schema from multiple data sources, query anything, run anywhere.",
   "language": "Other Solutions",
   "documentation": "https://www.the-guild.dev/graphql/mesh",
   "repository": {

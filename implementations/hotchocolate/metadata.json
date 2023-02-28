@@ -1,5 +1,6 @@
 {
   "fullName": "Hot Chocolate",
+  "description": "Open-source GraphQL server for the Microsoft .NET platform that takes the complexity away and lets you focus on delivering the next big thing.",
   "language": "C# / .NET",
   "documentation": "https://chillicream.com/docs/hotchocolate",
   "type": "Code first | SDL first",

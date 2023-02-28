@@ -1,5 +1,6 @@
 {
   "fullName": "GraphQL Yoga",
+  "description": "The fully-featured GraphQL server with focus on easy setup, performance and great developer experience.",
   "language": "JavaScript / TypeScript",
   "documentation": "https://www.the-guild.dev/graphql/yoga-server/v3/features/apollo-federation",
   "type": "SDL first",
