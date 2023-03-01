@@ -1,5 +1,6 @@
 {
   "fullName": "GraphQL Helix",
+  "description": "A highly evolved and framework-agnostic GraphQL HTTP server.",
   "language": "JavaScript / TypeScript",
   "documentation": "https://graphql-helix.vercel.app",
   "type": "SDL first",

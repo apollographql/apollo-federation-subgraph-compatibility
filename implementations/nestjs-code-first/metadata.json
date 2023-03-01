@@ -1,5 +1,6 @@
 {
   "fullName": "NestJS (code first)",
+  "description": "A progressive Node.js framework for building efficient, reliable and scalable server-side applications.",
   "language": "JavaScript / TypeScript",
   "documentation": "https://nestjs.com",
   "type": "Code first",
