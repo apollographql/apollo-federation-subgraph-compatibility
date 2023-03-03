@@ -9,6 +9,7 @@ import { ProductResearch } from "./product-research.model";
 @Directive('@key(fields: "id")')
 @Directive('@key(fields: "sku package")')
 @Directive('@key(fields: "sku variation { id }")')
+@Directive('@custom')
 export class Product {
   @Field((type) => ID)
   id: string;
