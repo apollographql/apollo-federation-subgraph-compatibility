@@ -10,6 +10,7 @@ import {
   ObjectTypeDefinitionNode,
   ObjectTypeExtensionNode,
   TypeNode,
+  DefinitionNode,
 } from 'graphql';
 import { resolve } from 'path';
 
@@ -22,19 +23,28 @@ const productsReferenceSchema = parse(productsRaw);
 function findObjectTypeDefinition(
   document: DocumentNode,
   typeName: string,
-): any | null {
+): ObjectTypeDefinitionNode | null {
   return document.definitions.find(
     (d) => d.kind == 'ObjectTypeDefinition' && d.name.value === typeName,
-  ) as any;
+  ) as ObjectTypeDefinitionNode;
 }
 
 function findObjectTypeExtensionDefinition(
   document: DocumentNode,
   typeName: string,
-): any | null {
+): ObjectTypeExtensionNode | null {
   return document.definitions.find(
     (d) => d.kind == 'ObjectTypeExtension' && d.name.value === typeName,
-  ) as any;
+  ) as ObjectTypeExtensionNode;
+}
+
+function findObjectTypeExtensionDefinitions(
+  document: DocumentNode,
+  typeName: string,
+): ObjectTypeExtensionNode[] {
+  return document.definitions
+    .filter((d) => d.kind == 'ObjectTypeExtension' && d.name.value === typeName)
+    .map((value) => value as ObjectTypeExtensionNode);
 }
 
 function isListReturnType(type: TypeNode | null): boolean {
@@ -252,10 +262,14 @@ export function compareSchemas(schemaToCompare: string): boolean {
   const expectedQueryDefinition =
     findObjectTypeExtensionDefinition(productsReferenceSchema, 'Query') ??
     findObjectTypeDefinition(productsReferenceSchema, 'Query');
-  const actualQueryDefinition =
-    findObjectTypeExtensionDefinition(schemaDefinition, 'Query') ??
-    findObjectTypeDefinition(schemaDefinition, 'Query');
-  const queryFields = actualQueryDefinition.fields.filter((field) => {
+  const allFields: FieldDefinitionNode[] = findObjectTypeExtensionDefinitions(
+    schemaDefinition,
+    'Query',
+  )
+    .map((value) => value.fields ?? [])
+    .flat()
+    .concat(findObjectTypeDefinition(schemaDefinition, 'Query')?.fields ?? []);
+  const queryFields = allFields.filter((field) => {
     return ['product', 'deprecatedProduct'].includes(field.name.value);
   });
   errors += compareTypeFields(
