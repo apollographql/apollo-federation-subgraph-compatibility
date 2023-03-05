@@ -79,9 +79,6 @@ function compareTypeFields(
   expectedFields: ReadonlyArray<FieldDefinitionNode>,
 ): string {
   let errors: string = '';
-  if (expectedFields.length !== fields.length) {
-    errors += `\n * ${typeName} does not declare the same number of fields`;
-  }
   expectedFields.forEach((expectedField) => {
     const matchedField = fields.find(
       (f) => f.name.value == expectedField.name.value,
