@@ -9,9 +9,6 @@ on:
       format:
         default: markdown
         type: string
-      fork:
-        default: false
-        type: boolean
     secrets:
       TEST_URL:
         required: false
@@ -25,13 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        if: ${{ inputs.fork }} == false
         uses: actions/checkout@v3
-      - name: Checkout Repository (fork mode)
-        if: ${{ inputs.fork }} == true
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup Environment
         uses: actions/setup-node@v3
         with:
