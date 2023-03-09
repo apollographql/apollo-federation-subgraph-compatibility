@@ -9,13 +9,36 @@ on:
 
 jobs:
   compatibility:
-    uses: ./.github/workflows/test-subgraph.yaml
-    with:
-      library: "appsync"
-      fork: true
-    secrets:
-      API_KEY: ${{ secrets.API_KEY_APPSYNC }}
-      TEST_URL: ${{ secrets.URL_APPSYNC }}
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Setup Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Install dependencies and build
+        run: npm install
+      - name: Compatibility test
+        run: npm run compatibility:test -- docker --compose implementations/appsync/docker-compose.yaml --schema implementations/appsync/cdk/products-service/src/products-service.graphql
+        env:
+          API_KEY: ${{ secrets.API_KEY_APPSYNC }}
+          TEST_URL: ${{ secrets.URL_APPSYNC }}
+      - name: Generate Results Summary
+        run: |
+          cat results.md >> $GITHUB_STEP_SUMMARY
+          mv results.md results-appsync.md
+          echo "RESULTS_FILE=results-appsync.md" >> $GITHUB_ENV
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RESULTS_FILE }}
+          path: ./${{ env.RESULTS_FILE }}
+          retention-days: 1
 
   pr-info:
     uses: ./.github/workflows/save-pr-info.yaml
