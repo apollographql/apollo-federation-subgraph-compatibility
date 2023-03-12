@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate.AspNetCore" Version="12.6.0" />
-    <PackageReference Include="HotChocolate.ApolloFederation" Version="12.6.0" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.0.0" />
+    <PackageReference Include="HotChocolate.ApolloFederation" Version="13.0.0" />
   </ItemGroup>
 
 </Project>

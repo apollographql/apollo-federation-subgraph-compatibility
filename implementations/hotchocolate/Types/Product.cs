@@ -7,12 +7,16 @@ namespace Products;
 [Key("sku variation { id }")]
 public class Product
 {
-    public Product(string id, string sku, string package, string variation)
+    public Product(string id, string? sku, string? package, ProductVariation? variation, ProductDimension? dimensions, User? createdBy, string? notes, List<ProductResearch> research)
     {
         Id = id;
         Sku = sku;
         Package = package;
-        Variation = new(variation);
+        Variation = variation;
+        Dimensions = dimensions;
+        CreatedBy = createdBy;
+        Notes = notes;
+        Research = research;
     }
 
     [ID]
@@ -24,10 +28,14 @@ public class Product
 
     public ProductVariation? Variation { get; }
 
-    public ProductDimension? Dimensions { get; } = new("small", 1);
+    public ProductDimension? Dimensions { get; }
 
     [Provides("totalProductsCreated")]
-    public User? CreatedBy { get; } = new("support@apollographql.com", 1337);
+    public User? CreatedBy { get; }
+
+    public string? Notes { get; }
+
+    public List<ProductResearch> Research { get; }
 
     [ReferenceResolver]
     public static Product? GetProductById(
