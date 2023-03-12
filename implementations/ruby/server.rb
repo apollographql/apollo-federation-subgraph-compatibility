@@ -59,7 +59,6 @@ class ProductDimension < BaseObject
   shareable
   field :size, String, null: true
   field :weight, Float, null: true
-  # inaccessible is currently incorrectly namespaced
   field :unit, String, null: true, inaccessible: true
 end
 
@@ -132,7 +131,7 @@ class Product < BaseObject
   field :variation, ProductVariation, null: true
   field :dimensions, ProductDimension, null: true
   field :created_by, User, null: true, provides: { fields: 'totalProductsCreated' }
-  field :notes, String, null: true
+  field :notes, String, null: true, tags: [{ name: 'internal' }]
   field :research, [ProductResearch], null:false
 
   def self.resolve_reference(object, _context)
@@ -142,6 +141,22 @@ class Product < BaseObject
       PRODUCTS.find { |product| product[:sku] == object[:sku] && product[:package] == object[:package] }
     elsif object[:sku] && object[:variation]
       PRODUCTS.find { |product| product[:sku] == object[:sku] && product[:variation][:id] == object[:variation]["id"] }
+    else
+      nil
+    end
+  end
+end
+
+class Inventory < BaseObject
+  key fields: 'id'
+  interface_object
+
+  field :id, ID, null: false
+  field :deprecatedProducts, [DeprecatedProduct], null:false
+
+  def self.resolve_reference(object, _context)
+    if object[:id] == INVENTORY[:id]
+      INVENTORY
     else
       nil
     end
@@ -167,7 +182,7 @@ RESEARCH = [
       description: "Studio Study"
     }
   }
-]
+].freeze
 
 DEPRECATED_PRODUCT = {
   sku: "apollo-federation-v1",
@@ -197,6 +212,11 @@ PRODUCTS = [
   },
 ].freeze
 
+INVENTORY = {
+  id: "apollo-oss",
+  deprecatedProducts: [DEPRECATED_PRODUCT]
+}
+
 class Query < BaseObject
   field :product, Product, null: true do
     argument :id, ID, required: true
@@ -223,4 +243,5 @@ class ProductSchema < GraphQL::Schema
   use ApolloFederation::Tracing
 
   query(Query)
+  orphan_types Inventory
 end
