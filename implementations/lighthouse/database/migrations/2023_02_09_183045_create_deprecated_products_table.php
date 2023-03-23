@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('reason')->nullable();
             $table->string('createdByUserEmail')->nullable();
 
-            $table->unique( array('sku', 'package') );
+            $table->unique(['sku', 'package']);
         });
     }
 

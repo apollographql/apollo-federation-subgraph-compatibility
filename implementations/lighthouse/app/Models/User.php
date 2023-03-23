@@ -12,7 +12,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string|null $name
  * @property int|null $totalProductsCreated
  * @property int $yearsOfEmployment
- * @property int|null $averageProductsCreatedPerYear
  */
 class User extends Authenticatable
 {

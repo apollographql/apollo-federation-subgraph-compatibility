@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 /**
  * Primary key
@@ -16,13 +17,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $variation
  * @property array{size: string|null, weight: float|null}|null $dimensions
  * @property string|null $notes
- * @property array{array{study:array{caseNumber: string, description: string|null}, outcome: string|null}} $research
  *
  * Foreign keys
  * @property string|null $createdByUserEmail
  *
  * Relations
  * @property-read User|null $createdBy
+ * @property-read EloquentCollection<int, ProductResearch> $research
  */
 class Product extends Model
 {

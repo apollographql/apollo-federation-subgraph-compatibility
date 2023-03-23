@@ -1,5 +1,5 @@
 type User @extends @key(fields: "email") {
-    averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
+    averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment") @method
     email: ID! @external
     name: String
     totalProductsCreated: Int @external
