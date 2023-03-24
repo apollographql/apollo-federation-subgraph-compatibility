@@ -1,7 +1,9 @@
 from flask import Flask
+from graphene_federation.tag import tag
 from graphql_server.flask import GraphQLView
 from graphene import ObjectType, Field, Float, ID, Int, String, List, NonNull
-from graphene_federation import build_schema, extend, external, key, provides, requires
+from graphene_federation import build_schema, extend, external, key, provides, requires, inaccessible, override, \
+    shareable
 
 # -------- data --------
 
@@ -72,7 +74,7 @@ products = [
 class User(ObjectType):
     average_products_created_per_year = requires(field=Int(), fields=["total_products_created", "years_of_employment"])
     email = external(ID(required=True))
-    name = String()
+    name = override(String(), _from="users")
     total_products_created = external(Int())
     years_of_employment = external(Int(required=True))
 
@@ -102,10 +104,11 @@ class ProductVariation(ObjectType):
     id = ID(required=True)
 
 
+@shareable
 class ProductDimension(ObjectType):
     size = String()
     weight = Float()
-    unit = String()
+    unit = inaccessible(String())
 
 
 class CaseStudy(ObjectType):
@@ -113,15 +116,18 @@ class CaseStudy(ObjectType):
     description = String()
 
 
-# @key(fields="study { caseNumber }")
+@key(fields="study { caseNumber }")
 class ProductResearch(ObjectType):
     study = Field(CaseStudy, required=True)
     outcome = String()
 
+    def __resolve_reference(self, info, **kwargs):
+        return ProductResearch(**get_product_research_by_study(self.study))
+
 
 @key(fields='id')
-# @key(fields='sku package')
-# @key(fields='sku variation { id }')
+@key(fields='sku package')
+@key(fields='sku variation { id }')
 @provides
 class Product(ObjectType):
     id = ID(required=True)
@@ -130,7 +136,7 @@ class Product(ObjectType):
     variation = Field(ProductVariation)
     dimensions = Field(ProductDimension)
     created_by = provides(Field(User), fields='total_products_created')
-    notes = String()
+    notes = tag(String(), name="internal")
     research = List(NonNull(ProductResearch), required=True)
 
     def __resolve_reference(self, info, **kwargs):
@@ -142,18 +148,21 @@ class Product(ObjectType):
             return Product(**get_product_by_sku_and_variation(self.sku, self.variation))
 
 
-# @key(fields="sku package")
+@key(fields="sku package")
 class DeprecatedProduct(ObjectType):
     sku = String(required=True)
     package = String(required=True)
     reason = String()
-    createdBy = Field(User)
+    created_by = Field(User)
+
+    def __resolve_reference(self, info, **kwargs):
+        return DeprecatedProduct(**get_deprecated_product_by_sku_and_package(self.sku, self.package))
 
 
 class Query(ObjectType):
     product = Field(Product, id=ID(required=True))
     deprecated_product = Field(DeprecatedProduct, sku=String(required=True), package=String(required=True),
-                              deprecation_reason="Use product query instead")
+                               deprecation_reason="Use product query instead")
 
     def resolve_product(self, info, id):
         return get_product_by_id(id)
@@ -185,6 +194,11 @@ def get_deprecated_product_by_sku_and_package(sku, package):
         return deprecated_product
 
     return None
+
+
+def get_product_research_by_study(study):
+    return next((product for product in products_research if product['study']['case_number']
+                 == study['caseNumber']), None)
 
 
 # -------- server --------
