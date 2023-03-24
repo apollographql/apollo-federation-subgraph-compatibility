@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * Attributes
  * @property string|null $name
+ *
+ * External
  * @property int|null $totalProductsCreated
  * @property int $yearsOfEmployment
  */
@@ -21,10 +23,10 @@ final class User extends Authenticatable
 
     protected $primaryKey = 'email';
 
-    public function averageProductsCreatedPerYear() {
-        if ($this->totalProductsCreated !== null && $this->yearsOfEmployment !== null) {
-            return round($this->totalProductsCreated / $this->yearsOfEmployment);
-        }
-        return null;
+    public function averageProductsCreatedPerYear(): float|null
+    {
+        return isset($this->totalProductsCreated) && isset($this->yearsOfEmployment)
+            ? round($this->totalProductsCreated / $this->yearsOfEmployment)
+            : null;
     }
 }

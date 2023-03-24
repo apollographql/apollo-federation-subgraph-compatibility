@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->string('email')->unique();
             $table->string('name')->nullable();
-            $table->unsignedInteger('totalProductsCreated')->nullable();
         });
     }
 
