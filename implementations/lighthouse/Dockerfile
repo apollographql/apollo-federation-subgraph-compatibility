@@ -9,7 +9,7 @@ RUN apt-get update \
 WORKDIR /workdir
 COPY . /workdir
 
-RUN composer install --no-progress \
+RUN composer update --no-progress \
     && touch database/database.sqlite \
     && php artisan migrate:fresh --seed
 
