@@ -2,7 +2,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^10",
-        "nuwave/lighthouse": "dev-hydrate-external-fields"
+        "nuwave/lighthouse": "^6.3.1"
     },
     "autoload": {
         "psr-4": {

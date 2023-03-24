@@ -10,9 +10,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * Attributes
  * @property string|null $name
+ * @property int|null $totalProductsCreated
  *
  * External
- * @property int|null $totalProductsCreated
  * @property int $yearsOfEmployment
  */
 final class User extends Authenticatable

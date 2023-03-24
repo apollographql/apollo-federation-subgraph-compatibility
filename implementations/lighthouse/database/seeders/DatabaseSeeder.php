@@ -16,6 +16,7 @@ final class DatabaseSeeder extends Seeder
         $user = new User();
         $user->email = 'support@apollographql.com';
         $user->name = 'Jane Smith';
+        $user->totalProductsCreated = 420;
         $user->save();
 
         $caseStudy1 = new CaseStudy();
