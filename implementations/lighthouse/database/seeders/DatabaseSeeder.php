@@ -43,17 +43,23 @@ final class DatabaseSeeder extends Seeder
         $deprecatedProduct->createdBy()->associate($user);
         $deprecatedProduct->save();
 
-        $product1 = new Product();
-        $product1->id = 'apollo-federation';
-        $product1->sku = 'federation';
-        $product1->package = '@apollo/federation';
-        $product1->variation = 'OSS';
-        $product1->dimensions = [
+        $productFederation = new Product();
+        $productFederation->id = 'apollo-federation';
+        $productFederation->sku = 'federation';
+        $productFederation->package = '@apollo/federation';
+        $productFederation->variation = 'OSS';
+        $productFederation->dimensions = [
             'size' => 'small',
             'weight' => 1,
             'unit' => 'kg'
         ];
-        $product1->createdBy()->associate($user);
-        $product1->save();
+        $productFederation->createdBy()->associate($user);
+        $productFederation->save();
+
+        $productStudio = new Product();
+        $productStudio->id = 'apollo-studio';
+        $productStudio->sku = 'studio';
+        $productStudio->createdBy()->associate($user);
+        $productStudio->save();
     }
 }
