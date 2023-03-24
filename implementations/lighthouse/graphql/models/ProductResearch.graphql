@@ -2,8 +2,3 @@ type ProductResearch @key(fields: "study { caseNumber }") {
   study: CaseStudy!
   outcome: String
 }
-
-type CaseStudy {
-  caseNumber: ID!
-  description: String
-}
