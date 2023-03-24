@@ -1,0 +1,15 @@
+{
+  "fullName": "Absinthe",
+  "language": "Elixir",
+  "documentation": "https://hexdocs.pm/absinthe_federation/readme.html",
+  "type": "Code first",
+  "repository": {
+    "name": "absinthe",
+    "owner": "absinthe-graphql",
+    "link": "https://github.com/absinthe-graphql/absinthe"
+  },
+  "federationlibrary": {
+    "name": "Absinthe.Federation",
+    "link": "https://github.com/DivvyPayHQ/absinthe_federation"
+  }
+}

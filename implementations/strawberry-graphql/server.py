@@ -1,6 +1,7 @@
 from typing import Optional, List
 
 import strawberry
+from strawberry.schema_directive import Location
 
 # ------- data -------
 
@@ -16,7 +17,6 @@ user = {
     "total_products_created": 1337,
     "years_of_employment": 10,
 }
-
 
 deprecated_product = {
     "sku": "apollo-federation-v1",
@@ -42,7 +42,6 @@ products_research = [
     },
 ]
 
-
 products = [
     {
         "id": "apollo-federation",
@@ -65,6 +64,11 @@ products = [
         "notes": None,
     },
 ]
+
+inventory = {
+    "id": "apollo-oss",
+    "deprecatedProducts": [deprecated_product]
+}
 
 
 # ------- resolvers -------
@@ -106,6 +110,11 @@ def get_product_by_sku_and_variation(sku: str, variation: dict) -> Optional["Pro
 
 
 # ------- types -------
+@strawberry.federation.schema_directive(
+    locations=[Location.OBJECT], name="custom", compose=True
+)
+class Custom:
+    pass
 
 
 @strawberry.federation.type(extend=True, keys=["email"])
@@ -216,7 +225,7 @@ class DeprecatedProduct:
         return None
 
 
-@strawberry.federation.type(keys=["id", "sku package", "sku variation { id }"])
+@strawberry.federation.type(keys=["id", "sku package", "sku variation { id }"], directives=[Custom()])
 class Product:
     id: strawberry.ID
     sku: Optional[str]
@@ -275,6 +284,22 @@ class Product:
         return None
 
 
+@strawberry.federation.interface_object(keys=["id"])
+class Inventory:
+    id: strawberry.ID
+    deprecated_products: List[DeprecatedProduct]
+
+    @classmethod
+    def resolve_reference(cls, **data) -> Optional["Inventory"]:
+        if inventory["id"] == data.get("id"):
+            return Inventory(
+                id=inventory["id"],
+                deprecated_products=[DeprecatedProduct(**deprecated_product)]
+            )
+
+        return None
+
+
 @strawberry.federation.type(extend=True)
 class Query:
     product: Optional[Product] = strawberry.field(resolver=get_product_by_id)
@@ -284,4 +309,4 @@ class Query:
         return None
 
 
-schema = strawberry.federation.Schema(query=Query, enable_federation_2=True)
+schema = strawberry.federation.Schema(query=Query, enable_federation_2=True, types=[Inventory])

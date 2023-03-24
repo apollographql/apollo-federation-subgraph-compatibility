@@ -51,7 +51,7 @@ class DeprecatedProductResolver : FederatedTypeResolver<DeprecatedProduct> {
     override suspend fun resolve(
         environment: DataFetchingEnvironment,
         representations: List<Map<String, Any>>
-    ): List<DeprecatedProduct?> = representations.map {
-        DeprecatedProduct.byReference(it)
+    ): List<DeprecatedProduct?> {
+        return representations.map { DeprecatedProduct.byReference(it) }
     }
 }

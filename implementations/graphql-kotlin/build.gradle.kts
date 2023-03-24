@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.7.2"
-	kotlin("jvm") version "1.7.10"
-	kotlin("plugin.spring") version "1.7.10"
+	id("org.springframework.boot") version "2.7.5"
+	kotlin("jvm") version "1.7.21"
+	kotlin("plugin.spring") version "1.7.21"
 }
 
 group = "com.example"
@@ -17,7 +17,7 @@ repositories {
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("com.expediagroup:graphql-kotlin-spring-server:6.1.0")
+	implementation("com.expediagroup:graphql-kotlin-spring-server:6.3.6")
 }
 
 tasks.withType<KotlinCompile> {

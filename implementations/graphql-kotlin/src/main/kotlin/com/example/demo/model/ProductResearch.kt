@@ -30,13 +30,15 @@ class ProductResearchResolver : FederatedTypeResolver<ProductResearch> {
     override suspend fun resolve(
         environment: DataFetchingEnvironment,
         representations: List<Map<String, Any>>
-    ): List<ProductResearch?> = representations.map { ref ->
-        val study = ref["study"]
-        val caseNumber = if (study is Map<*, *>) {
-            study["caseNumber"].toString()
-        } else {
-            null
+    ): List<ProductResearch?> {
+        return representations.map {
+            val study = it["study"]
+            val caseNumber = if (study is Map<*, *>) {
+                study["caseNumber"].toString()
+            } else {
+                null
+            }
+            RESEARCH_LIST.find { research -> research.study.caseNumber.value == caseNumber }
         }
-        RESEARCH_LIST.find { research -> research.study.caseNumber.value == caseNumber }
     }
 }

@@ -1,51 +1,43 @@
 {
-  "name": "apollo-federation-implementations",
+  "name": "@apollo/federation-subgraph-compatibility-monorepo",
+  "description": "Monorepo for Apollo Federation Subgraph Compatibility Testing packages",
+  "bugs": {
+    "url": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues"
+  },
+  "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility#readme",
+  "author": "Apollo <packages@apollographql.com>",
+  "license": "MIT",
   "workspaces": [
-    "subgraphs/inventory",
-    "subgraphs/users"
+    "packages/*",
+    "packages/subgraphs/*"
   ],
   "scripts": {
-    "build": "concurrently \"npm:build:*\"",
-    "build:compile": "tsc",
-    "build:supergraph": "APOLLO_ELV2_LICENSE=accept npx rover supergraph compose --config supergraph.yaml > supergraph.graphql",
-    "build-local": "concurrently \"npm:build-local:*\"",
-    "build-local:compile": "tsc",
-    "build-local:supergraph": "APOLLO_ELV2_LICENSE=accept npx rover supergraph compose --config supergraph-local.yaml > supergraph-local.graphql",
-    "docker": "concurrently \"npm:docker:*\"",
-    "docker:inventory": "docker build --file=subgraphs/inventory/Dockerfile --tag=apollo-federation-implementations/inventory subgraphs/inventory",
-    "docker:users": "docker build --file=subgraphs/users/Dockerfile --tag=apollo-federation-implementations/users subgraphs/users",
-    "setup": "npm run build && npm run docker",
-    "setup-local": "npm run setup-local:router && npm run build-local",
-    "setup-local:router": "curl -sSL https://router.apollo.dev/download/nix/latest | sh",
-    "start": "concurrently \"npm:start:*\"",
-    "start:router": "./router -c router.yaml -s supergraph-local.graphql",
-    "start:users": "npm run start --prefix subgraphs/users",
-    "start:inventory": "npm run start --prefix subgraphs/inventory",
-    "test": "node dist/index.js",
-    "test:jest": "jest src"
+    "build": "tsc --build tsconfig.json && npm run package",
+    "clean": "rm -rf packages/*/dist packages/*/tsconfig.tsbuildinfo",
+    "compatibility:report": "node packages/script/dist/generateReportCommand.js",
+    "compatibility:test": "node packages/script/dist/compatibilityTestCommand.js",
+    "lint": "eslint .",
+    "package": "cp implementations/_template_library_/products.graphql packages/compatibility && concurrently \"npm:package-subgraphs:*\"",
+    "package-subgraphs:inventory": "ncc build packages/subgraphs/inventory/index.js --source-map --out packages/compatibility/dist/subgraphs/inventory && cp packages/subgraphs/inventory/Dockerfile packages/subgraphs/inventory/inventory.graphql packages/compatibility/dist/subgraphs/inventory",
+    "package-subgraphs:users": "ncc build packages/subgraphs/users/index.js --source-map --out packages/compatibility/dist/subgraphs/users && cp packages/subgraphs/users/Dockerfile packages/subgraphs/users/users.graphql packages/compatibility/dist/subgraphs/users",
+    "prettier-check": "prettier --check .",
+    "prettier-fix": "prettier --write .",
+    "postinstall": "npm run build"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "debug": "^4.3.4",
-    "execa": "^5.1.1",
-    "graphql": "^16.6.0",
-    "jest": "^28.1.0",
-    "js-yaml": "^4.1.0",
-    "lodash": "^4.17.21",
-    "make-fetch-happen": "^10.1.5",
-    "ts-jest": "^28.0.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@apollo/rover": "^0.6.0",
-    "@types/debug": "^4.1.7",
-    "@types/jest": "^27.5.1",
-    "@types/js-yaml": "^4.0.5",
-    "@types/lodash": "^4.14.182",
-    "@types/make-fetch-happen": "^9.0.2",
-    "@types/node": "^17.0.35",
-    "@types/yargs": "^17.0.10",
-    "concurrently": "^7.2.1",
-    "typescript": "^4.7.2"
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "@vercel/ncc": "0.36.1",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.34.0",
+    "eslint-plugin-import": "^2.27.5",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   }
 }

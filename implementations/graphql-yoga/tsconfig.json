@@ -10,7 +10,8 @@
     "declaration": true,
     "declarationMap": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "allowJs": true
   },
   "include": [
     "./src/**/*"

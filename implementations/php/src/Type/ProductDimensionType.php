@@ -15,6 +15,7 @@ class ProductDimensionType extends ObjectType {
             'fields' => [
                 'size'   => [ 'type' => Types::string() ],
                 'weight' => [ 'type' => Types::float() ],
+                'unit' => [ 'type' => Types::string() ]
             ]
         ]);
     }

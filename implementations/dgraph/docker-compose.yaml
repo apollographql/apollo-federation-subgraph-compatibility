@@ -1,0 +1,62 @@
+# all path must be relative to the root of the project
+services:
+  dgraph:
+    image: dgraph/standalone:v21.03.2
+    environment: 
+      DGRAPH_ALPHA_GRAPHQL: 'lambda-url=http://dgraph_lambda:8686/graphql-worker'
+    ports:
+      - "8080:8080"
+      - "9080:9080"
+      - "8000:8000"
+    volumes:
+      - dgraph:/dgraph
+    healthcheck:
+        test: ["CMD", "curl", "-X", "GET", "http://dgraph:8080/admin?query=\\{health\\{status\\}\\}"]
+        interval: 15s
+        timeout: 10s
+        retries: 20
+
+  dgraph_lambda:
+    image: dgraph/dgraph-lambda:1.4.0
+    depends_on:
+      - dgraph
+    ports:
+      - "8686:8686"
+    environment:
+      DGRAPH_URL: http://dgraph:8080
+      MAX_MEMORY_LIMIT: 192M
+    volumes:
+      - ./implementations/dgraph/resolvers.js:/app/script/script.js:ro
+
+  dgraph_data:
+    image: curlimages/curl:7.85.0
+    depends_on:
+      dgraph:
+        condition: service_healthy
+    restart: "no"
+    working_dir: /app
+    volumes:
+      - ./implementations/dgraph/products.graphql:/app/products.graphql:ro
+      - ./implementations/dgraph/populateData.json:/app/populateData.json:ro
+    command:
+      - /bin/sh
+      - -c
+      - |
+        curl -v -X POST http://dgraph:8080/admin/schema --data-binary '@products.graphql'
+        curl -v -X POST -H 'Content-Type:application/json' http://dgraph:8080/graphql --data-binary '@populateData.json'
+  
+  products:
+    image: nginx:alpine
+    ports:
+      - 4001:4001
+    depends_on:
+      dgraph:
+        condition: service_healthy
+    environment:
+      DGRAPH_URL: http://dgraph:8080/graphql
+    volumes:
+      - ./implementations/dgraph/proxy.conf.template:/etc/nginx/conf.d/proxy.conf.template
+    command: /bin/sh -c "envsubst < /etc/nginx/conf.d/proxy.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+volumes:
+  dgraph: {}

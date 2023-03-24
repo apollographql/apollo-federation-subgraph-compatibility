@@ -1,18 +1,70 @@
 import { AppSyncResolverEvent } from 'aws-lambda';
 
-const products = [
+const totalProductsCreated = 1337;
+const yearsOfEmployment = 10;
+
+const dimension = {
+  size: "small",
+  weight: 1,
+  unit: "kg"
+};
+
+const user = {
+  averageProductsCreatedPerYear: totalProductsCreated ?? Math.round(totalProductsCreated / yearsOfEmployment),
+  email: "support@apollographql.com",
+  name: "Jane Smith",
+  totalProductsCreated: 1337,
+  yearsOfEmployment: 10
+ };
+
+ const deprecatedProduct = {
+  sku: "apollo-federation-v1",
+  package: "@apollo/federation-v1",
+  reason: "Migrate to Federation V2",
+  createdBy: user
+};
+
+const productsResearch = [
   {
-    id: 'apollo-federation',
-    sku: 'federation',
-    package: '@apollo/federation',
-    variation: { id: 'OSS' },
-    dimensions: { size: 'small', weight: 1, unit: "kg" },
+    study: {
+      caseNumber: "1234",
+      description: "Federation Study"
+    },
+    outcome: null
   },
   {
-    id: 'apollo-studio',
-    sku: 'studio',
-    package: '',
-    variation: { id: 'platform' },
+    study: {
+      caseNumber: "1235",
+      description: "Studio Study"
+    },
+    outcome: null
+  },
+];
+
+const products = [
+  {
+    id: "apollo-federation",
+    sku: "federation",
+    package: "@apollo/federation",
+    variation: {
+      id: "OSS"
+    },
+    dimensions: dimension,
+    research: [productsResearch[0]],
+    createdBy: user,
+    notes: null
+  },
+  {
+    id: "apollo-studio",
+    sku: "studio",
+    package: "",
+    variation: {
+      id: "platform"
+    },
+    dimensions: dimension,
+    research: [productsResearch[1]],
+    createdBy: user,
+    notes: null
   },
 ];
 
@@ -52,26 +104,62 @@ export const handler = async (event: AppSyncResolverEvent<any>) => {
           const { representations } = event.arguments;
           const entities: any[] = [];
 
+          // "representations": [
+          //       {
+          //         "__typename": "User",
+          //         "email": "support@apollographql.com"
+          //     }
+          // ]
           for (const representation of representations as [any]) {
-            const filteredProduct = products.find((p: any) => {
-              for (const key of Object.keys(representation)) {
-                if (typeof representation[key] != 'object' && key != '__typename' && p[key] != representation[key]) {
-                  return false;
-                } else if (typeof representation[key] == 'object') {
-                  for (const subkey of Object.keys(representation[key])) {
-                    if (
-                      typeof representation[key][subkey] != 'object' &&
-                      p[key][subkey] != representation[key][subkey]
-                    ) {
+            switch (representation["__typename"]) {
+              case 'User':
+                entities.push({...user, __typename: 'User'});
+                break;
+              case 'DeprecatedProduct':
+                entities.push({...deprecatedProduct, __typename: 'DeprecatedProduct'});
+                break;
+              case 'Product':
+                const filteredProduct = products.find((p: any) => {
+                  for (const key of Object.keys(representation)) {
+                    if (typeof representation[key] != 'object' && key != '__typename' && p[key] != representation[key]) {
                       return false;
+                    } else if (typeof representation[key] == 'object') {
+                      for (const subkey of Object.keys(representation[key])) {
+                        if (
+                          typeof representation[key][subkey] != 'object' &&
+                          p[key][subkey] != representation[key][subkey]
+                        ) {
+                          return false;
+                        }
+                      }
                     }
                   }
-                }
-              }
-              return true;
-            });
-
-            entities.push({ ...filteredProduct, __typename: 'Product' });
+                  return true;
+                });                
+                entities.push({ ...filteredProduct, __typename: 'Product' });
+                break;
+              case 'ProductResearch':
+                  const filteredProductResearch = productsResearch.find((p: any) => {
+                    for (const key of Object.keys(representation)) {
+                      if (typeof representation[key] != 'object' && key != '__typename' && p[key] != representation[key]) {
+                        return false;
+                      } else if (typeof representation[key] == 'object') {
+                        for (const subkey of Object.keys(representation[key])) {
+                          if (
+                            typeof representation[key][subkey] != 'object' &&
+                            p[key][subkey] != representation[key][subkey]
+                          ) {
+                            return false;
+                          }
+                        }
+                      }
+                    }
+                    return true;
+                  });
+      
+                entities.push({ ...filteredProductResearch, __typename: 'ProductResearch' });
+                break;
+            }
           }
           result = entities;
           break;

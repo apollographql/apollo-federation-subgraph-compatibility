@@ -1,0 +1,44 @@
+{
+  "name": "@apollo/federation-subgraph-compatibility-tests",
+  "version": "1.2.1",
+  "description": "Apollo Federation Subgraph Compatibility tests",
+  "author": "Apollo <packages@apollographql.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apollographql/apollo-federation-subgraph-compatibility.git",
+    "directory": "packages/compatibility/"
+  },
+  "keywords": [
+    "apollo",
+    "federation",
+    "compatibility"
+  ],
+  "bugs": {
+    "url": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues"
+  },
+  "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/packages/compatibility/README.md",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@apollo/rover": "^0.12.2",
+    "debug": "^4.3.4",
+    "execa": "^5.1.1",
+    "graphql": "^16.6.0",
+    "jest": "^29.4.2",
+    "make-fetch-happen": "^11.0.3",
+    "pm2": "^5.2.2",
+    "ts-jest": "^29.0.5"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/jest": "^29.4.0",
+    "@types/make-fetch-happen": "^10.0.1",
+    "@types/node": "^18.13.0"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  }
+}

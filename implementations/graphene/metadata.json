@@ -1,0 +1,19 @@
+{
+  "fullName": "Graphene",
+  "language": "Python",
+  "documentation": "https://graphene-python.org/",
+  "type": "Code first",
+  "repository": {
+    "name": "graphene",
+    "owner": "graphql-python",
+    "link": "https://github.com/graphql-python/graphene"
+  },
+  "coreLibrary": {
+    "name": "GraphQL-core 3",
+    "link": "https://github.com/graphql-python/graphql-core"
+  },
+  "federationlibrary": {
+    "name": "graphene-federation",
+    "link": "https: //github.com/graphql-python/graphene-federation"
+  }
+}

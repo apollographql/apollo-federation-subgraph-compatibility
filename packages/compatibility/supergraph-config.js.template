@@ -1,0 +1,14 @@
+// PM2 config
+module.exports = {
+    apps : [{
+      name   : "subgraph inventory",
+      script : "index.js",
+      cwd: "${DIST_DIR}/subgraphs/inventory",
+      wait_ready: true
+    },{
+      name   : "subgraph users",
+      script : "index.js",
+      cwd: "${DIST_DIR}/subgraphs/users",
+      wait_ready: true
+    }]
+  }

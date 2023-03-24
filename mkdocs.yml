@@ -1,0 +1,9 @@
+site_name: Federation-compatible subgraph implementations
+# repo_name: apollographql/apollo-federation-subgraph-compatibility
+# repo_url: https://github.com/apollographql/apollo-federation-subgraph-compatibility
+theme:
+  name: material
+  favicon: assets/favicon.svg
+  logo: assets/logo.svg
+  palette:
+    primary: white

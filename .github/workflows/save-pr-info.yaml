@@ -1,0 +1,23 @@
+name: Save PR info
+
+on:
+  workflow_call:
+    inputs:
+      pr_number:
+        required: true
+        type: string
+
+jobs:
+  save-pr-info:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save PR number
+        run: |
+          mkdir -p ./pr
+          echo ${{ inputs.pr_number }} > ./pr/pr_info
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pr
+          path: pr/
+          retention-days: 1

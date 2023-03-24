@@ -1,5 +1,15 @@
 
-schema @extends @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@provides", "@external", "@tag", "@extends", "@override"]) {query: Query}
+schema @extends @link(url: "https://specs.apollo.dev/federation/v2.0", import: [
+  "@extends",
+  "@external",
+  "@key",
+  "@inaccessible",
+  "@override",
+  "@provides",
+  "@requires",
+  "@shareable",
+  "@tag"
+]) {query: Query}
 
 type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
   id: ID!
@@ -9,6 +19,28 @@ type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku va
   dimensions: ProductDimension
   createdBy: User @provides(fields: "totalProductsCreated")
   notes: String @tag(name: "internal")
+  research: [ProductResearch!]!
+}
+
+type DeprecatedProduct @key(fields: "sku package") {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
+}
+
+type ProductVariation {
+  id: ID!
+}
+
+type ProductResearch @key(fields: "study { caseNumber }") {
+  study: CaseStudy!
+  outcome: String
+}
+
+type CaseStudy {
+  caseNumber: ID!
+  description: String
 }
 
 type ProductDimension @shareable {
@@ -21,26 +53,31 @@ type _Service {
   sdl: String
 }
 
-type ProductVariation {
-  id: ID!
-}
 input ProductVariationInput {
   id: ID!
+}
+
+input CaseStudyInput {
+  caseNumber: ID
+    description: String
 }
 
 type Query @extends {
   _service: _Service!
   _entities(representations: [_Any!]!): [_Entity]!
   product(id: ID!): Product
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
 }
 
 type User @key(fields: "email") @extends {
+  averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
   email: ID! @external
   name: String @override(from: "users")
   totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
 }
 
-union _Entity = User | Product
+union _Entity = User | Product | ProductResearch | ProductVariation | ProductDimension | DeprecatedProduct
 
 input _Any {
     __typename: String!
@@ -48,4 +85,8 @@ input _Any {
     sku: String
     package: String
     variation: ProductVariationInput
+    email: String
+    study: CaseStudyInput
+    totalProductsCreated: Int
+    yearsOfEmployment: Int
 }

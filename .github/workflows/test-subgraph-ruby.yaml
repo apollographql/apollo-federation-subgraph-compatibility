@@ -12,3 +12,8 @@ jobs:
     uses: ./.github/workflows/test-subgraph.yaml
     with:
       library: "ruby"
+
+  pr-info:
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}

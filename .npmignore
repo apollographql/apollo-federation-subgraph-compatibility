@@ -1,0 +1,24 @@
+# exclude test subgraph implementations
+implementations
+
+# exclude test results
+tmp
+
+# exclude docs
+docs
+mkdocs.yml
+
+# config files
+.dockerignore
+.editorconfig
+.eslintrc.js
+.eslintignore
+.gitattributes
+.github
+.prettierrc
+.prettierignore
+.vscode
+*.tsbuildinfo
+tsconfig.json
+
+simple-schema.apollo-workbench

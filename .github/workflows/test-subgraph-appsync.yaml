@@ -19,19 +19,28 @@ jobs:
       - name: Setup Environment
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
-      - name: Install dependencies
+      - name: Install dependencies and build
         run: npm install
-      - name: Compile supergraph
-        run: npm run setup
       - name: Compatibility test
-        run: npm run test appsync
+        run: npm run compatibility:test -- docker --compose implementations/appsync/docker-compose.yaml --schema implementations/appsync/cdk/products-service/src/products-service.graphql
         env:
-          DEBUG: docker,test
-          API_KEY_APPSYNC: ${{ secrets.API_KEY_APPSYNC }}
-          URL_APPSYNC: ${{ secrets.URL_APPSYNC }}
+          API_KEY: ${{ secrets.API_KEY_APPSYNC }}
+          TEST_URL: ${{ secrets.URL_APPSYNC }}
       - name: Generate Results Summary
         run: |
-          cat results.md
           cat results.md >> $GITHUB_STEP_SUMMARY
+          mv results.md results-appsync.md
+          echo "RESULTS_FILE=results-appsync.md" >> $GITHUB_ENV
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RESULTS_FILE }}
+          path: ./${{ env.RESULTS_FILE }}
+          retention-days: 1
+
+  pr-info:
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}

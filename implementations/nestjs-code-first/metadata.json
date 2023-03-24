@@ -1,0 +1,20 @@
+{
+  "fullName": "NestJS (code first)",
+  "description": "A progressive Node.js framework for building efficient, reliable and scalable server-side applications.",
+  "language": "JavaScript / TypeScript",
+  "documentation": "https://nestjs.com",
+  "type": "Code first",
+  "repository": {
+    "name": "graphql",
+    "owner": "nestjs",
+    "link": "https://github.com/nestjs/graphql"
+  },
+  "coreLibrary": {
+    "name": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  },
+  "federationlibrary": {
+    "name": "Apollo Subgraph",
+    "link": "https://www.npmjs.com/package/@apollo/subgraph"
+  }
+}

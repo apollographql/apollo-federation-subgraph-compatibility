@@ -1,0 +1,15 @@
+{
+  "fullName": "GraphQL Kotlin",
+  "language": "Java / Kotlin",
+  "documentation": "https://github.com/ExpediaGroup/graphql-kotlin",
+  "type": "Code first",
+  "repository": {
+    "name": "graphql-kotlin",
+    "owner": "ExpediaGroup",
+    "link": "https://github.com/ExpediaGroup/graphql-kotlin"
+  },
+  "coreLibrary": {
+    "name": "GraphQL Java",
+    "link": "https://github.com/graphql-java/graphql-java"
+  }
+}

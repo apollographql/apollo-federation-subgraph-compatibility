@@ -1,0 +1,26 @@
+{
+  "name": "graphql-mesh-federation-service",
+  "version": "1.0.0",
+  "description": "Federation Service implemented with GraphQL Mesh",
+  "scripts": {
+    "prebuild": "graphql-codegen",
+    "build": "npx tsc",
+    "start": "mesh dev"
+  },
+  "author": "Denis Badurina <badurinadenis@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-mesh/cli": "^0.82.24",
+    "@graphql-mesh/graphql": "^0.34.7",
+    "@graphql-mesh/transform-federation": "^0.11.7",
+    "@graphql-tools/schema": "^9.0.16",
+    "@graphql-yoga/plugin-apollo-inline-trace": "^1.7.0",
+    "graphql": "^16.3.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^3.2.1",
+    "@graphql-codegen/typescript": "^3.0.1",
+    "@graphql-codegen/typescript-resolvers": "^3.1.0",
+    "@types/node": "^18.14.2"
+  }
+}

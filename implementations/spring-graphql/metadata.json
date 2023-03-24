@@ -1,0 +1,19 @@
+{
+  "fullName": "Spring GraphQL",
+  "language": "Java / Kotlin",
+  "documentation": "https://docs.spring.io/spring-graphql/docs/current/reference/html/",
+  "type": "Schema first",
+  "repository": {
+    "name": "spring-graphql",
+    "owner": "spring-projects",
+    "link": "https://github.com/spring-projects/spring-graphql"
+  },
+  "coreLibrary": {
+    "name": "GraphQL Java",
+    "link": "https://github.com/graphql-java/graphql-java"
+  },
+  "federationlibrary": {
+    "name": "Federation JVM",
+    "link": "https://github.com/apollographql/federation-jvm"
+  }
+}

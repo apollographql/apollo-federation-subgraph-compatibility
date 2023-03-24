@@ -1,0 +1,19 @@
+name: NestJS (SDL First) Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/nestjs/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "nestjs"
+
+  pr-info:
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}
