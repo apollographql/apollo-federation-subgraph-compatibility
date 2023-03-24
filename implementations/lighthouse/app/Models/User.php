@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property int|null $totalProductsCreated
  * @property int $yearsOfEmployment
  */
-class User extends Authenticatable
+final class User extends Authenticatable
 {
     public $timestamps = false;
 

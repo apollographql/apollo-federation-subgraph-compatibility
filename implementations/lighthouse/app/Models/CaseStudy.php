@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * Attributes
  * @property string|null $description
  */
-class CaseStudy extends Model
+final class CaseStudy extends Model
 {
     public $timestamps = false;
 

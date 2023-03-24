@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Relations
  * @property-read CaseStudy $study
  */
-class ProductResearch extends Model
+final class ProductResearch extends Model
 {
     public $timestamps = false;
 

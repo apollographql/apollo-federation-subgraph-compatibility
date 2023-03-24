@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
  * @property-read User|null $createdBy
  * @property-read EloquentCollection<int, ProductResearch> $research
  */
-class Product extends Model
+final class Product extends Model
 {
     public $timestamps = false;
 

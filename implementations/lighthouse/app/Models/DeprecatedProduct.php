@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Relations
  * @property-read User|null $createdBy
  */
-class DeprecatedProduct extends Model
+final class DeprecatedProduct extends Model
 {
     public $timestamps = false;
 
