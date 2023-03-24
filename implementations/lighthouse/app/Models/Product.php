@@ -31,8 +31,6 @@ final class Product extends Model
 
     public $incrementing = false;
 
-    protected $primaryKey = 'id';
-
     protected $casts = [
         'dimensions' => 'array',
     ];
@@ -40,7 +38,7 @@ final class Product extends Model
     /**
      * @return array{id: string}|null
      */
-    public function variation(): ?array
+    public function variation(): array|null
     {
         return isset($this->variation)
             ? ['id' => $this->variation]

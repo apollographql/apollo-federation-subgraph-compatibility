@@ -24,7 +24,6 @@ final class DatabaseSeeder extends Seeder
         $caseStudy1->save();
 
         $research1 = new ProductResearch();
-        // $research1->studyCaseNumber = 'federation';
         $research1->study()->associate($caseStudy1);
         $research1->save();
 
@@ -34,7 +33,6 @@ final class DatabaseSeeder extends Seeder
         $caseStudy2->save();
 
         $research2 = new ProductResearch();
-        // $research2->studyCaseNumber = 'studio';
         $research2->study()->associate($caseStudy2);
         $research2->save();
 

@@ -12,9 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Attributes
  * @property string|null $outcome
  *
- * Foreign keys
- * @property string|null $studyCaseNumber
- *
  * Relations
  * @property-read CaseStudy $study
  */
