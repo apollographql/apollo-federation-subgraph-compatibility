@@ -1,5 +1,4 @@
 /vendor
-composer.lock
 
 # override defaults
 !app
