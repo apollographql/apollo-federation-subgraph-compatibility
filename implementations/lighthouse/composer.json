@@ -1,8 +1,8 @@
 {
     "require": {
-        "php": "^8",
-        "laravel/framework": "^8",
-        "nuwave/lighthouse": "^5"
+        "php": "^8.2",
+        "laravel/framework": "^10",
+        "nuwave/lighthouse": "^6.3.1"
     },
     "autoload": {
         "psr-4": {

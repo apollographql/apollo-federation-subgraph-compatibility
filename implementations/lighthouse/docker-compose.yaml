@@ -1,5 +1,7 @@
 services:
   products:
     build: implementations/lighthouse
+    volumes:
+      - ./implementations/lighthouse/storage/logs:/workdir/storage/logs
     ports:
       - 4001:4001
