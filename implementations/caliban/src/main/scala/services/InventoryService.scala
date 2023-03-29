@@ -1,4 +1,7 @@
-import zio.{ ZIO, ZLayer }
+package services
+
+import models.{DeprecatedProduct, ID, Inventory}
+import zio.{ZIO, ZLayer}
 
 trait InventoryService {
 

@@ -1,8 +1,9 @@
 import caliban.ZHttpAdapter
+import services.{InventoryService, ProductService, UserService}
 import sttp.tapir.json.zio._
 import zio.Console.printLine
-import zio.http.{ Server, ServerConfig }
-import zio.{ ZIOAppDefault, ZLayer }
+import zio.http.{Server, ServerConfig}
+import zio.{ZIOAppDefault, ZLayer}
 
 object Main extends ZIOAppDefault {
   override def run =

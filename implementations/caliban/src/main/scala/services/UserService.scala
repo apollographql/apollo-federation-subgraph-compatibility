@@ -1,3 +1,6 @@
+package services
+
+import models.{ID, User}
 import zio.{UIO, ULayer, ZIO, ZLayer}
 
 trait UserService {
