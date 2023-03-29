@@ -72,6 +72,12 @@ products_data = [
 ]
 
 
+inventory_data = {
+    "id": "apollo-oss",
+    "deprecatedProducts": [deprecated_product_data]
+}
+
+
 # ------- resolvers -------
 
 
@@ -108,6 +114,7 @@ product = FederatedObjectType("Product")
 deprecated_product = FederatedObjectType("DeprecatedProduct")
 product_research = FederatedObjectType("ProductResearch")
 user = FederatedObjectType("User")
+inventory = FederatedObjectType("Inventory")
 
 schema = load_schema_from_path("schema.graphql")
 
@@ -205,16 +212,16 @@ def resolve_product_research_reference(_, _info, representation):
 @user.reference_resolver
 def resolve_user_reference(_, _info, representation):
     if email := representation.get("email"):
-        user = {
+        resolved_user = {
             "email": email,
             "name": "Jane Smith",
             "totalProductsCreated": 1337,
         }
 
         if yearsOfEmployment := representation.get("yearsOfEmployment"):
-            user["yearsOfEmployment"] = yearsOfEmployment
+            resolved_user["yearsOfEmployment"] = yearsOfEmployment
 
-        return user
+        return resolved_user
 
     return None
 
@@ -227,8 +234,17 @@ def resolve_user_average_products_created_per_year(obj, info):
     return obj["totalProductsCreated"] / obj["yearsOfEmployment"]
 
 
+# ------- user -------
+@inventory.reference_resolver
+def resolve_inventory_reference(_, _info, representation):
+    if "apollo-oss" == representation["id"]:
+        return inventory_data
+
+    return None
+
+
 schema = make_federated_schema(
-    schema, [query, product, deprecated_product, product_research, user]
+    schema, [query, product, deprecated_product, product_research, user, inventory]
 )
 application = GraphQL(schema)
 
