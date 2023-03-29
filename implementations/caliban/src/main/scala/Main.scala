@@ -1,21 +1,20 @@
 import caliban.ZHttpAdapter
-import zhttp.http._
-import zhttp.service.Server
+import sttp.tapir.json.zio._
 import zio.Console.printLine
-import zio.ZIOAppDefault
+import zio.http.{ Server, ServerConfig }
+import zio.{ ZIOAppDefault, ZLayer }
 
 object Main extends ZIOAppDefault {
   override def run =
     (for {
       _           <- printLine("Starting server")
       interpreter <- ProductApi.interpreter
-      _           <- Server
-                       .start(
-                         4001,
-                         Http.collectHttp { case _ -> !! =>
-                           ZHttpAdapter.makeHttpService(interpreter)
-                         }
-                       )
-                       .forever
-    } yield ()).provide(ProductService.inMemory, UserService.inMemory).exitCode
+      _           <- Server.serve(ZHttpAdapter.makeHttpService(interpreter).withDefaultErrorResponse)
+    } yield ()).provide(
+      ZLayer.succeed(ServerConfig.default.port(4001)),
+      Server.live,
+      ProductService.inMemory,
+      UserService.inMemory,
+      InventoryService.inMemory
+    )
 }
