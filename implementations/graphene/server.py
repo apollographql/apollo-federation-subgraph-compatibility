@@ -74,7 +74,7 @@ products = [
 class User(ObjectType):
     average_products_created_per_year = requires(field=Int(), fields=["total_products_created", "years_of_employment"])
     email = external(ID(required=True))
-    name = override(String(), _from="users")
+    name = override(String(), from_="users")
     total_products_created = external(Int())
     years_of_employment = external(Int(required=True))
 
@@ -204,7 +204,7 @@ def get_product_research_by_study(study):
 # -------- server --------
 
 
-schema = build_schema(query=Query)
+schema = build_schema(query=Query, enable_federation_2=True)
 app = Flask(__name__)
 app.add_url_rule('/', view_func=GraphQLView.as_view(
     'graphql',

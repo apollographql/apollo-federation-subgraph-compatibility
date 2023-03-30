@@ -5,5 +5,5 @@ COPY requirements.txt ./
 RUN apk add --no-cache git \
     && pip install -r requirements.txt
 COPY server.py ./
-EXPOSE 4001
 CMD python server.py
+EXPOSE 4001
