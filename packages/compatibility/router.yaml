@@ -1,0 +1,20 @@
+cors:
+  # allow_credentials: true
+  allow_any_origin: true
+
+health_check:
+  listen: 0.0.0.0:8088
+  enabled: true
+
+homepage:
+  enabled: false
+
+sandbox:
+  enabled: true
+
+supergraph:
+  listen: 0.0.0.0:4000
+  introspection: true
+
+include_subgraph_errors:
+  all: true

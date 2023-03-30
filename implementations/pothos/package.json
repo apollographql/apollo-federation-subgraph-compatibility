@@ -4,15 +4,15 @@
     "start": "ts-node --transpile-only ./index.ts"
   },
   "dependencies": {
-    "@apollo/subgraph": "^2.0.0",
-    "@pothos/core": "^3.14.0",
-    "@pothos/plugin-directives": "^3.5.1",
-    "@pothos/plugin-federation": "^3.4.1",
-    "apollo-server": "^3.6.7",
-    "graphql": "^16.5.0",
-    "ts-node": "^10.8.2"
+    "@apollo/server": "^4.3.3",
+    "@apollo/subgraph": "^2.3.1",
+    "@pothos/core": "^3.27.0",
+    "@pothos/plugin-directives": "^3.10.0",
+    "@pothos/plugin-federation": "^3.10.0",
+    "graphql": "^16.6.0",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.4"
   }
 }

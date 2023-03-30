@@ -1,0 +1,16 @@
+{
+  "fullName": "Pothos GraphQL",
+  "description": "Plugin based GraphQL schema builder that makes building graphql schemas with TypeScript easy, fast and enjoyable.",
+  "language": "JavaScript / TypeScript",
+  "documentation": "https://pothos-graphql.dev/docs/plugins/federation",
+  "type": "Code first",
+  "repository": {
+    "name": "pothos",
+    "owner": "hayes",
+    "link": "https://github.com/hayes/pothos"
+  },
+  "coreLibrary": {
+    "name": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  }
+}

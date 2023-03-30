@@ -1,0 +1,11 @@
+{
+  "fullName": "gqlgen",
+  "language": "Go",
+  "documentation": "https://gqlgen.com",
+  "type": "SDL first",
+  "repository": {
+    "name": "gqlgen",
+    "owner": "99designs",
+    "link": "https://github.com/99designs/gqlgen"
+  }
+}

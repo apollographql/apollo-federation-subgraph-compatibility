@@ -5,11 +5,14 @@ type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku va
     variation: ProductVariation @method
     dimensions: ProductDimension
     createdBy: User @provides(fields: "totalProductsCreated")
+    notes: String
+    research: [ProductResearch!]!
 }
 
 type ProductDimension {
     size: String
     weight: Float
+    unit: String
 }
 
 type ProductVariation {

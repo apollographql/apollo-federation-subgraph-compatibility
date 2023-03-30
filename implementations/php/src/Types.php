@@ -10,10 +10,14 @@ use Exception;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\NonNull;
+use GraphQL\Type\Definition\ListOfType;
 
+use GraphQL\Compatibility\Type\CaseStudyType;
+use GraphQL\Compatibility\Type\DeprecatedProductType;
 use GraphQL\Compatibility\Type\ProductType;
 use GraphQL\Compatibility\Type\ProductDimensionType;
 use GraphQL\Compatibility\Type\ProductVariationType;
+use GraphQL\Compatibility\Type\ProductResearchType;
 use GraphQL\Compatibility\Type\UserType;
 
 use function class_exists;
@@ -26,6 +30,16 @@ use function strtolower;
 
 class Types {
     private static array $types = [];
+
+    public static function caseStudy(): callable
+    {
+        return static::get(CaseStudyType::class);
+    }
+
+    public static function deprecatedProduct(): callable
+    {
+        return static::get(DeprecatedProductType::class);
+    }
 
     public static function product(): callable
     {
@@ -42,6 +56,11 @@ class Types {
         return static::get(ProductVariationType::class);
     }
 
+    public static function productResearch(): callable
+    {
+        return static::get(ProductResearchType::class);
+    }
+
     public static function user(): callable
     {
         return static::get(UserType::class);
@@ -56,7 +75,7 @@ class Types {
     {
         return Type::id();
     }
-    
+
     public static function int(): ScalarType
     {
         return Type::int();
@@ -70,6 +89,11 @@ class Types {
     public static function nonNull($type): NonNull
     {
         return new NonNull($type);
+    }
+
+    public static function list($type): ListOfType
+    {
+        return new ListOfType($type);
     }
 
     private static function get(string $classname): Closure

@@ -2,8 +2,8 @@
     "name": "apollo/php-implementation",
     "type": "project",
     "require": {
-        "webonyx/graphql-php": "^14.9",
-        "skillshare/apollo-federation-php": "^1.5"
+        "webonyx/graphql-php": "^14.11",
+        "skillshare/apollo-federation-php": "^1.6"
     },
     "autoload": {
         "psr-4": {

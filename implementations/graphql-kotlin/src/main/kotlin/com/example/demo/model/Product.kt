@@ -1,5 +1,6 @@
 package com.example.demo.model
 
+import com.example.demo.CustomDirective
 import com.expediagroup.graphql.generator.annotations.GraphQLName
 import com.expediagroup.graphql.generator.federation.directives.FieldSet
 import com.expediagroup.graphql.generator.federation.directives.KeyDirective
@@ -46,6 +47,7 @@ type Product
   research: [ProductResearch!]!
 }
  */
+@CustomDirective
 @KeyDirective(fields = FieldSet("id"))
 @KeyDirective(fields = FieldSet("sku package"))
 @KeyDirective(fields = FieldSet("sku variation { id }"))
@@ -96,7 +98,7 @@ class ProductsResolver : FederatedTypeResolver<Product> {
     override suspend fun resolve(
         environment: DataFetchingEnvironment,
         representations: List<Map<String, Any>>
-    ): List<Product?> = representations.map {
-        Product.byReference(it)
+    ): List<Product?> {
+        return representations.map { Product.byReference(it) }
     }
 }

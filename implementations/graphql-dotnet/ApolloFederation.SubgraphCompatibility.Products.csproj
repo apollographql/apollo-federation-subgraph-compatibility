@@ -8,10 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="5.0.2" />
-    <PackageReference Include="GraphQL.Server.Transports.AspNetCore.SystemTextJson" Version="5.0.2" />
-    <!-- To include federation schema printer not printing empty query https://github.com/graphql-dotnet/graphql-dotnet/pull/2576 -->
-    <PackageReference Include="GraphQL" Version="4.6.1" />
+    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="GraphQL.SystemTextJson" Version="7.2.2" />
+    <PackageReference Include="GraphQL" Version="7.2.2" />
   </ItemGroup>
 
   <ItemGroup>

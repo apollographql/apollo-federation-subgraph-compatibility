@@ -1,0 +1,11 @@
+{
+  "fullName": "Graphiti",
+  "language": "Swift",
+  "documentation": "https://github.com/GraphQLSwift/Graphiti",
+  "type": "SDL first",
+  "repository": {
+    "name": "Graphiti",
+    "owner": "GraphQLSwift",
+    "link": "https://github.com/GraphQLSwift/Graphiti"
+  }
+}

@@ -1,0 +1,10 @@
+type DeprecatedProduct @key(fields: "sku package") {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
+}
+
+extend type Query {
+    deprecatedProduct(sku: String! @eq, package: String! @eq): DeprecatedProduct @deprecated(reason: "Use product query instead") @find
+}

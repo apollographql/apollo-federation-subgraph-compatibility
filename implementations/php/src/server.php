@@ -18,6 +18,9 @@ use GraphQL\Compatibility\Data\DataSource;
 
 use Apollo\Federation\FederatedSchema;
 
+// turn off deprecation notices
+error_reporting(E_ALL ^ E_DEPRECATED);
+
 try {
     DataSource::init();
 

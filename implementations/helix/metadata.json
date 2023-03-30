@@ -1,0 +1,20 @@
+{
+  "fullName": "GraphQL Helix",
+  "description": "A highly evolved and framework-agnostic GraphQL HTTP server.",
+  "language": "JavaScript / TypeScript",
+  "documentation": "https://graphql-helix.vercel.app",
+  "type": "SDL first",
+  "repository": {
+    "name": "graphql-helix",
+    "owner": "contra",
+    "link": "https://github.com/contra/graphql-helix"
+  },
+  "coreLibrary": {
+    "name": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  },
+  "federationlibrary": {
+    "name": "Apollo Subgraph",
+    "link": "https://www.npmjs.com/package/@apollo/subgraph"
+  }
+}

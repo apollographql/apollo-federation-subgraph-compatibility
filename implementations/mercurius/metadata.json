@@ -1,0 +1,19 @@
+{
+  "fullName": "Mercurius",
+  "language": "JavaScript / TypeScript",
+  "documentation": "https://mercurius.dev/#/",
+  "type": "SDL first",
+  "repository": {
+    "name": "mercurius",
+    "owner": "mercurius-js",
+    "link": "https://github.com/mercurius-js/mercurius"
+  },
+  "coreLibrary": {
+    "name": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  },
+  "federationlibrary": {
+    "name": "Apollo Subgraph",
+    "link": "https://www.npmjs.com/package/@apollo/subgraph"
+  }
+}

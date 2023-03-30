@@ -1,0 +1,101 @@
+name: Comment on PR
+
+on:
+  workflow_run:
+    workflows:
+      - "Test"
+      - "Absinthe Federation Test"
+      - "Apollo Server Test"
+      - "Ariadne Test"
+      - "AWS AppSync Test"
+      - "Caliban Test"
+      - "Dgraph Test"
+      - "DGS Test"
+      - "Express GraphQL Test"
+      - "Federation JVM Test"
+      - "GQLGen Test"
+      - "Graphene Test"
+      - "GraphQL for .Net Test"
+      - "GraphQL Go Test"
+      - "GraphQL Helix Test"
+      - "GraphQL Java Kickstart Test"
+      - "GraphQL Kotlin Test"
+      - "GraphQL Mesh Test"
+      - "GraphQL Yoga Test"
+      - "HotChocolate Test"
+      - "Lighthouse Test"
+      - "Mercurius Test"
+      - "NestJS (Code First) Test"
+      - "NestJS (SDL First) Test"
+      - "Apollo Federation PHP Test"
+      - "Pothos Test"
+      - "GraphQL Ruby Test"
+      - "Sangria Test"
+      - "StepZen Test"
+      - "Strawberry GraphQL Test"
+      - "Swift Graphiti Test"
+    types:
+      - completed
+
+jobs:
+  comment:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    if: >
+      (github.event.workflow_run.event == 'pull_request' || github.event.workflow_run.event == 'pull_request_target') &&
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Download Artifacts
+        uses: actions/github-script@v6
+        id: download_artifacts
+        with:
+          script: |
+            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{ github.event.workflow_run.id }},
+            });
+            var prArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "pr"
+            })[0];
+            var downloadPrArtifact = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: prArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(downloadPrArtifact.data));
+
+            var compatibilityResult = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name.startsWith("results") && artifact.name.endsWith(".md")
+            })[0];
+            var downloadResultsArtifact = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: compatibilityResult.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/results.zip', Buffer.from(downloadResultsArtifact.data));
+
+            core.setOutput('results_file_name', compatibilityResult.name);
+      - name: Unpack artifacts
+        run: |
+          unzip pr.zip
+          unzip results.zip
+      - name: Comment on PR
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            var issue_number = Number(fs.readFileSync('./pr_info'));
+            const results = fs.readFileSync('${{ steps.download_artifacts.outputs.results_file_name }}', 'utf-8');
+            const commentBody = `## Apollo Federation Subgraph Compatibility Results\n${results}\n`;
+            github.rest.issues.createComment({
+              issue_number: issue_number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });

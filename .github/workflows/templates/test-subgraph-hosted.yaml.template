@@ -1,4 +1,4 @@
-name: <Implementation> Test
+name: <Implementation Name> Test
 
 on:
   pull_request_target:
@@ -19,19 +19,31 @@ jobs:
       - name: Setup Environment
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
-      - name: Install dependencies
+      - name: Install dependencies and build
         run: npm install
-      - name: Compile supergraph
-        run: npm run setup
       - name: Compatibility test
-        run: npm run test <implementation>
+        run: npm run compatibility:test -- docker --compose implementations/<implementation>/docker-compose.yaml --schema implementations/<implementation>/products.graphql
         env:
-          DEBUG: docker,test
-          API_KEY_<IMPLEMENTATION>: ${{ secrets.API_KEY_<IMPLEMENTATION> }}
-          URL_<IMPLEMENTATION>: ${{ secrets.URL_<IMPLEMENTATION> }}
+          # secrets are optional
+          API_KEY: ${{ secrets.API_KEY_<implementation> }}
+          TEST_URL: ${{ secrets.URL_<implementation> }}
       - name: Generate Results Summary
         run: |
-          cat results.md
           cat results.md >> $GITHUB_STEP_SUMMARY
+          mv results.md results-<implementation>.md
+          echo "RESULTS_FILE=results-<implementation>.md" >> $GITHUB_ENV
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RESULTS_FILE }}
+          path: ./${{ env.RESULTS_FILE }}
+          retention-days: 1
+
+
+  pr-info:
+    # make sure to update comment.yaml workflow to trigger execution based on this workflow
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}

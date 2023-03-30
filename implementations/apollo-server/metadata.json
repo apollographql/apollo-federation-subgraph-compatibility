@@ -1,0 +1,19 @@
+{
+  "fullName": "Apollo Server",
+  "language": "JavaScript / TypeScript",
+  "documentation": "https://www.apollographql.com/docs/federation/",
+  "type": "SDL first",
+  "repository": {
+    "name": "apollo-server",
+    "owner": "apollographql",
+    "link": "https://github.com/apollographql/apollo-server"
+  },
+  "coreLibrary": {
+    "name": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  },
+  "federationlibrary": {
+    "name": "Apollo Subgraph",
+    "link": "https://www.npmjs.com/package/@apollo/subgraph"
+  }
+}

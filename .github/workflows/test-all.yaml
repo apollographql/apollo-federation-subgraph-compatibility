@@ -1,15 +1,13 @@
 name: Test
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
     paths:
-      - 'src/**'
-      - 'subgraphs/**'
-      - '*.json'
-      - '*.yaml'
-      - '*.graphql'
+      - 'packages/**'
+      - '!**/README.md'
+  workflow_call:
 
 jobs:
   build-matrix:
@@ -18,38 +16,80 @@ jobs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - name: generate matrix
         id: matrix
         run: |
-          echo "::set-output name=matrix::$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]"))]')"
+          echo "matrix=$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]") and . != "appsync" and . != "stepzen")]')" >> $GITHUB_OUTPUT
 
-  build:
-    timeout-minutes: 60
+  test:
     needs: build-matrix
     strategy:
       fail-fast: false
       matrix:
         name: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: ${{ matrix.name }}
+      format: "json"
+
+  # need secrets so appsync is configured separately
+  test-appsync:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "appsync"
+      format: "json"
+    secrets:
+      API_KEY: ${{ secrets.API_KEY_APPSYNC }}
+      TEST_URL: ${{ secrets.URL_APPSYNC }}
+
+  # need secrets so stepzen is configured separately
+  test-stepzen:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "stepzen"
+      format: "json"
+    secrets:
+      TEST_URL: ${{ secrets.URL_STEPZEN }}
+
+  report:
+    timeout-minutes: 10
+    needs: [test, test-appsync, test-stepzen]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup Environment
+        uses: actions/setup-node@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
-      - run: npm install
-      - run: npm run setup
-      - run: npm run test ${{ matrix.name }}
-        env:
-          DEBUG: docker,test
-          API_KEY_APPSYNC: ${{ secrets.API_KEY_APPSYNC }}
-          URL_APPSYNC: ${{ secrets.URL_APPSYNC }}
-          URL_STEPZEN: ${{ secrets.URL_STEPZEN }}
-      - run: cat results.md
-      - name: results summary
-        run: cat results.md >> $GITHUB_STEP_SUMMARY
+      - name: Install dependencies
+        run: npm install
+      - name: Compile script
+        run: npm run build
+      - name: Download Individual Results
+        uses: actions/download-artifact@v3
+      - name: Generate Final Results
+        run: |
+          echo "merging results"
+          jq -s . results*/results*.json > final_results.json
+
+          echo "generating markdown"
+          npm run compatibility:report -- final_results.json
+      - name: Generate Job Summary
+        run: |
+          cat results.md
+          cat results.md >> $GITHUB_STEP_SUMMARY
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: results.md
+          path: ./results.md
+          retention-days: 7
+
+  pr-info:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}

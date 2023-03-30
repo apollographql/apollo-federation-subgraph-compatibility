@@ -1,0 +1,15 @@
+{
+  "fullName": "GraphQL PHP",
+  "language": "PHP",
+  "documentation": "https://github.com/Skillshare/apollo-federation-php",
+  "type": "Code first",
+  "repository": {
+    "name": "graphql-php",
+    "owner": "webonyx",
+    "link": "https://github.com/webonyx/graphql-php"
+  },
+  "federationlibrary": {
+    "name": "Apollo Federation PHP",
+    "link": "https://github.com/Skillshare/apollo-federation-php"
+  }
+}

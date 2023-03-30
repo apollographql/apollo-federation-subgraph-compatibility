@@ -86,3 +86,23 @@ router
 
 # Python - ignore virtual env
 venv
+__pycache__
+
+# C#
+app
+
+# GraphQL Mesh
+.mesh
+
+# ignore generated files
+supergraph-compose.yaml
+supergraph-config.yaml
+supergraph-generated.yaml
+supergraph.config.js
+supergraph.graphql
+supergraph.yaml
+
+results*
+final_results.json
+
+packages/compatibility/products.graphql

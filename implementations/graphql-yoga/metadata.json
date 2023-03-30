@@ -1,0 +1,20 @@
+{
+  "fullName": "GraphQL Yoga",
+  "description": "The fully-featured GraphQL server with focus on easy setup, performance and great developer experience.",
+  "language": "JavaScript / TypeScript",
+  "documentation": "https://www.the-guild.dev/graphql/yoga-server/v3/features/apollo-federation",
+  "type": "SDL first",
+  "repository": {
+    "name": "graphql-yoga",
+    "owner": "dotansimha",
+    "link": "https://github.com/dotansimha/graphql-yoga/"
+  },
+  "coreLibrary": {
+    "name": "GraphQL.js",
+    "link": "https://www.npmjs.com/package/graphql"
+  },
+  "federationlibrary": {
+    "name": "Apollo Subgraph",
+    "link": "https://www.npmjs.com/package/@apollo/subgraph"
+  }
+}

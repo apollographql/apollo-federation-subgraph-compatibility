@@ -1,0 +1,20 @@
+{
+  "fullName": "Full library name; if left blank the implementation folder name will be used",
+  "language": "Programming language and/or runtime",
+  "documentation": "Reference link (for docs, github, etc.); e.g. https://link-to-docs.com",
+  "description": "OPTIONAL custom description, if field is omitted description will be pulled from Github repo",
+  "type": "SDL first and/or Code first",
+  "repository": {
+    "name": "<github_repo_name>",
+    "owner": "<github_org_name>",
+    "link": "https://github.com/<github_org_name>/<github_repo_name>"
+  },
+  "coreLibrary": {
+    "name": "<display name of core GraphQL library - ONLY INCLUDE THIS SECTION IF DIFFERENT THAN THE MAIN LIBRARY REPO>",
+    "link": "github repo | NPM link | other distribution link"
+  },
+  "federationlibrary": {
+    "name": "<display name of Federation library - ONLY INCLUDE THIS SECTION IF DIFFERENT THAN THE MAIN LIBRARY REPO>",
+    "link": "github repo | NPM link | other distribution link"
+  }
+}

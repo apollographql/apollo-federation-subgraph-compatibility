@@ -55,7 +55,7 @@ class UserResolver : FederatedTypeResolver<User> {
             it["yearsOfEmployment"]?.toString()?.toIntOrNull()?.let { yearsOfEmployment ->
                 user.yearsOfEmployment = yearsOfEmployment
             }
-            user;
+            user
         }
     }
 }

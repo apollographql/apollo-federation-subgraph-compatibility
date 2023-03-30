@@ -1,0 +1,15 @@
+{
+  "fullName": "Lighthouse (Laravel)",
+  "language": "PHP",
+  "documentation": "https://lighthouse-php.com/",
+  "type": "SDL first",
+  "repository": {
+    "name": "lighthouse",
+    "owner": "nuwave",
+    "link": "https://github.com/nuwave/lighthouse"
+  },
+  "coreLibrary": {
+    "name": "graphql-php",
+    "link": "https://github.com/webonyx/graphql-php"
+  }
+}

@@ -1,0 +1,71 @@
+serve:
+  port: 4001
+  browser: false
+  endpoint: /
+
+sources:
+  - name: GraphQL API
+    handler:
+      graphql:
+        source: ./src/schema.ts
+    transforms:
+      - federation:
+          types:
+            - name: Product
+              config:
+                key:
+                  - fields: "id"
+                  - fields: "sku package"
+                  - fields: "sku variation { id }"
+                resolveReference: ./src/resolve-product.ts
+                fields:
+                  - name: createdBy
+                    config:
+                      provides:
+                        fields: "totalProductsCreated"
+                  - name: notes
+                    config:
+                      tag:
+                        name: "internal"
+            - name: DeprecatedProduct
+              config:
+                key:
+                  - fields: "sku package"
+                resolveReference: ./src/resolve-deprecated-product.ts
+            - name: ProductResearch
+              config:
+                key:
+                  - fields: "study { caseNumber }"
+                resolveReference: ./src/resolve-product-research.ts
+            - name: ProductDimension
+              config:
+                shareable: true
+                fields:
+                  - name: unit
+                    config:
+                      inaccessible: true
+            - name: User
+              config:
+                key:
+                  - fields: email
+                fields:
+                  - name: averageProductsCreatedPerYear
+                    config:
+                      requires:
+                        fields: "totalProductsCreated yearsOfEmployment"
+                  - name: email
+                    config:
+                      external: true
+                  - name: name
+                    config:
+                      override:
+                        from: "users"
+                  - name: totalProductsCreated
+                    config:
+                      external: true
+                  - name: yearsOfEmployment
+                    config:
+                      external: true
+
+plugins:
+  - "@graphql-yoga/plugin-apollo-inline-trace": {}

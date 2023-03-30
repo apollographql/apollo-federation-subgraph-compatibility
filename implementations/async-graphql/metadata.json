@@ -1,0 +1,11 @@
+{
+  "fullName": "async-graphql",
+  "language": "Rust",
+  "documentation": "https://async-graphql.github.io/async-graphql/en/apollo_federation.html",
+  "type": "Code first",
+  "repository": {
+    "name": "async-graphql",
+    "owner": "async-graphql",
+    "link": "https://github.com/async-graphql/async-graphql"
+  }
+}

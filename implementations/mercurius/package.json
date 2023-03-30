@@ -3,10 +3,10 @@
   "description": "mercurius-fastify-implementations",
   "main": "index.js",
   "dependencies": {
-    "@apollo/subgraph": "^0.2.0",
-    "fastify": "^3.27.1",
-    "graphql": "^16.3.0",
+    "@apollo/subgraph": "^2.1.4",
+    "fastify": "^4.9.2",
+    "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
-    "mercurius": "^9.2.0"
+    "mercurius": "^11.5.0"
   }
 }

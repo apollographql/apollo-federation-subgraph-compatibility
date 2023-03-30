@@ -6,9 +6,18 @@ on:
       library:
         required: true
         type: string
+      format:
+        default: markdown
+        type: string
+    secrets:
+      TEST_URL:
+        required: false
+      API_KEY:
+        required: false
 
 jobs:
   compatibility:
+    name: compatibility-${{ inputs.library }}
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
@@ -17,17 +26,28 @@ jobs:
       - name: Setup Environment
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
-      - name: Install dependencies
+      - name: Install dependencies and build
         run: npm install
-      - name: Compile supergraph
-        run: npm run setup
       - name: Compatibility test
-        run: npm run test ${{ inputs.library }}
+        run: npm run compatibility:test -- docker --compose implementations/${{ inputs.library }}/docker-compose.yaml --schema implementations/_template_library_/products.graphql --format ${{ inputs.format }}
         env:
-          DEBUG: docker,test
+          API_KEY: ${{ secrets.API_KEY }}
+          TEST_URL: ${{ secrets.TEST_URL }}
       - name: Generate Results Summary
         run: |
-          cat results.md
-          cat results.md >> $GITHUB_STEP_SUMMARY
+          if [[ ${{ inputs.format }} == "json" ]]; then
+            jq -s '.[0] + .[1] + {tests: .[2]}' implementations/${{ inputs.library }}/github_metadata.json implementations/${{ inputs.library }}/metadata.json results.json > results-${{ inputs.library }}.json
+            echo "RESULTS_FILE=results-${{ inputs.library }}.json" >> $GITHUB_ENV
+          else
+            cat results.md >> $GITHUB_STEP_SUMMARY
+            mv results.md results-${{ inputs.library }}.md
+            echo "RESULTS_FILE=results-${{ inputs.library }}.md" >> $GITHUB_ENV
+          fi
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RESULTS_FILE }}
+          path: ./${{ env.RESULTS_FILE }}
+          retention-days: 1

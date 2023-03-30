@@ -1,56 +1,34 @@
 package graphql.kickstart.federation.compatibility.model;
 
-import lombok.Getter;
+import static graphql.kickstart.federation.compatibility.model.ProductResearch.FEDERATION_STUDY;
+import static graphql.kickstart.federation.compatibility.model.ProductResearch.STUDIO_STUDY;
+import static graphql.kickstart.federation.compatibility.model.User.DEFAULT_USER;
 
-@Getter
-public class Product {
+import java.util.ArrayList;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-    private final String id;
-    private final String sku;
-    private final String productPackage;
-    private final ProductVariation variation;
-    private final ProductDimension dimensions;
-    private final User createdBy;
+public record Product(String id, String sku, String pkg, ProductVariation variation, ProductDimension dimensions, User createdBy, String notes, List<ProductResearch> research) {
 
-    private final String notes;
+    public static List<Product> PRODUCTS = List.of(
+            new Product("apollo-federation", "federation", "@apollo/federation", "OSS", FEDERATION_STUDY),
+            new Product("apollo-studio", "studio", "", "platform", STUDIO_STUDY)
+    );
 
-    public Product(String id) {
-        this.id = id;
-        this.sku = "";
-        this.productPackage = "";
-        this.variation = new ProductVariation("");
-        this.dimensions = new ProductDimension("small", 1, "kg");
-        this.createdBy = new User("support@apollographql.com");
-        this.notes = "";
+    public Product(String id, String sku, String pkg, String variationId, ProductResearch research) {
+        this(id, sku, pkg, new ProductVariation(variationId), new ProductDimension("small", 1, "kg"), DEFAULT_USER, "", List.of(research));
     }
 
-    public Product(String id, String sku, String productPackage, String variationId) {
-        this.id = id;
-        this.sku = sku;
-        this.productPackage = productPackage;
-        this.variation = new ProductVariation(variationId);
-        this.dimensions = new ProductDimension("small", 1, "kg");
-        this.createdBy = new User("support@apollographql.com");
-        this.notes = "";
+    public String getPackage() {
+        return pkg;
     }
 
-    public Product(String sku, String productPackage) {
-        this.id = "";
-        this.sku = sku;
-        this.productPackage = productPackage;
-        this.variation = new ProductVariation("");
-        this.dimensions = new ProductDimension("small", 1, "kg");
-        this.createdBy = new User("support@apollographql.com");
-        this.notes = "";
-    }
-
-    public Product(String sku, ProductVariation variation) {
-        this.id = "";
-        this.productPackage = "";
-        this.sku = sku;
-        this.variation = variation;
-        this.dimensions = new ProductDimension("small", 1, "kg");
-        this.createdBy = new User("support@apollographql.com");
-        this.notes = "";
+    public static Product resolveById(@NotNull String productId) {
+        for (Product product : PRODUCTS) {
+            if (product.id().equals(productId)) {
+                return product;
+            }
+        }
+        return null;
     }
 }
