@@ -1,5 +1,5 @@
 {
   "description": "🧘 Rewrite of a fully-featured GraphQL Server with focus on easy setup, performance & great developer experience.  The core of Yoga implements WHATWG Fetch API and can run/deploy on any JS environment.",
-  "stargazerCount": 7470,
-  "lastRelease": "2023-03-14T17:06:20Z"
+  "stargazerCount": 7485,
+  "lastRelease": "2023-03-28T14:55:15Z"
 }
