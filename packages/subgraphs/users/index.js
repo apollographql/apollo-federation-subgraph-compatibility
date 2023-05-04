@@ -16,7 +16,7 @@ const users = [
   },
 ];
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const typeDefs = gql(
   readFileSync(resolve(__dirname, 'users.graphql'), 'utf-8'),
 );

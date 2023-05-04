@@ -25,7 +25,7 @@ const inventory = [
   },
 ];
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const typeDefs = gql(
   readFileSync(resolve(__dirname, 'inventory.graphql'), 'utf-8'),
 );
