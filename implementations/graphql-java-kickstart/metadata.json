@@ -2,7 +2,7 @@
   "fullName": "GraphQL Java Kickstart (Spring Boot)",
   "language": "Java / Kotlin",
   "documentation": "https://github.com/graphql-java-kickstart/graphql-spring-boot",
-  "type": "Schema first",
+  "type": "SDL first",
   "repository": {
     "name": "graphql-spring-boot",
     "owner": "graphql-java-kickstart",

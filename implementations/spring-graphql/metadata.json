@@ -2,7 +2,7 @@
   "fullName": "Spring GraphQL",
   "language": "Java / Kotlin",
   "documentation": "https://docs.spring.io/spring-graphql/docs/current/reference/html/",
-  "type": "Schema first",
+  "type": "SDL first",
   "repository": {
     "name": "spring-graphql",
     "owner": "spring-projects",
