@@ -4,7 +4,8 @@ import { GraphQLError } from 'graphql';
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
 
 const serverPort = parseInt(process.env.INVENTORY_PORT || '') || 4003;
 
@@ -24,6 +25,7 @@ const inventory = [
   },
 ];
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const typeDefs = gql(
   readFileSync(resolve(__dirname, 'inventory.graphql'), 'utf-8'),
 );
