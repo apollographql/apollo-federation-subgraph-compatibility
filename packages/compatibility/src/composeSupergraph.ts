@@ -10,7 +10,7 @@ import { createWriteStream } from 'fs';
 const COMPOSITION_VERSION =
   process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.3.2';
 const ROUTER_VERSION =
-  process.env['APOLLO_ROVER_DEV_ROUTER_VERSION'] ?? '1.17.0';
+  process.env['APOLLO_ROVER_DEV_ROUTER_VERSION'] ?? '1.16.0';
 const roverDebug = debug('rover');
 
 /**

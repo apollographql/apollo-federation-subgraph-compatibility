@@ -3,7 +3,8 @@ import { gql } from 'graphql-tag';
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
 
 const serverPort = parseInt(process.env.USERS_PORT || '') || 4002;
 const users = [
@@ -15,6 +16,7 @@ const users = [
   },
 ];
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const typeDefs = gql(
   readFileSync(resolve(__dirname, 'users.graphql'), 'utf-8'),
 );
