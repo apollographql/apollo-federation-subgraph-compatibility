@@ -1,0 +1,15 @@
+framework:
+  cache:
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  app.cache.adapter.array:
+    class: Symfony\Component\Cache\Adapter\ArrayAdapter
+    arguments:
+      $defaultLifetime: 10
+      $storeSerialized: false
+      $maxLifetime: 100
+      $maxItems: 3000

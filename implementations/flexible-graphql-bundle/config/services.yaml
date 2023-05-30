@@ -1,0 +1,20 @@
+parameters:
+  container.dumper.inline_factories: true
+services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  Psr\Container\ContainerInterface: '@service_container'
+
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/Domain/Entity/'
+      - '../src/Application/Kernel.php'
+
+  App\Application\Controller\:
+    resource: '../src/Application/Controller/'
+    tags: ['controller.service_arguments']
+    calls:
+      - [setContainer, ['@service_container']]

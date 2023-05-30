@@ -1,0 +1,5 @@
+{
+  "description": "Schema first lib for generate php code from graphql sdl to TypeRegistry whom support webonyx/graphql-php with simple integrate to any controller.",
+  "stargazerCount": 4481,
+  "lastRelease": "2023-03-09T10:26:13Z"
+}

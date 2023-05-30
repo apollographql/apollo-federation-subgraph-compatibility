@@ -1,0 +1,6 @@
+flexible_graphql:
+  namespace: App\Application\GraphQL # namespace where store GraphQL models and resolvers
+  dir: '%kernel.project_dir%/src/Application/GraphQL/' # path where it will be they save files
+  schema_type: graphql # type of schema generation. Default is `graphql` or optional is `federation` for apollo federation support
+  schema_files: '%kernel.project_dir%/config/graphql/*.graphql' # path to graphql schema SDL files
+  enable_preload: true # use Symfony preload if it true

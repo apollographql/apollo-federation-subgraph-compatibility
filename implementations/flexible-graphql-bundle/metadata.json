@@ -1,0 +1,19 @@
+{
+  "fullName": "Axtiva Flexible Graphql Bundle",
+  "language": "PHP",
+  "documentation": "https://github.com/axtiva/flexible-graphql-bundle",
+  "type": "Schema first",
+  "repository": {
+    "name": "flexible-graphql-bundle",
+    "owner": "axtiva",
+    "link": "https://github.com/axtiva/flexible-graphql-bundle"
+  },
+  "federationlibrary": {
+    "name": "Axtiva Flexible Graphql",
+    "link": "https://github.com/axtiva/flexible-graphql-php"
+  },
+  "coreLibrary": {
+    "name": "graphql-php",
+    "link": "https://github.com/webonyx/graphql-php"
+  }
+}
