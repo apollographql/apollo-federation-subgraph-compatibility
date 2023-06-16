@@ -2,7 +2,7 @@
   "name": "apollo-server-implementation",
   "type": "module",
   "dependencies": {
-    "@apollo/server": "^4.7.1",
+    "@apollo/server": "^4.7.4",
     "@apollo/subgraph": "^2.4.7",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6"
