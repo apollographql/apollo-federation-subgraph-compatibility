@@ -142,12 +142,16 @@ Last Release: ${lastReleaseDate}</br></br>`;
     }
 
     if (result.coreLibrary?.link) {
-      const coreLibraryName = result.coreLibrary.owner ? `${result.coreLibrary.owner}/${result.coreLibrary.name}` : result.coreLibrary.name;
+      const coreLibraryName = result.coreLibrary.owner
+        ? `${result.coreLibrary.owner}/${result.coreLibrary.name}`
+        : result.coreLibrary.name;
       content += `Core Library: <a href="${result.coreLibrary.link}">${coreLibraryName}</a></br>`;
     }
 
     if (result.federationlibrary?.link) {
-      const fedLibraryName = result.federationlibrary.owner ? `${result.federationlibrary.owner}/${result.federationlibrary.name}` : result.federationlibrary.name;
+      const fedLibraryName = result.federationlibrary.owner
+        ? `${result.federationlibrary.owner}/${result.federationlibrary.name}`
+        : result.federationlibrary.name;
       content += `Federation Library: <a href="${result.federationlibrary.link}">${fedLibraryName}</a></br>`;
     }
 
@@ -164,12 +168,13 @@ Last Release: ${lastReleaseDate}</br></br>`;
     let cell = '<table>';
     TESTS.forEach((test) => {
       if (test.fedVersion === fedVersion) {
-        cell += `<tr><th><code>${test.column}</code></th><td>${testResults[test.assertion]?.success
-          ? '🟢'
-          : test.required
+        cell += `<tr><th><code>${test.column}</code></th><td>${
+          testResults[test.assertion]?.success
+            ? '🟢'
+            : test.required
             ? '❌'
             : '🔲'
-          }</td></tr>`;
+        }</td></tr>`;
       }
     });
     cell += '</table>';
