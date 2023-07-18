@@ -13,7 +13,8 @@
     "link": "https://github.com/graphql-java/graphql-java"
   },
   "federationlibrary": {
-    "name": "Federation JVM",
+    "name": "federation-jvm",
+    "owner": "apollographql",
     "link": "https://github.com/apollographql/federation-jvm"
   }
 }

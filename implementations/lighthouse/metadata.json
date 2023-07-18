@@ -10,6 +10,7 @@
   },
   "coreLibrary": {
     "name": "graphql-php",
+    "owner": "webonyx",
     "link": "https://github.com/webonyx/graphql-php"
   }
 }
