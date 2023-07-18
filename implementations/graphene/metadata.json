@@ -14,6 +14,7 @@
   },
   "federationlibrary": {
     "name": "graphene-federation",
-    "link": "https: //github.com/graphql-python/graphene-federation"
+    "owner": "graphql-python",
+    "link": "https://github.com/graphql-python/graphene-federation"
   }
 }

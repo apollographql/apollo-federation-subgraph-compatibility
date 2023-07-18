@@ -142,11 +142,17 @@ Last Release: ${lastReleaseDate}</br></br>`;
     }
 
     if (result.coreLibrary?.link) {
-      content += `Core Library: <a href="${result.coreLibrary.link}">${result.coreLibrary.name}</a></br>`;
+      const coreLibraryName = result.coreLibrary.owner
+        ? `${result.coreLibrary.owner}/${result.coreLibrary.name}`
+        : result.coreLibrary.name;
+      content += `Core Library: <a href="${result.coreLibrary.link}">${coreLibraryName}</a></br>`;
     }
 
     if (result.federationlibrary?.link) {
-      content += `Federation Library: <a href="${result.federationlibrary.link}">${result.federationlibrary.name}</a></br>`;
+      const fedLibraryName = result.federationlibrary.owner
+        ? `${result.federationlibrary.owner}/${result.federationlibrary.name}`
+        : result.federationlibrary.name;
+      content += `Federation Library: <a href="${result.federationlibrary.link}">${fedLibraryName}</a></br>`;
     }
 
     return content;

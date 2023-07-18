@@ -9,7 +9,8 @@
     "link": "https://github.com/absinthe-graphql/absinthe"
   },
   "federationlibrary": {
-    "name": "Absinthe.Federation",
+    "name": "absinthe_federation",
+    "owner": "DivvyPayHQ",
     "link": "https://github.com/DivvyPayHQ/absinthe_federation"
   }
 }
