@@ -1,0 +1,25 @@
+{
+    "name": "neo4j-graphql",
+    "private": true,
+    "version": "1.0.0",
+    "description": "Neo4j GraphQL Library Apollo Federation Compatibility Tests",
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "prettify": "prettier -w *.json src/"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@apollo/server": "^4.7.5",
+        "@neo4j/graphql": "^4.0.0-beta.0",
+        "graphql": "^16.7.1",
+        "graphql-tag": "^2.12.6",
+        "neo4j-driver": "^5.10.0"
+    },
+    "devDependencies": {
+        "prettier": "^3.0.0",
+        "typescript": "^5.1.6"
+    }
+}

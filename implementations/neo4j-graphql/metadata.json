@@ -1,0 +1,19 @@
+{
+    "fullName": "Full library name; if left blank the implementation folder name will be used",
+    "language": "JavaScript / TypeScript",
+    "documentation": "https://neo4j.com/docs/graphql-manual/current/",
+    "type": "SDL first and/or Code first",
+    "repository": {
+        "name": "graphql",
+        "owner": "neo4j",
+        "link": "https://github.com/neo4j/graphql"
+    },
+    "coreLibrary": {
+        "name": "GraphQL.js",
+        "link": "https://www.npmjs.com/package/graphql"
+    },
+    "federationlibrary": {
+        "name": "Apollo Subgraph",
+        "link": "https://www.npmjs.com/package/@apollo/subgraph"
+    }
+}

@@ -25,6 +25,7 @@ on:
       - "HotChocolate Test"
       - "Lighthouse Test"
       - "Mercurius Test"
+      - "Neo4j GraphQL Library Test"
       - "NestJS (Code First) Test"
       - "NestJS (SDL First) Test"
       - "Apollo Federation PHP Test"

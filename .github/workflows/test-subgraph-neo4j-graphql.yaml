@@ -1,0 +1,19 @@
+name: Neo4j GraphQL Library Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'implementations/neo4j-graphql/**'
+
+jobs:
+  compatibility:
+    uses: ./.github/workflows/test-subgraph.yaml
+    with:
+      library: "neo4j-graphql"
+
+  pr-info:
+    uses: ./.github/workflows/save-pr-info.yaml
+    with:
+      pr_number: ${{ github.event.number }}
