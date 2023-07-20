@@ -1,6 +1,6 @@
 {
-    "fullName": "Full library name; if left blank the implementation folder name will be used",
-    "language": "JavaScript / TypeScript",
+    "fullName": "Neo4J Graph Database",
+    "language": "Other Solutions",
     "documentation": "https://neo4j.com/docs/graphql-manual/current/",
     "type": "SDL first and/or Code first",
     "repository": {
