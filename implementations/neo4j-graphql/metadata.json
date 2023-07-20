@@ -2,7 +2,7 @@
     "fullName": "Neo4J Graph Database",
     "language": "Other Solutions",
     "documentation": "https://neo4j.com/docs/graphql-manual/current/",
-    "type": "SDL first and/or Code first",
+    "type": "Code first | SDL first",
     "repository": {
         "name": "graphql",
         "owner": "neo4j",
