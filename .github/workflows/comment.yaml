@@ -35,6 +35,7 @@ on:
       - "StepZen Test"
       - "Strawberry GraphQL Test"
       - "Swift Graphiti Test"
+      - "Ballerina GraphQL Test"
     types:
       - completed
 

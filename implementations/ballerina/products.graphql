@@ -1,0 +1,99 @@
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@external" ,"@requires" ,"@provides" ,"@key" ,"@shareable" ,"@inaccessible" ,"@tag" ,"@override" ,"@extends" ,"FieldSet"], as: "") 
+
+directive @external on FIELD_DEFINITION|OBJECT
+
+directive @requires(fields: FieldSet!) on FIELD_DEFINITION
+
+directive @provides(fields: FieldSet!) on FIELD_DEFINITION
+
+directive @key(fields: FieldSet!, resolvable: Boolean = true) repeatable on OBJECT|INTERFACE
+
+directive @link(url: String!, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+directive @shareable on OBJECT|FIELD_DEFINITION
+
+directive @inaccessible on FIELD_DEFINITION|OBJECT|INTERFACE|UNION|ARGUMENT_DEFINITION|SCALAR|ENUM|ENUM_VALUE|INPUT_OBJECT|INPUT_FIELD_DEFINITION
+
+directive @tag(name: String!) repeatable on FIELD_DEFINITION|OBJECT|INTERFACE|UNION|ARGUMENT_DEFINITION|SCALAR|ENUM|ENUM_VALUE|INPUT_OBJECT|INPUT_FIELD_DEFINITION
+
+directive @override(from: String!) on FIELD_DEFINITION
+
+directive @composeDirective(name: String!) repeatable on SCHEMA
+
+directive @extends on OBJECT|INTERFACE
+
+type Query {
+  product(id: ID!): Product
+  ""
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
+  _service: _Service!
+  _entities(representations: [_Any!]!): [_Entity]!
+}
+
+type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
+  id: ID!
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User
+  notes: String
+  research: [ProductResearch!]!
+}
+
+"The `ID` scalar type is a unique identifier that is serialized as a string. It is commonly represented as a string, integer, or UUID."
+scalar ID
+
+type ProductVariation {
+  id: ID!
+}
+
+type ProductDimension {
+  size: String
+  weight: Float
+  unit: String
+}
+
+type User @key(fields: "email") {
+  name: String
+  email: ID!
+  yearsOfEmployment: Int!
+  totalProductsCreated: Int
+  averageProductsCreatedPerYear: Int
+}
+
+type ProductResearch @key(fields: "study { caseNumber }") {
+  study: CaseStudy!
+  outcome: String
+}
+
+type CaseStudy {
+  caseNumber: ID!
+  description: String
+}
+
+type DeprecatedProduct @key(fields: "sku package") {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
+}
+
+scalar _Any
+
+scalar FieldSet
+
+scalar link__Import
+
+enum link__Purpose {
+  "`EXECUTION` features provide metadata necessary for operation execution."
+  EXECUTION
+  "`SECURITY` features provide metadata necessary to securely resolve fields."
+  SECURITY
+}
+
+type _Service {
+  sdl: String!
+}
+
+union _Entity = DeprecatedProduct|ProductResearch|User|Product
