@@ -31,10 +31,10 @@
     "ts-jest": "^29.1.0"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.7",
-    "@types/jest": "^29.5.1",
-    "@types/make-fetch-happen": "^10.0.1",
-    "@types/node": "^18.16.3"
+    "@types/debug": "4.1.7",
+    "@types/jest": "29.5.1",
+    "@types/make-fetch-happen": "10.0.1",
+    "@types/node": "18.16.3"
   },
   "release": {
     "branches": [
