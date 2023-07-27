@@ -9,7 +9,7 @@ describe('@requires', () => {
 
     const { sdl } = response.data._service;
     expect(stripIgnoredCharacters(sdl)).toMatch(
-      /averageProductsCreatedPerYear:Int(@requires|@federation__requires)\(fields:"totalProductsCreated yearsOfEmployment"\)/
+      /averageProductsCreatedPerYear:Int(@requires|@federation__requires)\(fields:"totalProductsCreated yearsOfEmployment"\)/,
     );
   });
 
@@ -33,5 +33,5 @@ describe('@requires', () => {
         },
       },
     });
-  })
+  });
 });

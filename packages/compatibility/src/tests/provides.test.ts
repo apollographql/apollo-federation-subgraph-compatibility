@@ -9,7 +9,7 @@ describe('@provides', () => {
 
     const { sdl } = response.data._service;
     expect(stripIgnoredCharacters(sdl)).toMatch(
-      /createdBy:User(@provides|@federation__provides)\(fields:"totalProductsCreated"\)/
+      /createdBy:User(@provides|@federation__provides)\(fields:"totalProductsCreated"\)/,
     );
   });
 
