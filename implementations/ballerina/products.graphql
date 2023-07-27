@@ -41,9 +41,6 @@ type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku va
   research: [ProductResearch!]!
 }
 
-"The `ID` scalar type is a unique identifier that is serialized as a string. It is commonly represented as a string, integer, or UUID."
-scalar ID
-
 type ProductVariation {
   id: ID!
 }
