@@ -8,6 +8,7 @@ on:
       - "Apollo Server Test"
       - "Ariadne Test"
       - "AWS AppSync Test"
+      - "Ballerina GraphQL Test"
       - "Caliban Test"
       - "Dgraph Test"
       - "DGS Test"
@@ -35,7 +36,6 @@ on:
       - "StepZen Test"
       - "Strawberry GraphQL Test"
       - "Swift Graphiti Test"
-      - "Ballerina GraphQL Test"
     types:
       - completed
 
