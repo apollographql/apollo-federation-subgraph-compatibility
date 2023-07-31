@@ -52,3 +52,4 @@ To deploy your own version of this `products` service on AppSync you will need t
         Time:        6.552 s, estimated 7 s
         Ran all test suites matching /src/i.
     ```
+
