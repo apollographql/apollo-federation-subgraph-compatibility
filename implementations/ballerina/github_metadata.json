@@ -1,5 +1,5 @@
 {
-  "description": "A spec-compliant, production-ready, Standard Library module for building and interacting with GraphQL APIs using Ballerina",
+  "description": "The Ballerina GraphQL module is part of the Ballerina Standard Library. It is a spec-compliant, production-ready GraphQL implementation for writing GraphQL APIs in Ballerina.",
   "stargazerCount": 51,
-  "lastRelease": "2023-06-30T12:13:47Z"
+  "lastRelease": "2023-06-30T12:14:37Z"
 }
