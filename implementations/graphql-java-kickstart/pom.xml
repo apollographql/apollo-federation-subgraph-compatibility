@@ -17,7 +17,7 @@
 
     <properties>
         <federation-graphql-java-support.version>2.1.1</federation-graphql-java-support.version>
-        <graphql-spring-boot-starter.version>14.0.0</graphql-spring-boot-starter.version>
+        <graphql-spring-boot-starter.version>15.0.0</graphql-spring-boot-starter.version>
 
         <java.version>17</java.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
