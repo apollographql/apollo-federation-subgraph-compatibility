@@ -1,6 +1,6 @@
 {
-  "fullName": "module-ballerina-graphql",
-  "language": "ballerina",
+  "fullName": "Ballerina GraphQL Module",
+  "language": "Ballerina",
   "documentation": "https://ballerina.io/spec/graphql",
   "description": "A spec-compliant, production-ready, Standard Library module for building and interacting with GraphQL APIs using Ballerina.",
   "type": "Code first",
