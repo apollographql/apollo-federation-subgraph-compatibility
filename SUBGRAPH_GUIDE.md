@@ -85,8 +85,18 @@ compatibility tests will fail.**
    it to include the name of your implementation under `.github/workflows/test-subgraph-<hosted>.yaml`
    - This is a workflow that will be triggered for PRs opened against your implementation.
    - Modify the template so it only triggers for your implementation.
-6. Update `.github/workflows/comment.yaml` workflow to include name of your newly created workflow (
-   this will enable automatic compatibility comments on PRs against your implementation).
+6. Update `.github/workflows/test-hosted-subgraph.yaml` workflow
+   - include name of your newly created workflow to trigger compatibility tests against your PR
+   - include new conditional step to run tests against your subggraph
+
+  ```yaml
+    - name: (Conditional) <Hosted> compatibility test
+      if: ${{ env.SUBGRAPH = '<hosted>' }}
+      run: npm run compatibility:test -- docker --compose implementations/<hosted>/docker-compose.yaml --schema implementations/<hosted>/products.graphql
+      env:
+        API_KEY: ${{ secrets.API_KEY_<HOSTED> }}
+        TEST_URL: ${{ secrets.URL_<HOSTED> }}
+  ```
 7. When you are ready to integrate, reach out to us at [Apollo Community Forums](https://community.apollographql.com/).
    Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem)
    and we'll help you configure your API KEY and URL as a Github Secret. Those secrets will be used

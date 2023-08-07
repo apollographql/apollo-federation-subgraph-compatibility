@@ -1,0 +1,71 @@
+name: Hosted Subgraph Test
+
+on:
+  workflow_run:
+    workflows:
+      - "AWS AppSync Test"
+      - "StepZen Test"
+    types:
+      - completed
+
+jobs:
+  compatibility:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Install dependencies and build
+        run: npm install
+      - name: Locate subgraph to test
+        uses: actions/github-script@v6
+        with:
+          script: |
+            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{ github.event.workflow_run.id }},
+            });
+            var subgraphArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "subgraph"
+            })[0];
+            var downloadSubgraphArtifact = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: subgraphArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/subgraph.zip', Buffer.from(downloadSubgraphArtifact.data));
+      - name: Extract subgraph information
+        run: |
+          unzip subgraph.zip
+          echo "SUBGRAPH=$(cat subgraph_info)" >> $GITHUB_ENV
+      - name: (Conditional) AppSync compatibility test
+        if: ${{ env.SUBGRAPH = 'appsync' }}
+        run: npm run compatibility:test -- docker --compose implementations/appsync/docker-compose.yaml --schema implementations/appsync/cdk/products-service/src/products-service.graphql
+        env:
+          API_KEY: ${{ secrets.API_KEY_APPSYNC }}
+          TEST_URL: ${{ secrets.URL_APPSYNC }}
+      - name: (Conditional) StepZen compatibility test
+        if: ${{ env.SUBGRAPH = 'stepzen' }}
+        run: npm run compatibility:test -- docker --compose implementations/stepzen/docker-compose.yaml --schema implementations/stepzen/products.graphql
+        env:
+          TEST_URL: ${{ secrets.URL_STEPZEN }}
+      - name: Generate Results Summary
+        run: |
+          cat results.md >> $GITHUB_STEP_SUMMARY
+          mv results.md results-${{ env.SUBGRAPH }}.md
+          echo "RESULTS_FILE=results-${{ env.SUBGRAPH }}.md" >> $GITHUB_ENV
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RESULTS_FILE }}
+          path: ./${{ env.RESULTS_FILE }}
+          retention-days: 1
