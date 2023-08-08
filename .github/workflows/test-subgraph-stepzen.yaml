@@ -8,35 +8,18 @@ on:
       - 'implementations/stepzen/**'
 
 jobs:
-  compatibility:
-    timeout-minutes: 30
+  compatibility-hosted:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Setup Environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-      - name: Install dependencies and build
-        run: npm install
-      - name: Compatibility test
-        run: npm run compatibility:test -- docker --compose implementations/stepzen/docker-compose.yaml --schema implementations/stepzen/products.graphql
-        env:
-          TEST_URL: ${{ secrets.URL_STEPZEN }}
-      - name: Generate Results Summary
+      - name: Save subgraph info
         run: |
-          cat results.md >> $GITHUB_STEP_SUMMARY
-          mv results.md results-stepzen.md
-          echo "RESULTS_FILE=results-stepzen.md" >> $GITHUB_ENV
-      - name: Upload Results
-        uses: actions/upload-artifact@v3
+          mkdir -p ./subgraph
+          echo stepzen > ./subgraph/subgraph_info
+      - uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.RESULTS_FILE }}
-          path: ./${{ env.RESULTS_FILE }}
+          name: subgraph
+          path: subgraph/
           retention-days: 1
 
   pr-info:

@@ -13,9 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Save PR number
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
         run: |
           mkdir -p ./pr
-          echo ${{ inputs.pr_number }} > ./pr/pr_info
+          echo $PR_NUMBER > ./pr/pr_info
       - uses: actions/upload-artifact@v3
         with:
           name: pr

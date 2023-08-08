@@ -7,7 +7,6 @@ on:
       - "Absinthe Federation Test"
       - "Apollo Server Test"
       - "Ariadne Test"
-      - "AWS AppSync Test"
       - "Ballerina GraphQL Test"
       - "Caliban Test"
       - "Dgraph Test"
@@ -24,6 +23,7 @@ on:
       - "GraphQL Mesh Test"
       - "GraphQL Yoga Test"
       - "HotChocolate Test"
+      - "Hosted Subgraph Test"
       - "Lighthouse Test"
       - "Mercurius Test"
       - "Neo4j GraphQL Library Test"
@@ -33,7 +33,6 @@ on:
       - "Pothos Test"
       - "GraphQL Ruby Test"
       - "Sangria Test"
-      - "StepZen Test"
       - "Strawberry GraphQL Test"
       - "Swift Graphiti Test"
     types:
@@ -44,7 +43,7 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     if: >
-      (github.event.workflow_run.event == 'pull_request' || github.event.workflow_run.event == 'pull_request_target') &&
+      (github.event.workflow_run.event == 'pull_request' || github.event.workflow_run.event == 'workflow_run') &&
       github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Download Artifacts
