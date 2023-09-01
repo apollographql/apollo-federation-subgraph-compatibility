@@ -17,18 +17,19 @@
  * limitations under the License.
  */
 
+import { GraphQLResolveInfo } from "graphql";
+
 export const resolvers = {
     User: {
         averageProductsCreatedPerYear: (
             _source: any,
             _args: any,
-            context: any,
+            _context: any,
+            info: GraphQLResolveInfo
         ) => {
             return Math.floor(
-                context.resolveTree.args.representations[0]
-                    .totalProductsCreated /
-                    context.resolveTree.args.representations[0]
-                        .yearsOfEmployment,
+                (info.variableValues.representations as any)[0].totalProductsCreated /
+                    (info.variableValues.representations as any)[0].yearsOfEmployment
             );
         },
     },
