@@ -21,7 +21,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@apollo/rover": "^0.14.0",
+    "@apollo/rover": "^0.18.1",
     "debug": "^4.3.4",
     "execa": "^5.1.1",
     "graphql": "^16.6.0",
