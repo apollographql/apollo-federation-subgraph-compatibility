@@ -8,9 +8,9 @@ import { readFile, writeFile } from 'fs/promises';
 import { createWriteStream } from 'fs';
 
 const COMPOSITION_VERSION =
-  process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.4.3';
+  process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.5.1';
 const ROUTER_VERSION =
-  process.env['APOLLO_ROVER_DEV_ROUTER_VERSION'] ?? '1.18.0';
+  process.env['APOLLO_ROVER_DEV_ROUTER_VERSION'] ?? '1.28.1';
 const roverDebug = debug('rover');
 
 /**
