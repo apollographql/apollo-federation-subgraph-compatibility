@@ -11,6 +11,10 @@
     "packages/*",
     "packages/subgraphs/*"
   ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.6.0"
+  },
   "scripts": {
     "build": "tsc --build tsconfig.json && npm run package",
     "clean": "rm -rf packages/*/dist packages/*/tsconfig.tsbuildinfo",
