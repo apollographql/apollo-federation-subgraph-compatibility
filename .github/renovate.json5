@@ -1,4 +1,10 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   ignorePaths: ['**/node_modules/**', '**/implementations/**'],
+    "packageRules": [
+    {
+      matchPackageNames: ["@types/node"],
+      allowedVersions: "18.x"
+    },
+  ],
 }

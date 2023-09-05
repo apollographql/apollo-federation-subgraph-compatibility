@@ -21,6 +21,10 @@
     "url": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/issues"
   },
   "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/packages/script/README.md",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.6.0"
+  },
   "dependencies": {
     "@apollo/federation-subgraph-compatibility-tests": "^2.0.0",
     "commander": "^11.0.0",
