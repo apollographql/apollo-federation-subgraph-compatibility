@@ -22,5 +22,11 @@
     automerge: false,
     schedule: ["every weekday"],
   },
+  packageRules: [
+    {
+      matchPackageNames: ['@types/node'],
+      allowedVersions: '18.x',
+    }
+  ]
 }
 
