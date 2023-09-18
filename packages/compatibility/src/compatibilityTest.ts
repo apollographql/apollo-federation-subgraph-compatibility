@@ -58,10 +58,10 @@ export async function compatibilityTest(
   // print results to console
   logResults(testResults);
 
-  if (runtimeConfig.failOnRequired) {
-    return allRequiredSuccessful;
-  } else if (runtimeConfig.failOnWarning) {
+  if (runtimeConfig.failOnWarning) {
     return allSuccessful;
+  } else if (runtimeConfig.failOnRequired) {
+    return allRequiredSuccessful;
   } else {
     return true;
   }
