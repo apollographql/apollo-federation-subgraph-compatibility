@@ -1,18 +1,18 @@
 {
-{
-  "extends": [
-    "config:js-lib",
-    "group:allNonMajor",
-    "group:jestPlusTSJest",
-    "group:jestPlusTypes",
+  ignorePaths: ['**/node_modules/**', '**/implementations/**'],
+  extends: [
+    'config:js-lib',
+    'group:allNonMajor',
+    'group:jestPlusTSJest',
+    'group:jestPlusTypes',
     // Our default configuration. See
     // https://github.com/apollographql/renovate-config-apollo-open-source/blob/master/package.json
-    "github>apollographql/renovate-config-apollo-open-source:default.json5",
+    'github>apollographql/renovate-config-apollo-open-source:default.json5',
   ],
-  "packageRules": [
+  packageRules: [
     {
-      "matchPackageNames": ["@types/node"],
-      "allowedVersions": "18.x"
+      matchPackageNames: ['@types/node'],
+      allowedVersions: '18.x',
     },
   ],
 }
