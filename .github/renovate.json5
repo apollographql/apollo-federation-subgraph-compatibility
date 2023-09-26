@@ -1,31 +1,18 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  ignorePaths: ['**/node_modules/**', '**/implementations/**'],
-  // We have prCreation set to "not-pending" in the Apollo default config.
-  // However, based on the CI config in this repo, "immediate" may make more sense.
-  // See https://docs.renovatebot.com/configuration-options/#prcreation
-  // for available options.
-  prCreation: 'immediate',
-  lockFileMaintenance: {
-    // This change from default in this section is adjusting
-    // the schedule attribute. In practice, setting the schedule
-    // to "weekdays" will mean that Renovate has one opportunity
-    // each weekday to create a PR to update locks.
-    // If this gets too noisy, this can be scaled back.
-    // However, with the default schedule, lockfiles update PRs
-    // will essentially never be created because there isn't overlap
-    // between "before 4am on monday" and the times that we have
-    // Renovate scheduled to run.
-    // See https://docs.renovatebot.com/configuration-options/#lockfilemaintenance
-    // for details.
-    enabled: true,
-    automerge: false,
-    schedule: ['every weekday'],
-  },
-  packageRules: [
+{
+  "extends": [
+    "config:js-lib",
+    "group:allNonMajor",
+    "group:jestPlusTSJest",
+    "group:jestPlusTypes",
+    // Our default configuration. See
+    // https://github.com/apollographql/renovate-config-apollo-open-source/blob/master/package.json
+    "github>apollographql/renovate-config-apollo-open-source:default.json5",
+  ],
+  "packageRules": [
     {
-      matchPackageNames: ['@types/node'],
-      allowedVersions: '18.x',
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "18.x"
     },
   ],
 }
