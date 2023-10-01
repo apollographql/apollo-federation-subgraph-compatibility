@@ -37,8 +37,8 @@
   "devDependencies": {
     "@types/debug": "4.1.9",
     "@types/jest": "29.5.5",
-    "@types/make-fetch-happen": "10.0.1",
-    "@types/node": "18.17.18"
+    "@types/make-fetch-happen": "10.0.2",
+    "@types/node": "18.18.1"
   },
   "release": {
     "branches": [
