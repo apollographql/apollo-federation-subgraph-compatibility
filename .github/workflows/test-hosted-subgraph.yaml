@@ -48,13 +48,13 @@ jobs:
           unzip subgraph.zip
           echo "SUBGRAPH=$(cat subgraph_info)" >> $GITHUB_ENV
       - name: (Conditional) AppSync compatibility test
-        if: ${{ env.SUBGRAPH = 'appsync' }}
+        if: ${{ env.SUBGRAPH == 'appsync' }}
         run: npm run compatibility:test -- docker --compose implementations/appsync/docker-compose.yaml --schema implementations/appsync/cdk/products-service/src/products-service.graphql
         env:
           API_KEY: ${{ secrets.API_KEY_APPSYNC }}
           TEST_URL: ${{ secrets.URL_APPSYNC }}
       - name: (Conditional) StepZen compatibility test
-        if: ${{ env.SUBGRAPH = 'stepzen' }}
+        if: ${{ env.SUBGRAPH == 'stepzen' }}
         run: npm run compatibility:test -- docker --compose implementations/stepzen/docker-compose.yaml --schema implementations/stepzen/products.graphql
         env:
           TEST_URL: ${{ secrets.URL_STEPZEN }}
