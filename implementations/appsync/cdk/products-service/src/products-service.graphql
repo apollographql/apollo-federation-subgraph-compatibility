@@ -1,5 +1,5 @@
 
-schema @extends @link(url: "https://specs.apollo.dev/federation/v2.0", import: [
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: [
   "@extends",
   "@external",
   "@key",
@@ -79,14 +79,4 @@ type User @key(fields: "email") @extends {
 
 union _Entity = User | Product | ProductResearch | ProductVariation | ProductDimension | DeprecatedProduct
 
-input _Any {
-    __typename: String!
-    id: String
-    sku: String
-    package: String
-    variation: ProductVariationInput
-    email: String
-    study: CaseStudyInput
-    totalProductsCreated: Int
-    yearsOfEmployment: Int
-}
+scalar _Any
