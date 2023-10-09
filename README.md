@@ -1,7 +1,8 @@
 # Apollo Federation Subgraph Compatibility Testing Monorepo
 
-[![Join the community forum](https://img.shields.io/badge/Join%20The%20Community-Forum-blueviolet)](https://community.apollographql.com)
 [![MIT License](https://img.shields.io/github/license/apollographql/apollo-federation-subgraph-compatibility)](https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/LICENSE)
+[![Join the community forum](https://img.shields.io/badge/Join%20The%20Community-Forum-blueviolet)](https://community.apollographql.com)
+[![Join our Discord server](https://img.shields.io/discord/1022972389463687228.svg?color=7389D8&labelColor=6A7EC2&logo=discord&logoColor=ffffff&style=flat-square)](https://discord.gg/graphos)
 
 This monorepo contains test suite that verifies subgraphs compatibility against [Apollo Federation Subgraph Specification](https://www.apollographql.com/docs/federation/subgraph-spec/). This testing suite verifies various Federation features against subgraph implementation. See [compatibility testing docs](./COMPATIBILITY.md) for details on the expected schema and the data sets as well as information about the executed tests. Test suite is packaged as [NPX script](./packages/script/README.md) and [Github Action](https://github.com/apollographql/apollo-federation-subgraph-compatibility-action).
 
