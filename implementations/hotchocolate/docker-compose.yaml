@@ -2,7 +2,6 @@ services:
   products:
     # must be relative to the root of the project
     build:
-      context: .
-      dockerfile: ./compatibility/dockerfile
+      build: implementations/hotchocolate
     ports:
       - 4001:4001
