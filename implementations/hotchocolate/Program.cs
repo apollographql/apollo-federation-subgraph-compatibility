@@ -5,12 +5,13 @@ builder.Services
 
 builder.Services
     .AddGraphQLServer()
-    .AddApolloFederation()
+    .AddApolloFederationV2(new CustomSchema())
+    .AddType<CustomDirectiveType>()
+    .AddType<Inventory>()
     .AddQueryType<Query>()
     .RegisterService<Data>();
 
 var app = builder.Build();
 
 app.MapGraphQL("/");
-
-app.Run();
+app.RunWithGraphQLCommands(args);

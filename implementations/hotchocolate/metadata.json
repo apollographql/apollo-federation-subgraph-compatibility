@@ -8,5 +8,10 @@
     "name": "graphql-platform",
     "owner": "ChilliCream",
     "link": "https://github.com/ChilliCream/graphql-platform"
+  },
+  "federationlibrary": {
+    "name": "federation-hotchocolate",
+    "owner": "apollographql",
+    "link": "https://github.com/apollographql/federation-hotchocolate"
   }
 }
