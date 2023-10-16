@@ -1,10 +1,11 @@
-using HotChocolate.ApolloFederation;
+using ApolloGraphQL.HotChocolate.Federation;
 
 namespace Products;
 
 [Key("id")]
 [Key("sku package")]
 [Key("sku variation { id }")]
+[Custom]
 public class Product
 {
     public Product(string id, string? sku, string? package, ProductVariation? variation, ProductDimension? dimensions, User? createdBy, string? notes, List<ProductResearch> research)
@@ -33,6 +34,7 @@ public class Product
     [Provides("totalProductsCreated")]
     public User? CreatedBy { get; }
 
+    [ApolloTag("internal")]
     public string? Notes { get; }
 
     public List<ProductResearch> Research { get; }

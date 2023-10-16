@@ -27,4 +27,8 @@ public class Data
     {
         new ("apollo-federation-v1", "@apollo/federation-v1", "Migrate to Federation V2", DefaultUser)
     };
+
+    public List<Inventory> Inventories() => new List<Inventory> {
+        new ("apollo-oss")
+    };
 }
