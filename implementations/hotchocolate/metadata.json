@@ -12,6 +12,7 @@
   "federationlibrary": {
     "name": "federation-hotchocolate",
     "owner": "apollographql",
+    "maintainer": "apollographql",
     "link": "https://github.com/apollographql/federation-hotchocolate"
   }
 }

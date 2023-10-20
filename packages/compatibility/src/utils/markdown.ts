@@ -64,7 +64,7 @@ class MarkdownFile {
 
 | Icon | Description                                          |
 | ---- | ---------------------------------------------------- |
-| ${apolloIcon} | Library is maintained by Apollo |
+| ${apolloIcon} | Maintained by Apollo |
 | 🟢    | Functionality is supported                           |
 | ❌    | Critical functionality is NOT supported              |
 | 🔲    | Additional federation functionality is NOT supported |
@@ -143,10 +143,7 @@ class MarkdownFile {
       let repoName = result.repository.owner
         ? `${result.repository.owner}/${result.repository.name}`
         : result.repository.name;
-      if (
-        result.repository.owner === apolloName ||
-        result.repository.maintainer === apolloName
-      ) {
+      if (result.repository.maintainer === apolloName) {
         repoName += `&nbsp;&nbsp;${apolloIcon}`;
       }
       content += `Github: <a href="${result.repository.link}">${repoName}</a><br/>
@@ -159,10 +156,7 @@ Last Release: ${lastReleaseDate}<br/><br/>`;
       let coreLibraryName = result.coreLibrary.owner
         ? `${result.coreLibrary.owner}/${result.coreLibrary.name}`
         : result.coreLibrary.name;
-      if (
-        result.coreLibrary.owner === apolloName ||
-        result.coreLibrary.maintainer === apolloName
-      ) {
+      if (result.coreLibrary.maintainer === apolloName) {
         coreLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
       }
       content += `Core Library: <a href="${result.coreLibrary.link}">${coreLibraryName}</a><br/>`;
@@ -172,10 +166,7 @@ Last Release: ${lastReleaseDate}<br/><br/>`;
       let fedLibraryName = result.federationlibrary.owner
         ? `${result.federationlibrary.owner}/${result.federationlibrary.name}`
         : result.federationlibrary.name;
-      if (
-        result.federationlibrary.owner === apolloName ||
-        result.federationlibrary.maintainer === apolloName
-      ) {
+      if (result.federationlibrary.maintainer === apolloName) {
         fedLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
       }
       content += `Federation Library: <a href="${result.federationlibrary.link}">${fedLibraryName}</a><br/>`;

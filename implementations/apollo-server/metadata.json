@@ -6,16 +6,17 @@
   "repository": {
     "name": "apollo-server",
     "owner": "apollographql",
+    "maintainer" : "apollographql",
     "link": "https://github.com/apollographql/apollo-server"
   },
   "coreLibrary": {
     "name": "GraphQL.js",
-    "owner": "apollographql",
+    "maintainer": "apollographql",
     "link": "https://www.npmjs.com/package/graphql"
   },
   "federationlibrary": {
     "name": "Apollo Subgraph",
-    "owner": "apollographql",
+    "maintainer": "apollographql",
     "link": "https://www.npmjs.com/package/@apollo/subgraph"
   }
 }

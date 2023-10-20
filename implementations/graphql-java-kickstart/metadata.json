@@ -15,6 +15,7 @@
   "federationlibrary": {
     "name": "federation-jvm",
     "owner": "apollographql",
+    "maintainer": "apollographql",
     "link": "https://github.com/apollographql/federation-jvm"
   }
 }
