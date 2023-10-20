@@ -2,8 +2,9 @@ import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { TestResultDetails, TestResults, TESTS } from '../testRunner';
 
-const apolloIcon:string = '<img style="display:inline-block; height:1em; width:auto;" alt="Maintained by Apollo" src="https://apollo-server-landing-page.cdn.apollographql.com/_latest/assets/favicon.png"/>';
-const apolloName:string = 'apollographql';
+const apolloIcon: string =
+  '<img style="display:inline-block; height:1em; width:auto;" alt="Maintained by Apollo" src="https://apollo-server-landing-page.cdn.apollographql.com/_latest/assets/favicon.png"/>';
+const apolloName: string = 'apollographql';
 
 export function generateMarkdown(results: TestResultDetails[]) {
   const markdownFile = new MarkdownFile(true);
@@ -142,8 +143,10 @@ class MarkdownFile {
       let repoName = result.repository.owner
         ? `${result.repository.owner}/${result.repository.name}`
         : result.repository.name;
-      if (result.repository.owner  === apolloName ||
-          result.repository.maintainer === apolloName) {
+      if (
+        result.repository.owner === apolloName ||
+        result.repository.maintainer === apolloName
+      ) {
         repoName += `&nbsp;&nbsp;${apolloIcon}`;
       }
       content += `Github: <a href="${result.repository.link}">${repoName}</a><br/>
@@ -156,8 +159,10 @@ Last Release: ${lastReleaseDate}<br/><br/>`;
       let coreLibraryName = result.coreLibrary.owner
         ? `${result.coreLibrary.owner}/${result.coreLibrary.name}`
         : result.coreLibrary.name;
-      if (result.coreLibrary.owner === apolloName ||
-          result.coreLibrary.maintainer === apolloName) {
+      if (
+        result.coreLibrary.owner === apolloName ||
+        result.coreLibrary.maintainer === apolloName
+      ) {
         coreLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
       }
       content += `Core Library: <a href="${result.coreLibrary.link}">${coreLibraryName}</a><br/>`;
@@ -167,8 +172,10 @@ Last Release: ${lastReleaseDate}<br/><br/>`;
       let fedLibraryName = result.federationlibrary.owner
         ? `${result.federationlibrary.owner}/${result.federationlibrary.name}`
         : result.federationlibrary.name;
-      if (result.federationlibrary.owner === apolloName ||
-          result.federationlibrary.maintainer === apolloName) {
+      if (
+        result.federationlibrary.owner === apolloName ||
+        result.federationlibrary.maintainer === apolloName
+      ) {
         fedLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
       }
       content += `Federation Library: <a href="${result.federationlibrary.link}">${fedLibraryName}</a><br/>`;
