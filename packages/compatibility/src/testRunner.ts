@@ -162,6 +162,7 @@ export interface TestResultDetails {
 export interface RepositoryInformation {
   name: string;
   owner?: string;
+  maintainer?: string;
   link: string;
 }
 
