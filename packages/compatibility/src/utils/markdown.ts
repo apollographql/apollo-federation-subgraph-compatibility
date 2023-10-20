@@ -2,6 +2,9 @@ import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { TestResultDetails, TestResults, TESTS } from '../testRunner';
 
+const apolloIcon:string = '<img style="display:inline-block; height:1em; width:auto;" alt="Maintained by Apollo" src="https://apollo-server-landing-page.cdn.apollographql.com/_latest/assets/favicon.png"/>';
+const apolloName:string = 'apollographql';
+
 export function generateMarkdown(results: TestResultDetails[]) {
   const markdownFile = new MarkdownFile(true);
 
@@ -60,6 +63,7 @@ class MarkdownFile {
 
 | Icon | Description                                          |
 | ---- | ---------------------------------------------------- |
+| ${apolloIcon} | Library is maintained by Apollo |
 | 🟢    | Functionality is supported                           |
 | ❌    | Critical functionality is NOT supported              |
 | 🔲    | Additional federation functionality is NOT supported |
@@ -123,7 +127,7 @@ class MarkdownFile {
   }
 
   renderSubgraphDetailsCell(result: TestResultDetails): String {
-    let content = `${result.description}</br></br>`;
+    let content = `${result.description}<br/><br/>`;
 
     if (result.repository?.link) {
       const starCount = Number(result.stargazerCount);
@@ -135,24 +139,39 @@ class MarkdownFile {
       }
       const lastReleaseDate = result.lastRelease.substring(0, 10);
 
-      content += `Github: <a href="${result.repository.link}">${result.repository.owner}/${result.repository.name}</a></br>
-Type: ${result.type}</br>
-Stars: ${stars} ⭐</br>
-Last Release: ${lastReleaseDate}</br></br>`;
+      let repoName = result.repository.owner
+        ? `${result.repository.owner}/${result.repository.name}`
+        : result.repository.name;
+      if (result.repository.owner  === apolloName ||
+          result.repository.maintainer === apolloName) {
+        repoName += `&nbsp;&nbsp;${apolloIcon}`;
+      }
+      content += `Github: <a href="${result.repository.link}">${repoName}</a><br/>
+Type: ${result.type}<br/>
+Stars: ${stars} ⭐<br/>
+Last Release: ${lastReleaseDate}<br/><br/>`;
     }
 
     if (result.coreLibrary?.link) {
-      const coreLibraryName = result.coreLibrary.owner
+      let coreLibraryName = result.coreLibrary.owner
         ? `${result.coreLibrary.owner}/${result.coreLibrary.name}`
         : result.coreLibrary.name;
-      content += `Core Library: <a href="${result.coreLibrary.link}">${coreLibraryName}</a></br>`;
+      if (result.coreLibrary.owner === apolloName ||
+          result.coreLibrary.maintainer === apolloName) {
+        coreLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
+      }
+      content += `Core Library: <a href="${result.coreLibrary.link}">${coreLibraryName}</a><br/>`;
     }
 
     if (result.federationlibrary?.link) {
-      const fedLibraryName = result.federationlibrary.owner
+      let fedLibraryName = result.federationlibrary.owner
         ? `${result.federationlibrary.owner}/${result.federationlibrary.name}`
         : result.federationlibrary.name;
-      content += `Federation Library: <a href="${result.federationlibrary.link}">${fedLibraryName}</a></br>`;
+      if (result.federationlibrary.owner === apolloName ||
+          result.federationlibrary.maintainer === apolloName) {
+        fedLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
+      }
+      content += `Federation Library: <a href="${result.federationlibrary.link}">${fedLibraryName}</a><br/>`;
     }
 
     return content;

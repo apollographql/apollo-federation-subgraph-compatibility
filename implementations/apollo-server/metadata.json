@@ -10,10 +10,12 @@
   },
   "coreLibrary": {
     "name": "GraphQL.js",
+    "owner": "apollographql",
     "link": "https://www.npmjs.com/package/graphql"
   },
   "federationlibrary": {
     "name": "Apollo Subgraph",
+    "owner": "apollographql",
     "link": "https://www.npmjs.com/package/@apollo/subgraph"
   }
 }

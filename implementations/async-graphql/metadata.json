@@ -6,6 +6,7 @@
   "repository": {
     "name": "async-graphql",
     "owner": "async-graphql",
+    "maintainer": "apollographql",
     "link": "https://github.com/async-graphql/async-graphql"
   }
 }
