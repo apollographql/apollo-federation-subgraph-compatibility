@@ -6,7 +6,7 @@
   "repository": {
     "name": "strawberry",
     "owner": "strawberry-graphql",
-    "link": "https://github.com/strawberry-graphql/strawberry",
+    "link": "https://github.com/strawberry-graphql/strawberry"
   },
   "coreLibrary": {
     "name": "GraphQL-core 3",
