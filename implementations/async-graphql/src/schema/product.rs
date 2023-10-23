@@ -2,9 +2,11 @@ use async_graphql::{ComplexObject, Context, InputObject, Object, SimpleObject, I
 
 use crate::schema::user::User;
 use crate::schema::ProductResearch;
+use super::custom_directive::custom;
 
 #[derive(SimpleObject, Clone, Debug)]
 #[graphql(complex)]
+#[graphql(directive = "custom::apply()")]
 pub struct Product {
     pub id: ID,
     pub sku: Option<String>,

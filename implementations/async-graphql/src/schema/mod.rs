@@ -6,6 +6,8 @@ mod deprecated_product;
 mod product;
 mod product_research;
 mod user;
+mod custom_directive;
+
 use self::deprecated_product::DeprecatedProductQuery;
 use self::product::{Product, ProductVariation, ProductsQuery};
 use self::product_research::{CaseStudy, ProductResearch, ProductResearchQuery};
