@@ -31,4 +31,9 @@ final class DeprecatedProduct extends Model
     {
         return $this->belongsTo(User::class, 'createdByUserEmail');
     }
+
+    public function inventory(): BelongsTo
+    {
+        return $this->belongsTo(Inventory::class);
+    }
 }

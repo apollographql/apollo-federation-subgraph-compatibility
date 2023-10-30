@@ -1,18 +1,18 @@
-type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
+type Product @custom @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
     id: ID!
     sku: String
     package: String
     variation: ProductVariation @method
     dimensions: ProductDimension
     createdBy: User @provides(fields: "totalProductsCreated")
-    notes: String
+    notes: String @tag(name: "internal")
     research: [ProductResearch!]!
 }
 
-type ProductDimension {
+type ProductDimension @shareable {
     size: String
     weight: Float
-    unit: String
+    unit: String @inaccessible
 }
 
 type ProductVariation {

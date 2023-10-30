@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('product_research', function (Blueprint $table) {
             $table->string('studyCaseNumber')->unique();
             $table->string('outcome')->nullable();
+            $table->string('product_id')->nullable();
         });
     }
 

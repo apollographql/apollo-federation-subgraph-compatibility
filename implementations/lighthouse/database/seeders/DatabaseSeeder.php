@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\CaseStudy;
 use App\Models\DeprecatedProduct;
+use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\ProductResearch;
 use App\Models\User;
@@ -37,10 +38,15 @@ final class DatabaseSeeder extends Seeder
         $research2->study()->associate($caseStudy2);
         $research2->save();
 
+        $inventory = new Inventory();
+        $inventory->id = 'apollo-oss';
+        $inventory->save();
+
         $deprecatedProduct = new DeprecatedProduct();
         $deprecatedProduct->sku = 'apollo-federation-v1';
         $deprecatedProduct->package = '@apollo/federation-v1';
         $deprecatedProduct->reason = 'Migrate to Federation V2';
+        $deprecatedProduct->inventory()->associate($inventory);
         $deprecatedProduct->createdBy()->associate($user);
         $deprecatedProduct->save();
 
@@ -56,11 +62,13 @@ final class DatabaseSeeder extends Seeder
         ];
         $productFederation->createdBy()->associate($user);
         $productFederation->save();
+        $productFederation->research()->save($research1);
 
         $productStudio = new Product();
         $productStudio->id = 'apollo-studio';
         $productStudio->sku = 'studio';
         $productStudio->createdBy()->associate($user);
         $productStudio->save();
+        $productStudio->research()->save($research2);
     }
 }

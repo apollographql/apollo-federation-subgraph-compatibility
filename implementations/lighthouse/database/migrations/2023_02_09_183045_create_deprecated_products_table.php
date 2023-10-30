@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('package');
             $table->string('reason')->nullable();
             $table->string('createdByUserEmail')->nullable();
+            $table->string('inventory_id');
 
             $table->unique(['sku', 'package']);
         });
