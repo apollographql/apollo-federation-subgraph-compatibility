@@ -1,0 +1,11 @@
+{
+  "fullName": "Grafbase",
+  "language": "Other Solutions",
+  "documentation": "https://grafbase.com/docs",
+  "type": "Code first | SDL first",
+  "repository": {
+    "name": "grafbase",
+    "owner": "grafbase",
+    "link": "https://github.com/grafbase/grafbase"
+  }
+}

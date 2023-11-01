@@ -1,0 +1,100 @@
+extend schema @federation(version: "2.3") @auth(rules: [{ allow: public }])
+
+type Product
+  @key(fields: "id", select: "product(id: $id)")
+  @key(
+    fields: "sku package"
+    select: "productBySku(sku: $sku, package: $package)"
+  )
+  @key(
+    fields: "sku variation { id }"
+    select: "productBySkuAndVariation(sku: $sku, variation: $variation)"
+  ) {
+  id: ID!
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User @provides(fields: "totalProductsCreated")
+  notes: String @tag(name: "internal")
+  research: [ProductResearch!]!
+}
+
+type DeprecatedProduct
+  @key(
+    fields: "sku package"
+    select: "deprecatedProduct(sku: $sku, package: $package)"
+  ) {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
+}
+
+type ProductVariation {
+  id: ID!
+}
+
+type ProductResearch
+  @key(
+    fields: "study { caseNumber }"
+    select: "productResearchLookup(study: $study)"
+  ) {
+  study: CaseStudy!
+  outcome: String
+}
+
+type CaseStudy {
+  caseNumber: ID!
+  description: String
+}
+
+type ProductDimension @shareable {
+  size: String
+  weight: Float
+  unit: String @inaccessible
+}
+
+extend type Query {
+  # Fields required by the Subgraph tests
+  product(id: ID!): Product @resolver(name: "product")
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct
+    @deprecated(reason: "Use product query instead")
+    @resolver(name: "deprecatedProduct")
+
+  # Fields used for our entity resolvers
+  productBySku(sku: String!, package: String!): Product
+    @resolver(name: "productBySku")
+  productBySkuAndVariation(
+    sku: String!
+    variation: VariationLookupInput!
+  ): Product @resolver(name: "productBySkuAndVariation")
+  productResearchLookup(study: CaseStudyLookupInput!): ProductResearch
+    @resolver(name: "productResearchLookup")
+}
+
+input CaseStudyLookupInput {
+  caseNumber: ID!
+}
+
+input VariationLookupInput {
+  id: ID!
+}
+
+type User @key(fields: "email") {
+  averageProductsCreatedPerYear: Int
+    @resolver(name: "averageProductsPerYear")
+    @requires(fields: "totalProductsCreated yearsOfEmployment")
+  email: ID! @external
+  name: String
+    @override(from: "users")
+    @resolver(name: "userName")
+    @requires(fields: "email")
+  totalProductsCreated: Int @external
+  yearsOfEmployment: Int! @external
+}
+
+# type Inventory @interfaceObject @key(fields: "id") {
+#   id: ID!
+#   deprecatedProducts: [DeprecatedProduct!]!
+# }
