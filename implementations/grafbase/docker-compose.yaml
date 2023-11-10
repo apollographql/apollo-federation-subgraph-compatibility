@@ -1,0 +1,13 @@
+services:
+  grafbase:
+    # must be relative to the root of the project
+    build: implementations/grafbase
+    command:
+      start --listen-address 0.0.0.0
+  products:
+    image: umputun/reproxy
+    depends_on:
+      - grafbase
+    ports:
+      - 4001:4001
+    command: --static.enabled --static.rule="*,^(.*),http://grafbase:4000/graphql" --ssl.type=none --listen=0.0.0.0:4001
