@@ -10,6 +10,7 @@ trait ProductService {
   def bySkuAndPackage(sku: String, `package`: String): Future[Option[Product]]
   def bySkuAndProductVariantionId(sku: String, variation: ProductVariation): Future[Option[Product]]
   def deprecatedProduct(sku: String, `package`: String): Future[Option[DeprecatedProduct]]
+  def inventory(id: ID): Future[Option[Inventory]]
 }
 
 object ProductService {
@@ -45,6 +46,13 @@ object ProductService {
   private val products: List[Product] = List(product1, product2)
   private val deprecatedProducts: List[DeprecatedProduct] = List(deprecatedProduct)
 
+  private val inventoryList: List[Inventory] = List(
+    Inventory(
+      id = ID("apollo-oss"),
+      deprecatedProducts = deprecatedProducts
+    )
+  )
+
   val inMemory: ProductService = new ProductService {
     override def product(id: ID): Future[Option[Product]] =
       Future.successful(products.find(_.id == id))
@@ -60,5 +68,7 @@ object ProductService {
 
     override def deprecatedProduct(sku: String, `package`: String): Future[Option[DeprecatedProduct]] =
       Future.successful(deprecatedProducts.find(p => p.sku == sku && p.`package` == `package`))
+
+    def inventory(id: ID): Future[Option[Inventory]] = Future.successful(inventoryList.find(_.id == id))
   }
 }

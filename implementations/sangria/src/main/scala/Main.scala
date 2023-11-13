@@ -1,6 +1,6 @@
 import cats.effect.{ExitCode, IO, IOApp}
 import com.comcast.ip4s.IpLiteralSyntax
-import graphql.{AppContext, GraphQLSchema, ProductGraphQLSchema, UserGraphQLSchema}
+import graphql.{AppContext, GraphQLSchema, InventoryGraphQLSchema, ProductGraphQLSchema, UserGraphQLSchema}
 import http.{GraphQLExecutor, GraphQLServer}
 import io.circe.Json
 import sangria.federation.v2.Federation
@@ -47,7 +47,8 @@ object Main extends IOApp {
       ProductGraphQLSchema.productResolver,
       ProductGraphQLSchema.deprecatedProductResolver,
       ProductGraphQLSchema.productResearchResolver,
-      UserGraphQLSchema.userResolver
+      UserGraphQLSchema.userResolver,
+      InventoryGraphQLSchema.inventoryResolver
     )
 
   private def graphQLExecutor(context: AppContext): IO[GraphQLExecutor[AppContext]] = IO {
