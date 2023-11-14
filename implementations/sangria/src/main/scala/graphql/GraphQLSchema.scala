@@ -1,5 +1,6 @@
 package graphql
 
+import graphql.InventoryGraphQLSchema.InventoryType
 import graphql.ProductGraphQLSchema.{deprecatedProductQueryField, productQueryField}
 import graphql.UserGraphQLSchema.UserType
 import sangria.schema._
@@ -18,6 +19,6 @@ object GraphQLSchema {
   val schema: Schema[AppContext, Unit] = Schema(
     query = QueryType,
     mutation = None,
-    additionalTypes = List(UserType)
+    additionalTypes = List(UserType, InventoryType)
   )
 }

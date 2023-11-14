@@ -64,7 +64,7 @@ object ProductGraphQLSchema {
     Key("sku variation { id }")
   )
 
-  private val DeprecatedProductType: ObjectType[Unit, DeprecatedProduct] = ObjectType(
+  val DeprecatedProductType: ObjectType[Unit, DeprecatedProduct] = ObjectType(
     "DeprecatedProduct",
     fields = fields[Unit, DeprecatedProduct](
       Field("sku", StringType, resolve = _.value.sku),
