@@ -14,8 +14,13 @@ extend schema
       "@tag"
     ]
   )
+  @link(url: "https://myspecs.dev/myDirective/v1.0", import: ["@custom"])
+  @composeDirective(name: "@custom")
+
+directive @custom on OBJECT
 
 type Product
+  @custom
   @key(fields: "id")
   @key(fields: "sku package")
   @key(fields: "sku variation { id }") {
