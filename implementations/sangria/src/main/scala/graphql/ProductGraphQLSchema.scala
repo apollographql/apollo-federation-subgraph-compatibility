@@ -1,5 +1,6 @@
 package graphql
 
+import graphql.CustomDirectiveSpec.CustomDirective
 import graphql.UserGraphQLSchema.UserType
 import io.circe.Json
 import io.circe.generic.semiauto._
@@ -59,6 +60,7 @@ object ProductGraphQLSchema {
       Field("research", ListType(ProductResearchType), resolve = _.value.research)
     )
   ).withDirectives(
+    CustomDirective,
     Key("id"),
     Key("sku package"),
     Key("sku variation { id }")

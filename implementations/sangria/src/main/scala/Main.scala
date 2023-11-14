@@ -1,9 +1,9 @@
 import cats.effect.{ExitCode, IO, IOApp}
 import com.comcast.ip4s.IpLiteralSyntax
-import graphql.{AppContext, GraphQLSchema, InventoryGraphQLSchema, ProductGraphQLSchema, UserGraphQLSchema}
+import graphql.{AppContext, CustomDirectiveSpec, GraphQLSchema, InventoryGraphQLSchema, ProductGraphQLSchema, UserGraphQLSchema}
 import http.{GraphQLExecutor, GraphQLServer}
 import io.circe.Json
-import sangria.federation.v2.Federation
+import sangria.federation.v2.{CustomDirectivesDefinition, Federation, Spec}
 import sangria.marshalling.InputUnmarshaller
 import sangria.renderer.QueryRenderer
 import sangria.schema.Schema
@@ -43,6 +43,9 @@ object Main extends IOApp {
   private def schemaAndUm: (Schema[AppContext, Unit], InputUnmarshaller[Json]) =
     Federation.federate(
       GraphQLSchema.schema,
+      CustomDirectivesDefinition(
+        Spec("https://myspecs.dev/myCustomDirective/v1.0") -> List(CustomDirectiveSpec.CustomDirectiveDefinition)
+      ),
       sangria.marshalling.circe.CirceInputUnmarshaller,
       ProductGraphQLSchema.productResolver,
       ProductGraphQLSchema.deprecatedProductResolver,
