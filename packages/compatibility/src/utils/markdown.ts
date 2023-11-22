@@ -1,14 +1,138 @@
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { TestResultDetails, TestResults, TESTS } from '../testRunner';
+import Mustache from 'mustache';
+
+const template = `
+The following open-source GraphQL server libraries and other solutions support acting as a subgraph in a federated supergraph.
+
+## Table Legend
+
+| Icon | Description                                          |
+| ---- | ---------------------------------------------------- |
+| {{{apolloIcon}}} | Maintained by Apollo |
+| 🟢    | Functionality is supported                           |
+| ❌    | Critical functionality is NOT supported              |
+| 🔲    | Additional federation functionality is NOT supported |
+
+{{#compatibilityResults}}
+
+## {{{language}}}
+
+<table>
+  <thead>
+    <tr>
+      <th width="300">Library</th>
+      <th>Federation 1 Support</th>
+      <th>Federation 2 Support</th>
+    </tr>
+  </thead>
+	<tbody>
+    {{#implementations}}
+		<tr>
+			<th colspan="3"><big><a href="{{{documentation}}}">{{name}}</a></big></th>
+		</tr>
+		<tr>
+			<td>{{description}}<br/>
+<br/>
+{{#repository}}
+Github: <a href="{{{link}}}">{{{name}}}{{#apolloIcon}}&nbsp;&nbsp;{{{apolloIcon}}}{{/apolloIcon}}</a><br/>
+<br/>
+{{#type}}Type: {{{type}}}<br/>{{/type}}
+{{#stargazerCount}}Stars: {{stargazerCount}} ⭐<br/>{{/stargazerCount}}
+{{#lastRelease}}Last Release: {{lastRelease}}<br/>{{/lastRelease}}
+{{/repository}}
+<br/>
+{{#coreLibrary}}
+Core Library: <a href="{{{link}}}">{{{name}}}{{#apolloIcon}}&nbsp;&nbsp;{{{apolloIcon}}}{{/apolloIcon}}</a><br/>
+{{/coreLibrary}}
+{{#federationlibrary}}
+Federation Library: <a href="{{{link}}}">{{{name}}}{{#apolloIcon}}&nbsp;&nbsp;{{{apolloIcon}}}{{/apolloIcon}}</a>
+{{/federationlibrary}}
+      </td>
+      {{#compatibilities}}
+      <td>
+        <table>
+        {{#tests}}
+          <tr><th><code>{{name}}</code></th><td>{{result}}</td></tr>
+        {{/tests}}
+        </table>
+      </td>
+      {{/compatibilities}}
+    </tr>
+    {{/implementations}}
+  </tbody>
+</table>
+{{/compatibilityResults}}
+`;
+
+const singleImplementationTemplate = `
+<table>
+	<thead>
+		<tr>
+			<th width="300">Library</th>
+			<th>Federation 1 Support</th>
+			<th>Federation 2 Support</th>
+		</tr>
+	</thead>
+	<tbody>
+    <tr>
+      {{#compatibilities}}
+      <td>
+        <table>
+        {{#tests}}
+          <tr><th><code>{{name}}</code></th><td>{{result}}</td></tr>
+        {{/tests}}
+        </table>
+      </td>
+      {{/compatibilities}}
+		</tr>
+	</tbody>
+</table>
+`;
 
 const apolloIcon: string =
   '<img style="display:inline-block; height:1em; width:auto;" alt="Maintained by Apollo" src="https://apollo-server-landing-page.cdn.apollographql.com/_latest/assets/favicon.png"/>';
 const apolloName: string = 'apollographql';
 
-export function generateMarkdown(results: TestResultDetails[]) {
-  const markdownFile = new MarkdownFile(true);
+interface CompatibilityResults {
+  language: string;
+  implementations: SubgraphImplementation[];
+}
 
+interface SubgraphImplementation {
+  name: string;
+  documentation: string;
+  description: string;
+  repository?: ProjectGithubRepository;
+  coreLibrary?: GithubRepository;
+  federationLibrary?: GithubRepository;
+  compatibilities: FederationCompatibility[];
+}
+
+interface GithubRepository {
+  name: string;
+  link: string;
+  apolloIcon?: string;
+}
+
+interface ProjectGithubRepository extends GithubRepository {
+  type?: string;
+  stargazerCount?: string;
+  lastRelease?: string;
+}
+
+interface FederationCompatibility {
+  version: Number;
+  tests: FederationTest[];
+}
+
+interface FederationTest {
+  name: string;
+  result: string;
+}
+
+export function generateMarkdown(results: TestResultDetails[]) {
   const resultsSortedByLanguage = results.sort((a, b) => {
     if (a.language === b.language) return 0;
 
@@ -19,118 +143,28 @@ export function generateMarkdown(results: TestResultDetails[]) {
     return a.language > b.language ? 1 : -1;
   });
 
+  let compatibilityResults: CompatibilityResults[] = [];
+  var current: CompatibilityResults = null;
   var currentLanguage = null;
   resultsSortedByLanguage.forEach((result) => {
     if (currentLanguage !== result.language) {
       if (currentLanguage !== null) {
-        markdownFile.endTable();
+        compatibilityResults.push(current);
       }
-
-      markdownFile.startTable(result);
       currentLanguage = result.language;
+      current = {
+        language: currentLanguage,
+        implementations: [],
+      };
     }
-    markdownFile.addFrameworkResultToTable(result);
-  });
-  markdownFile.endTable();
+    let impl: SubgraphImplementation = {
+      name: result.fullName || result.name,
+      documentation: result.documentation,
+      description: result.description,
+      compatibilities: generateCompatibilityResults(result.tests),
+    };
 
-  writeFileSync(
-    resolve(process.cwd(), 'results.md'),
-    markdownFile.toString(),
-    'utf-8',
-  );
-}
-
-export function generateSimplifiedMarkdown(
-  results: TestResults,
-  outputFile: string,
-) {
-  const markdownFile = new MarkdownFile();
-
-  markdownFile.startTable();
-  markdownFile.addTestResultsToTable(results);
-  markdownFile.endTable();
-
-  writeFileSync(outputFile, markdownFile.toString(), 'utf-8');
-}
-
-class MarkdownFile {
-  private content: string[] = [];
-
-  constructor(includeLegend?: Boolean) {
-    if (includeLegend) {
-      let intro = `The following open-source GraphQL server libraries and other solutions support acting as a subgraph in a federated supergraph.
-
-## Table Legend
-
-| Icon | Description                                          |
-| ---- | ---------------------------------------------------- |
-| ${apolloIcon} | Maintained by Apollo |
-| 🟢    | Functionality is supported                           |
-| ❌    | Critical functionality is NOT supported              |
-| 🔲    | Additional federation functionality is NOT supported |
-
-`;
-
-      this.content.push(intro);
-    }
-  }
-
-  startTable(result?: TestResultDetails) {
-    let headers = '<th>Federation 1 Support</th><th>Federation 2 Support</th>';
-    if (result) {
-      this.content.push('', `## ${result.language}`, '');
-      headers = '<th width="300">Library</th>' + headers;
-    }
-
-    this.content.push(
-      '<table>',
-      '<thead>',
-      `<tr>${headers}</tr>`,
-      '</thead>',
-      '<tbody>',
-    );
-  }
-
-  endTable() {
-    this.content.push('</tbody>', '</table>');
-  }
-
-  addFrameworkResultToTable(result: TestResultDetails) {
-    const name = result.fullName || result.name;
-    this.content.push(
-      `<tr><th colspan="3"><big><a href="${result.documentation}">${name}</a></big></th></tr>`,
-    );
-
-    const columns = [
-      this.renderSubgraphDetailsCell(result),
-      this.renderTestResultsCell({ fedVersion: 1, testResults: result.tests }),
-      this.renderTestResultsCell({ fedVersion: 2, testResults: result.tests }),
-    ];
-    let tableRow = '<tr>';
-    columns.forEach((column) => {
-      tableRow += `<td>${column}</td>`;
-    });
-    tableRow += '</tr>';
-    this.content.push(tableRow);
-  }
-
-  addTestResultsToTable(results: TestResults) {
-    const rows = [
-      this.renderTestResultsCell({ fedVersion: 1, testResults: results }),
-      this.renderTestResultsCell({ fedVersion: 2, testResults: results }),
-    ];
-    let tableRow = '<tr>';
-    rows.forEach((row) => {
-      tableRow += `<td>${row}</td>`;
-    });
-    tableRow += '</tr>';
-    this.content.push(tableRow);
-  }
-
-  renderSubgraphDetailsCell(result: TestResultDetails): String {
-    let content = `${result.description}<br/><br/>`;
-
-    if (result.repository?.link) {
+    if (result.repository) {
       const starCount = Number(result.stargazerCount);
       let stars = null;
       if (starCount > 1000) {
@@ -138,67 +172,94 @@ class MarkdownFile {
       } else {
         stars = `${starCount}`;
       }
-      const lastReleaseDate = result.lastRelease.substring(0, 10);
-
+      const lastReleaseDate = result.lastRelease?.substring(0, 10);
       let repoName = result.repository.owner
         ? `${result.repository.owner}/${result.repository.name}`
         : result.repository.name;
-      if (result.repository.maintainer === apolloName) {
-        repoName += `&nbsp;&nbsp;${apolloIcon}`;
-      }
-      content += `Github: <a href="${result.repository.link}">${repoName}</a><br/>
-Type: ${result.type}<br/>
-Stars: ${stars} ⭐<br/>
-Last Release: ${lastReleaseDate}<br/><br/>`;
+
+      impl.repository = {
+        name: repoName,
+        link: result.repository.link,
+        apolloIcon:
+          apolloName == result.repository.maintainer ? apolloIcon : null,
+        type: result.type,
+        stargazerCount: stars,
+        lastRelease: lastReleaseDate,
+      };
     }
 
-    if (result.coreLibrary?.link) {
+    if (result.coreLibrary) {
       let coreLibraryName = result.coreLibrary.owner
         ? `${result.coreLibrary.owner}/${result.coreLibrary.name}`
         : result.coreLibrary.name;
-      if (result.coreLibrary.maintainer === apolloName) {
-        coreLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
-      }
-      content += `Core Library: <a href="${result.coreLibrary.link}">${coreLibraryName}</a><br/>`;
+      impl.coreLibrary = {
+        name: coreLibraryName,
+        link: result.coreLibrary.link,
+        apolloIcon:
+          apolloName == result.coreLibrary.maintainer ? apolloIcon : null,
+      };
     }
 
-    if (result.federationlibrary?.link) {
+    if (result.federationlibrary) {
       let fedLibraryName = result.federationlibrary.owner
         ? `${result.federationlibrary.owner}/${result.federationlibrary.name}`
         : result.federationlibrary.name;
-      if (result.federationlibrary.maintainer === apolloName) {
-        fedLibraryName += `&nbsp;&nbsp;${apolloIcon}`;
-      }
-      content += `Federation Library: <a href="${result.federationlibrary.link}">${fedLibraryName}</a><br/>`;
+      impl.federationLibrary = {
+        name: fedLibraryName,
+        link: result.federationlibrary.link,
+        apolloIcon:
+          apolloName == result.federationlibrary.maintainer ? apolloIcon : null,
+      };
     }
+    current.implementations.push(impl);
+  });
+  // push the last results section
+  compatibilityResults.push(current);
 
-    return content;
-  }
+  var output = Mustache.render(template, {
+    compatibilityResults: compatibilityResults,
+    apolloIcon: apolloIcon,
+  });
 
-  renderTestResultsCell({
-    fedVersion,
-    testResults,
-  }: {
-    fedVersion: number;
-    testResults: TestResults;
-  }): String {
-    let cell = '<table>';
-    TESTS.forEach((test) => {
-      if (test.fedVersion === fedVersion) {
-        cell += `<tr><th><code>${test.column}</code></th><td>${
-          testResults[test.assertion]?.success
-            ? '🟢'
-            : test.required
-            ? '❌'
-            : '🔲'
-        }</td></tr>`;
-      }
+  writeFileSync(resolve(process.cwd(), 'results.md'), output, 'utf-8');
+}
+
+export function generateSimplifiedMarkdown(
+  results: TestResults,
+  outputFile: string,
+) {
+  let compatibilityResults = generateCompatibilityResults(results);
+  var output = Mustache.render(singleImplementationTemplate, {
+    compatibilities: compatibilityResults,
+  });
+
+  writeFileSync(outputFile, output, 'utf-8');
+}
+
+function generateCompatibilityResults(
+  results: TestResults,
+): FederationCompatibility[] {
+  let compatibilities = [
+    {
+      version: 1,
+      tests: [],
+    },
+    {
+      version: 2,
+      tests: [],
+    },
+  ];
+  TESTS.forEach((test) => {
+    let index = test.fedVersion - 1;
+    let testResult = results[test.assertion]?.success
+      ? '🟢'
+      : test.required
+      ? '❌'
+      : '🔲';
+    compatibilities[index].tests.push({
+      name: test.column,
+      result: testResult,
     });
-    cell += '</table>';
-    return cell;
-  }
-
-  toString() {
-    return this.content.join('\n');
-  }
+  });
+  return compatibilities;
 }
