@@ -33,6 +33,12 @@ final class DatabaseSeeder extends Seeder
         $productFederation->createdBy()->associate($user);
         $productFederation->save();
 
+        $productStudio = new Product();
+        $productStudio->id = 'apollo-studio';
+        $productStudio->sku = 'studio';
+        $productStudio->createdBy()->associate($user);
+        $productStudio->save();
+
         $caseStudy1 = new CaseStudy();
         $caseStudy1->caseNumber = '1234';
         $caseStudy1->description = 'Federation Study';
@@ -50,6 +56,7 @@ final class DatabaseSeeder extends Seeder
 
         $research2 = new ProductResearch();
         $research2->study()->associate($caseStudy2);
+        $research2->product()->associate($productStudio);
         $research2->save();
 
         $inventory = new Inventory();
@@ -63,12 +70,5 @@ final class DatabaseSeeder extends Seeder
         $deprecatedProduct->inventory()->associate($inventory);
         $deprecatedProduct->createdBy()->associate($user);
         $deprecatedProduct->save();
-
-        $productStudio = new Product();
-        $productStudio->id = 'apollo-studio';
-        $productStudio->sku = 'studio';
-        $productStudio->createdBy()->associate($user);
-        $productStudio->save();
-        $productStudio->research()->save($research2);
     }
 }
