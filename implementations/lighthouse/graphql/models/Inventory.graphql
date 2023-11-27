@@ -1,0 +1,4 @@
+type Inventory @interfaceObject @key(fields: "id") {
+  id: ID!
+  deprecatedProducts: [DeprecatedProduct!]!
+}

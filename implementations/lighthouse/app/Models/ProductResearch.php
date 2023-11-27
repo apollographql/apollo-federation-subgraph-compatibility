@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * Attributes
  * @property string|null $outcome
+ * @property string|null $product_id
  *
  * Relations
  * @property-read CaseStudy $study
+ * @property-read Product|null $product
  */
 final class ProductResearch extends Model
 {
@@ -26,5 +28,10 @@ final class ProductResearch extends Model
     public function study(): BelongsTo
     {
         return $this->belongsTo(CaseStudy::class, 'studyCaseNumber');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
     }
 }

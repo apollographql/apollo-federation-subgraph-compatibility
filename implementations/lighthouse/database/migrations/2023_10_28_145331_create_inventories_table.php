@@ -8,15 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('product_research', function (Blueprint $table): void {
-            $table->string('studyCaseNumber')->unique();
-            $table->string('outcome')->nullable();
-            $table->string('product_id')->nullable();
+        Schema::create('inventories', function (Blueprint $table): void {
+            $table->string('id')->unique();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('product_research');
+        Schema::dropIfExists('inventories');
     }
 };
