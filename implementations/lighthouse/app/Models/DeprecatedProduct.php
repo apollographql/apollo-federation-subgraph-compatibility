@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * Relations
  * @property-read User|null $createdBy
+ * @property-read Inventory|null $inventory
  */
 final class DeprecatedProduct extends Model
 {

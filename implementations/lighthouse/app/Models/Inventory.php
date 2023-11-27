@@ -1,12 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Inventory extends Model
+/**
+ * Primary key
+ * @property string $id
+ *
+ * Relations
+ * @property-read Collection<int,DeprecatedProduct> $deprecatedProducts
+ */
+final class Inventory extends Model
 {
     public $timestamps = false;
 

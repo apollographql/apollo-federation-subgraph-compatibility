@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('product_research', function (Blueprint $table) {
+        Schema::create('product_research', function (Blueprint $table): void {
             $table->string('studyCaseNumber')->unique();
             $table->string('outcome')->nullable();
             $table->string('product_id')->nullable();

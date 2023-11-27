@@ -20,6 +20,19 @@ final class DatabaseSeeder extends Seeder
         $user->totalProductsCreated = 420;
         $user->save();
 
+        $productFederation = new Product();
+        $productFederation->id = 'apollo-federation';
+        $productFederation->sku = 'federation';
+        $productFederation->package = '@apollo/federation';
+        $productFederation->variation = 'OSS';
+        $productFederation->dimensions = [
+            'size' => 'small',
+            'weight' => 1,
+            'unit' => 'kg'
+        ];
+        $productFederation->createdBy()->associate($user);
+        $productFederation->save();
+
         $caseStudy1 = new CaseStudy();
         $caseStudy1->caseNumber = '1234';
         $caseStudy1->description = 'Federation Study';
@@ -27,6 +40,7 @@ final class DatabaseSeeder extends Seeder
 
         $research1 = new ProductResearch();
         $research1->study()->associate($caseStudy1);
+        $research1->product()->associate($productFederation);
         $research1->save();
 
         $caseStudy2 = new CaseStudy();
@@ -49,20 +63,6 @@ final class DatabaseSeeder extends Seeder
         $deprecatedProduct->inventory()->associate($inventory);
         $deprecatedProduct->createdBy()->associate($user);
         $deprecatedProduct->save();
-
-        $productFederation = new Product();
-        $productFederation->id = 'apollo-federation';
-        $productFederation->sku = 'federation';
-        $productFederation->package = '@apollo/federation';
-        $productFederation->variation = 'OSS';
-        $productFederation->dimensions = [
-            'size' => 'small',
-            'weight' => 1,
-            'unit' => 'kg'
-        ];
-        $productFederation->createdBy()->associate($user);
-        $productFederation->save();
-        $productFederation->research()->save($research1);
 
         $productStudio = new Product();
         $productStudio->id = 'apollo-studio';
