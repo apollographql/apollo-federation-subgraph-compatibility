@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies and build
         run: npm install
       - name: Locate subgraph to test
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
