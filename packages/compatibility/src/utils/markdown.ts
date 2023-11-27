@@ -70,7 +70,6 @@ const singleImplementationTemplate = `
 <table>
 	<thead>
 		<tr>
-			<th width="300">Library</th>
 			<th>Federation 1 Support</th>
 			<th>Federation 2 Support</th>
 		</tr>
