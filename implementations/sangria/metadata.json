@@ -8,7 +8,7 @@
     "owner": "sangria-graphql",
     "link": "https://github.com/sangria-graphql/sangria"
   },
-  "federationlibrary": {
+  "federationLibrary": {
     "name": "sangria-federated",
     "owner": "sangria-graphql",
     "link": "https://github.com/sangria-graphql/sangria-federated"

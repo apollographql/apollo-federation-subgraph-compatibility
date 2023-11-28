@@ -8,7 +8,7 @@
     "owner": "webonyx",
     "link": "https://github.com/webonyx/graphql-php"
   },
-  "federationlibrary": {
+  "federationLibrary": {
     "name": "apollo-federation-php",
     "owner": "Skillshare",
     "link": "https://github.com/Skillshare/apollo-federation-php"
