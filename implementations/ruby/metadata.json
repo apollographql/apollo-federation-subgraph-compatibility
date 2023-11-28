@@ -8,7 +8,7 @@
     "owner": "rmosolgo",
     "link": "https://github.com/rmosolgo/graphql-ruby"
   },
-  "federationlibrary": {
+  "federationLibrary": {
     "name": "Gusto/apollo-federation-ruby",
     "link": "https://github.com/Gusto/apollo-federation-ruby/"
   }

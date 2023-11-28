@@ -12,7 +12,7 @@
     "name": "GraphQL-core 3",
     "link": "https://github.com/graphql-python/graphql-core"
   },
-  "federationlibrary": {
+  "federationLibrary": {
     "name": "graphene-federation",
     "owner": "graphql-python",
     "link": "https://github.com/graphql-python/graphene-federation"

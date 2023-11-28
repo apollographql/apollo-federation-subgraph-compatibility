@@ -13,7 +13,7 @@
     "name": "<display name of core GraphQL library - ONLY INCLUDE THIS SECTION IF DIFFERENT THAN THE MAIN LIBRARY REPO>",
     "link": "github repo | NPM link | other distribution link"
   },
-  "federationlibrary": {
+  "federationLibrary": {
     "name": "<display name of Federation library - ONLY INCLUDE THIS SECTION IF DIFFERENT THAN THE MAIN LIBRARY REPO>",
     "link": "github repo | NPM link | other distribution link"
   }

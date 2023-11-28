@@ -154,7 +154,7 @@ export interface TestResultDetails {
   }[];
   repository?: RepositoryInformation;
   coreLibrary?: RepositoryInformation;
-  federationlibrary?: RepositoryInformation;
+  federationLibrary?: RepositoryInformation;
   started: boolean;
   tests: TestResults;
 }

@@ -46,9 +46,9 @@ Github: <a href="{{{link}}}">{{{name}}}{{#apolloIcon}}&nbsp;&nbsp;{{{apolloIcon}
 {{#coreLibrary}}
 Core Library: <a href="{{{link}}}">{{{name}}}{{#apolloIcon}}&nbsp;&nbsp;{{{apolloIcon}}}{{/apolloIcon}}</a><br/>
 {{/coreLibrary}}
-{{#federationlibrary}}
+{{#federationLibrary}}
 Federation Library: <a href="{{{link}}}">{{{name}}}{{#apolloIcon}}&nbsp;&nbsp;{{{apolloIcon}}}{{/apolloIcon}}</a>
-{{/federationlibrary}}
+{{/federationLibrary}}
       </td>
       {{#compatibilities}}
       <td>
@@ -199,15 +199,15 @@ export function generateMarkdown(results: TestResultDetails[]) {
       };
     }
 
-    if (result.federationlibrary) {
-      let fedLibraryName = result.federationlibrary.owner
-        ? `${result.federationlibrary.owner}/${result.federationlibrary.name}`
-        : result.federationlibrary.name;
+    if (result.federationLibrary) {
+      let fedLibraryName = result.federationLibrary.owner
+        ? `${result.federationLibrary.owner}/${result.federationLibrary.name}`
+        : result.federationLibrary.name;
       impl.federationLibrary = {
         name: fedLibraryName,
-        link: result.federationlibrary.link,
+        link: result.federationLibrary.link,
         apolloIcon:
-          apolloName == result.federationlibrary.maintainer ? apolloIcon : null,
+          apolloName == result.federationLibrary.maintainer ? apolloIcon : null,
       };
     }
     current.implementations.push(impl);
