@@ -23,8 +23,8 @@ export function logResults(testResults: TestResults) {
         testResults[test.assertion]?.success
           ? 'PASS'
           : test.required
-          ? 'FAIL'
-          : 'WARNING',
+            ? 'FAIL'
+            : 'WARNING',
       );
     }
   });
@@ -36,8 +36,8 @@ export function logResults(testResults: TestResults) {
         testResults[test.assertion]?.success
           ? 'PASS'
           : test.required
-          ? 'FAIL'
-          : 'WARNING',
+            ? 'FAIL'
+            : 'WARNING',
       );
     }
   });

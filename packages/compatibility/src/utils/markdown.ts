@@ -253,8 +253,8 @@ function generateCompatibilityResults(
     let testResult = results[test.assertion]?.success
       ? '🟢'
       : test.required
-      ? '❌'
-      : '🔲';
+        ? '❌'
+        : '🔲';
     compatibilities[index].tests.push({
       name: test.column,
       result: testResult,
