@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:21-alpine
 WORKDIR /web
 COPY *.js *.js.map *.cjs package.json users.graphql ./
 EXPOSE 4002
