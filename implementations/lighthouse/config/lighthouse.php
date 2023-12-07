@@ -65,4 +65,26 @@ return [
 
     'debug' => \GraphQL\Error\DebugFlag::INCLUDE_DEBUG_MESSAGE | \GraphQL\Error\DebugFlag::INCLUDE_TRACE,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Tracing
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for tracing support.
+    |
+    */
+
+    'tracing' => [
+        /*
+         * Driver used for tracing.
+         *
+         * Accepts the fully qualified class name of a class that implements Nuwave\Lighthouse\Tracing\Tracing.
+         * Lighthouse provides:
+         * - Nuwave\Lighthouse\Tracing\ApolloTracing\ApolloTracing::class
+         * - Nuwave\Lighthouse\Tracing\FederatedTracing\FederatedTracing::class
+         *
+         * In Lighthouse v7 the default will be changed to 'Nuwave\Lighthouse\Tracing\FederatedTracing\FederatedTracing::class'.
+         */
+        'driver' => Nuwave\Lighthouse\Tracing\FederatedTracing\FederatedTracing::class,
+    ],
 ];

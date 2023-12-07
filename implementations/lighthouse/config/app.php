@@ -186,6 +186,7 @@ return [
          * Package Service Providers...
          */
         Nuwave\Lighthouse\Federation\FederationServiceProvider::class,
+        Nuwave\Lighthouse\Tracing\TracingServiceProvider::class,
 
         /*
          * Application Service Providers...
