@@ -2,7 +2,8 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^10",
-        "nuwave/lighthouse": "^6.23"
+        "nuwave/lighthouse": "^6.26",
+        "google/protobuf": "^3.25"
     },
     "autoload": {
         "psr-4": {
