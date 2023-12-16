@@ -82,7 +82,7 @@ jobs:
           cat results.md
           cat results.md >> $GITHUB_STEP_SUMMARY
       - name: Upload Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results.md
           path: ./results.md
