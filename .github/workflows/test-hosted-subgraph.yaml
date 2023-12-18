@@ -64,7 +64,7 @@ jobs:
           mv results.md results-${{ env.SUBGRAPH }}.md
           echo "RESULTS_FILE=results-${{ env.SUBGRAPH }}.md" >> $GITHUB_ENV
       - name: Upload Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.RESULTS_FILE }}
           path: ./${{ env.RESULTS_FILE }}
