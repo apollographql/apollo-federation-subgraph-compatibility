@@ -7,7 +7,7 @@ import caliban.schema.{ GenericSchema, Schema }
 import models._
 import services.{ InventoryService, ProductService, UserService }
 import zio.query.ZQuery
-import zio.{ IO, URIO, ZIO }
+import zio.{ URIO, ZIO }
 
 case class Query(
   product: IDArgs => URIO[ProductService, Option[models.Product]],
@@ -86,8 +86,8 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
           "custom",
           None,
           Set(__DirectiveLocation.OBJECT),
-          Nil,
-          repeatable = false
+          _ => Nil,
+          isRepeatable = false
         )
       )
     ) @@ federated(
@@ -96,12 +96,6 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
       productResearchResolver,
       deprecatedProductResolver,
       inventoryResolver
-    ) @@ ApolloFederatedTracing.wrapper
-
-  val interpreter: IO[CalibanError.ValidationError, GraphQLInterpreter[
-    ProductService with UserService with InventoryService,
-    CalibanError
-  ]] =
-    graphql.interpreter
+    ) @@ ApolloFederatedTracing.wrapper()
 
 }

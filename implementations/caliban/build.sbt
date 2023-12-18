@@ -1,17 +1,12 @@
-import sbt._
+import sbt.*
 
-version := "2.1.0"
-scalaVersion := "2.13.8"
+version      := "2.4.3"
+scalaVersion := "2.13.12"
 
-val zioJsonV = "0.4.2"
-val zioHttpV = "0.0.5"
-val calibanV = "2.1.0" //"2.0.1"
+val calibanV = "2.4.3"
 
 libraryDependencies ++= List(
-  "dev.zio"                     %% "zio-json"           % zioJsonV,
-  "dev.zio"                     %% "zio-http"           % zioHttpV,
-  "com.softwaremill.sttp.tapir" %% "tapir-json-zio"     % "1.2.11",
-  "com.github.ghostdogpr"       %% "caliban"            % calibanV,
-  "com.github.ghostdogpr"       %% "caliban-federation" % calibanV,
-  "com.github.ghostdogpr"       %% "caliban-zio-http"   % calibanV
+  "com.github.ghostdogpr" %% "caliban"            % calibanV,
+  "com.github.ghostdogpr" %% "caliban-quick"      % calibanV,
+  "com.github.ghostdogpr" %% "caliban-federation" % calibanV
 )
