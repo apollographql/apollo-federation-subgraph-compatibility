@@ -96,6 +96,6 @@ object ProductApi extends GenericSchema[ProductService with UserService] {
       productResearchResolver,
       deprecatedProductResolver,
       inventoryResolver
-    ) @@ ApolloFederatedTracing.wrapper
+    ) @@ ApolloFederatedTracing.wrapper()
 
 }

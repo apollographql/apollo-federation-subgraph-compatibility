@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:11.0.12_1.5.5_2.13.6 AS build
+FROM sbtscala/scala-sbt:graalvm-ce-22.3.3-b1-java17_1.9.8_2.13.12 AS build
 
 WORKDIR /build
 COPY project/build.properties ./project/
