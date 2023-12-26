@@ -45,7 +45,7 @@ jobs:
           mv results.md docs/index.md
           mkdocs build
       - name: Upload GH page
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
