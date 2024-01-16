@@ -91,7 +91,7 @@ const singleImplementationTemplate = `
 `;
 
 const apolloIcon: string =
-  '<img style="display:inline-block; height:1em; width:auto;" alt="Maintained by Apollo" src="https://apollo-server-landing-page.cdn.apollographql.com/_latest/assets/favicon.png"/>';
+  '<img style="display:inline-block; height:1em; width:auto;" alt="Maintained by Apollo" src="https://raw.githubusercontent.com/apollographql/apollo-federation-subgraph-compatibility/96e13acebd8d699127f2bae142622fbd4c392ecf/docs/assets/horizon_logo.png"/>';
 const apolloName: string = 'apollographql';
 
 interface CompatibilityResults {
