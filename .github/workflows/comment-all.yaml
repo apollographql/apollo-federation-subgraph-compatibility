@@ -1,40 +1,9 @@
-name: Comment on PR
+name: Comment on test ALL PR
 
 on:
   workflow_run:
     workflows:
-      - "Absinthe Federation Test"
-      - "Apollo Server Test"
-      - "Ariadne Test"
-      - "Ballerina GraphQL Test"
-      - "Caliban Test"
-      - "Dgraph Test"
-      - "DGS Test"
-      - "Express GraphQL Test"
-      - "Federation JVM Test"
-      - "GQLGen Test"
-      - "Grafbase Test"
-      - "Graphene Test"
-      - "GraphQL for .Net Test"
-      - "GraphQL Go Test"
-      - "GraphQL Helix Test"
-      - "GraphQL Java Kickstart Test"
-      - "GraphQL Kotlin Test"
-      - "GraphQL Mesh Test"
-      - "GraphQL Yoga Test"
-      - "HotChocolate Test"
-      - "Hosted Subgraph Test"
-      - "Lighthouse Test"
-      - "Mercurius Test"
-      - "Neo4j GraphQL Library Test"
-      - "NestJS (Code First) Test"
-      - "NestJS (SDL First) Test"
-      - "Apollo Federation PHP Test"
-      - "Pothos Test"
-      - "GraphQL Ruby Test"
-      - "Sangria Test"
-      - "Strawberry GraphQL Test"
-      - "Swift Graphiti Test"
+      - "Test"
     types:
       - completed
 
@@ -51,12 +20,13 @@ jobs:
         id: download_artifacts
         with:
           script: |
-            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+            var prArtifactInfo = await github.rest.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
                repo: context.repo.repo,
                run_id: ${{ github.event.workflow_run.id }},
+               name: 'pr'
             });
-            var prArtifact = artifacts.data.artifacts.filter((artifact) => {
+            var prArtifact = prArtifactInfo.data.artifacts.filter((artifact) => {
               return artifact.name == "pr"
             })[0];
             var downloadedPrArtifact = await github.rest.actions.downloadArtifact({
@@ -68,7 +38,13 @@ jobs:
             var fs = require('fs');
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(downloadedPrArtifact.data));
 
-            var compatibilityResult = artifacts.data.artifacts.filter((artifact) => {
+            var resultArtifactInfo = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{ github.event.workflow_run.id }},
+               name: 'results.md'
+            });
+            var compatibilityResult = resultArtifactInfo.data.artifacts.filter((artifact) => {
               return artifact.name.startsWith("results") && artifact.name.endsWith(".md")
             })[0];
             var downloadedResultsArtifact = await github.rest.actions.downloadArtifact({
