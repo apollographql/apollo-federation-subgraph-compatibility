@@ -25,7 +25,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@apollo/rover": "^0.21.0",
+    "@apollo/rover": "^0.22.0",
     "debug": "^4.3.4",
     "execa": "^5.1.1",
     "graphql": "^16.8.0",
@@ -40,7 +40,7 @@
     "@types/jest": "29.5.10",
     "@types/make-fetch-happen": "10.0.4",
     "@types/mustache": "4.2.5",
-    "@types/node": "18.19.3"
+    "@types/node": "18.19.8"
   },
   "release": {
     "branches": [
