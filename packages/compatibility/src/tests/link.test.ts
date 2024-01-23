@@ -33,7 +33,9 @@ test('@link', async () => {
 
         const federationVersion = linkUrl.match(linkUrlSpecVersionRegex)[1];
         // federation v2.0 through v2.7 are supported
-        expect(federationVersion).toMatch(/2\.0|2\.1|2\.2|2\.3|2\.4|2\.5|2\.6|2\.7/);
+        expect(federationVersion).toMatch(
+          /2\.0|2\.1|2\.2|2\.3|2\.4|2\.5|2\.6|2\.7/,
+        );
 
         const linkImportsRegex = /import:\[(.+?)\]/;
         if (linkImportsRegex.test(element)) {
