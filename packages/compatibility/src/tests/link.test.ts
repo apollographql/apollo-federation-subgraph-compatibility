@@ -41,6 +41,7 @@ test('@link', async () => {
         if (linkImportsRegex.test(element)) {
           // verify federation imports
           const expected = [
+            '@authenticated',
             '@composeDirective',
             '@extends',
             '@external',
@@ -48,11 +49,15 @@ test('@link', async () => {
             '@interfaceObject',
             '@key',
             '@override',
+            '@policy',
             '@provides',
             '@requires',
+            '@requiresScopes',
             '@shareable',
             '@tag',
             'FieldSet',
+            'Scope',
+            'Policy'
           ];
 
           const linkImportsMatch = element.match(linkImportsRegex);
