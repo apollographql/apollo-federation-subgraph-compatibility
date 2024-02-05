@@ -57,7 +57,7 @@ test('@link', async () => {
             '@tag',
             'FieldSet',
             'Scope',
-            'Policy'
+            'Policy',
           ];
 
           const linkImportsMatch = element.match(linkImportsRegex);
