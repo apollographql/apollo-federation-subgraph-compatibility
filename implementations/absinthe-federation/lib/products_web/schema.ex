@@ -1,7 +1,4 @@
 defmodule ProductsWeb.Schema do
-  use Absinthe.Schema
-  use Absinthe.Federation.Schema
-
   defmodule Product do
     defstruct [:id, :sku, :package, :variation]
   end
@@ -26,23 +23,37 @@ defmodule ProductsWeb.Schema do
     defstruct [:email, :name, :total_products_created, :years_of_employment]
   end
 
-  import_sdl """
-    schema @link(url: "https://specs.apollo.dev/federation/v2.0",
-                import: [
-                  "@extends",
-                  "@external",
-                  "@inaccessible",
-                  "@key",
-                  "@override",
-                  "@provides",
-                  "@requires",
-                  "@shareable",
-                  "@tag"
-                ]) {
-      query: Query
-      mutation: Mutation
-    }
-  """
+  defmodule Prototype do
+    use Absinthe.Schema.Prototype
+    use Absinthe.Federation.Schema.Prototype.FederatedDirectives
+
+    directive :custom do
+      on :object
+    end
+  end
+
+  use Absinthe.Schema
+  use Absinthe.Federation.Schema, prototype_schema: Prototype
+
+  extend schema do
+    directive :composeDirective, name: "@custom"
+    directive :link, url: "https://divvypay.com/test/v2.4", import: ["@custom"]
+
+    directive :link,
+      url: "https://specs.apollo.dev/federation/v2.1",
+      import: [
+        "@extends",
+        "@external",
+        "@inaccessible",
+        "@key",
+        "@override",
+        "@provides",
+        "@requires",
+        "@shareable",
+        "@tag",
+        "@composeDirective"
+      ]
+  end
 
   @desc """
   type Product @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
@@ -58,6 +69,8 @@ defmodule ProductsWeb.Schema do
   """
   object :product do
     key_fields(["id", "sku package", "sku variation { id }"])
+    directive :custom
+
     field :id, non_null(:id)
     field :sku, :string
     field :package, :string
@@ -124,7 +137,7 @@ defmodule ProductsWeb.Schema do
   }
   """
   object :product_research do
-    key_fields("study { caseNumber }")
+    key_fields("study { case_number }")
     field :study, non_null(:case_study)
     field :outcome, :string
 
@@ -132,7 +145,7 @@ defmodule ProductsWeb.Schema do
       resolve(fn representation, _ctx ->
         {:ok,
          Enum.find(product_research(), fn p ->
-           representation.study.caseNumber === p.study.case_number
+           representation.study.case_number === p.study.case_number
          end)}
       end)
     end
@@ -285,8 +298,8 @@ defmodule ProductsWeb.Schema do
         {:ok,
          %{
            user
-           | total_products_created: representation[:totalProductsCreated],
-             years_of_employment: representation[:yearsOfEmployment]
+           | total_products_created: representation[:total_products_created],
+             years_of_employment: representation[:years_of_employment]
          }}
 
       nil ->
