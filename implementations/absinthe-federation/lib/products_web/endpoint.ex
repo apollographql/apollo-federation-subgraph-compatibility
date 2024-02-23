@@ -19,8 +19,7 @@ defmodule ProductsWeb.Endpoint do
   plug(Plug.RequestId)
 
   plug(Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
-    pass: ["*/*"],
+    parsers: [:json],
     json_decoder: Phoenix.json_library()
   )
 
