@@ -1,5 +1,5 @@
 {
   "description": "A GraphQL to Cypher query execution layer for Neo4j and JavaScript GraphQL implementations.",
-  "stargazerCount": 465,
-  "lastRelease": "2024-02-23T12:07:45Z"
+  "stargazerCount": 467,
+  "lastRelease": "2024-02-27T13:23:05Z"
 }
