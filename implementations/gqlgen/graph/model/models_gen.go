@@ -45,3 +45,6 @@ func (ProductResearch) IsEntity() {}
 type ProductVariation struct {
 	ID string `json:"id"`
 }
+
+type Query struct {
+}
