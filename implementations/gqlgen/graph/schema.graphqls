@@ -64,8 +64,7 @@ extend type Query {
 
 extend type User @key(fields: "email") {
   averageProductsCreatedPerYear: Int
-      # @requires is not supported due to https://github.com/99designs/gqlgen/issues/2357
-      # @requires(fields: "totalProductsCreated yearsOfEmployment")
+      @requires(fields: "totalProductsCreated yearsOfEmployment")
       @goField(forceResolver: true)
   email: ID! @external
   name: String @override(from: "users")
