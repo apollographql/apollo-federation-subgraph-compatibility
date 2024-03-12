@@ -20,6 +20,14 @@ func (r *entityResolver) FindDeprecatedProductBySkuAndPackage(ctx context.Contex
 	return nil, nil
 }
 
+// FindInventoryByID is the resolver for the findInventoryByID field.
+func (r *entityResolver) FindInventoryByID(ctx context.Context, id string) (*model.Inventory, error) {
+	inventory := &model.Inventory{
+		DeprecatedProducts: r.deprecatedProducts,
+	}
+	return inventory, nil
+}
+
 // FindProductByID is the resolver for the findProductByID field.
 func (r *entityResolver) FindProductByID(ctx context.Context, id string) (*model.Product, error) {
 	for i := range r.products {

@@ -43,10 +43,10 @@ type ResolverRoot interface {
 	Entity() EntityResolver
 	Product() ProductResolver
 	Query() QueryResolver
-	User() UserResolver
 }
 
 type DirectiveRoot struct {
+	Custom func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -64,11 +64,17 @@ type ComplexityRoot struct {
 
 	Entity struct {
 		FindDeprecatedProductBySkuAndPackage func(childComplexity int, sku string, packageArg string) int
+		FindInventoryByID                    func(childComplexity int, id string) int
 		FindProductByID                      func(childComplexity int, id string) int
 		FindProductBySkuAndPackage           func(childComplexity int, sku *string, packageArg *string) int
 		FindProductBySkuAndVariationID       func(childComplexity int, sku *string, variationID string) int
 		FindProductResearchByStudyCaseNumber func(childComplexity int, studyCaseNumber string) int
 		FindUserByEmail                      func(childComplexity int, email string) int
+	}
+
+	Inventory struct {
+		DeprecatedProducts func(childComplexity int) int
+		ID                 func(childComplexity int) int
 	}
 
 	Product struct {
@@ -122,6 +128,7 @@ type DeprecatedProductResolver interface {
 }
 type EntityResolver interface {
 	FindDeprecatedProductBySkuAndPackage(ctx context.Context, sku string, packageArg string) (*model.DeprecatedProduct, error)
+	FindInventoryByID(ctx context.Context, id string) (*model.Inventory, error)
 	FindProductByID(ctx context.Context, id string) (*model.Product, error)
 	FindProductBySkuAndPackage(ctx context.Context, sku *string, packageArg *string) (*model.Product, error)
 	FindProductBySkuAndVariationID(ctx context.Context, sku *string, variationID string) (*model.Product, error)
@@ -136,9 +143,6 @@ type ProductResolver interface {
 type QueryResolver interface {
 	Product(ctx context.Context, id string) (*model.Product, error)
 	DeprecatedProduct(ctx context.Context, sku string, packageArg string) (*model.DeprecatedProduct, error)
-}
-type UserResolver interface {
-	AverageProductsCreatedPerYear(ctx context.Context, obj *model.User) (*int, error)
 }
 
 type executableSchema struct {
@@ -214,6 +218,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindDeprecatedProductBySkuAndPackage(childComplexity, args["sku"].(string), args["packageArg"].(string)), true
 
+	case "Entity.findInventoryByID":
+		if e.complexity.Entity.FindInventoryByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findInventoryByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindInventoryByID(childComplexity, args["id"].(string)), true
+
 	case "Entity.findProductByID":
 		if e.complexity.Entity.FindProductByID == nil {
 			break
@@ -273,6 +289,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindUserByEmail(childComplexity, args["email"].(string)), true
+
+	case "Inventory.deprecatedProducts":
+		if e.complexity.Inventory.DeprecatedProducts == nil {
+			break
+		}
+
+		return e.complexity.Inventory.DeprecatedProducts(childComplexity), true
+
+	case "Inventory.id":
+		if e.complexity.Inventory.ID == nil {
+			break
+		}
+
+		return e.complexity.Inventory.ID(childComplexity), true
 
 	case "Product.createdBy":
 		if e.complexity.Product.CreatedBy == nil {
@@ -548,34 +578,39 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 var sources = []*ast.Source{
 	{Name: "../schema.graphqls", Input: `extend schema
   @link(
-    url: "https://specs.apollo.dev/federation/v2.0",
+    url: "https://specs.apollo.dev/federation/v2.3"
     import: [
-      "@extends",
-      "@external",
-      "@key",
-      "@inaccessible",
-      "@override",
-      "@provides",
-      "@requires",
-      "@shareable",
+      "@composeDirective"
+      "@extends"
+      "@external"
+      "@key"
+      "@inaccessible"
+      "@interfaceObject"
+      "@override"
+      "@provides"
+      "@requires"
+      "@shareable"
       "@tag"
     ]
   )
+  @link(url: "https://myspecs.dev/myCustomDirective/v1.0", import: ["@custom"])
+  @composeDirective(name: "@custom")
+
+directive @custom on OBJECT
 
 type Product
+  @custom
   @key(fields: "id")
   @key(fields: "sku package")
   @key(fields: "sku variation { id }") {
-    id: ID!
-    sku: String
-    package: String
-    variation: ProductVariation
-    dimensions: ProductDimension
-    createdBy: User
-        @provides(fields: "totalProductsCreated")
-        @goField(forceResolver: true)
-    notes: String @tag(name: "internal")
-    research: [ProductResearch!]! @goField(forceResolver: true)
+  id: ID!
+  sku: String
+  package: String
+  variation: ProductVariation
+  dimensions: ProductDimension
+  createdBy: User @provides(fields: "totalProductsCreated") @goField(forceResolver: true)
+  notes: String @tag(name: "internal")
+  research: [ProductResearch!]! @goField(forceResolver: true)
 }
 
 type DeprecatedProduct @key(fields: "sku package") {
@@ -607,33 +642,27 @@ type ProductDimension @shareable {
 
 extend type Query {
   product(id: ID!): Product
-  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct
+    @deprecated(reason: "Use product query instead")
 }
 
 extend type User @key(fields: "email") {
   averageProductsCreatedPerYear: Int
-      # @requires is not supported due to https://github.com/99designs/gqlgen/issues/2357
-      # @requires(fields: "totalProductsCreated yearsOfEmployment")
-      @goField(forceResolver: true)
+    @requires(fields: "totalProductsCreated yearsOfEmployment")
   email: ID! @external
   name: String @override(from: "users")
   totalProductsCreated: Int @external
   yearsOfEmployment: Int! @external
 }
 
-directive @goModel(
-  model: String
-  models: [String!]
-) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+type Inventory @interfaceObject @key(fields: "id") {
+  id: ID!
+  deprecatedProducts: [DeprecatedProduct!]!
+}
 
 directive @goField(
   forceResolver: Boolean
   name: String
-) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
-
-directive @goTag(
-  key: String!
-  value: String
 ) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION`, BuiltIn: false},
 	{Name: "../../federation/directives.graphql", Input: `
 	directive @authenticated on FIELD_DEFINITION | OBJECT | INTERFACE | SCALAR | ENUM
@@ -688,11 +717,12 @@ directive @goTag(
 `, BuiltIn: true},
 	{Name: "../../federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = DeprecatedProduct | Product | ProductResearch | User
+union _Entity = DeprecatedProduct | Inventory | Product | ProductResearch | User
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
 		findDeprecatedProductBySkuAndPackage(sku: String!,packageArg: String!,): DeprecatedProduct!
+	findInventoryByID(id: ID!,): Inventory!
 	findProductByID(id: ID!,): Product!
 	findProductBySkuAndPackage(sku: String,packageArg: String,): Product!
 	findProductBySkuAndVariationID(sku: String,variationID: ID!,): Product!
@@ -738,6 +768,21 @@ func (ec *executionContext) field_Entity_findDeprecatedProductBySkuAndPackage_ar
 		}
 	}
 	args["packageArg"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Entity_findInventoryByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -1273,6 +1318,67 @@ func (ec *executionContext) fieldContext_Entity_findDeprecatedProductBySkuAndPac
 	return fc, nil
 }
 
+func (ec *executionContext) _Entity_findInventoryByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Entity_findInventoryByID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindInventoryByID(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Inventory)
+	fc.Result = res
+	return ec.marshalNInventory2ᚖsubgraphᚋgraphᚋmodelᚐInventory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Entity_findInventoryByID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Inventory_id(ctx, field)
+			case "deprecatedProducts":
+				return ec.fieldContext_Inventory_deprecatedProducts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Inventory", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Entity_findInventoryByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Entity_findProductByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Entity_findProductByID(ctx, field)
 	if err != nil {
@@ -1286,8 +1392,28 @@ func (ec *executionContext) _Entity_findProductByID(ctx context.Context, field g
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindProductByID(rctx, fc.Args["id"].(string))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Entity().FindProductByID(rctx, fc.Args["id"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Custom == nil {
+				return nil, errors.New("directive custom is not implemented")
+			}
+			return ec.directives.Custom(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.Product); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *subgraph/graph/model.Product`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1359,8 +1485,28 @@ func (ec *executionContext) _Entity_findProductBySkuAndPackage(ctx context.Conte
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindProductBySkuAndPackage(rctx, fc.Args["sku"].(*string), fc.Args["packageArg"].(*string))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Entity().FindProductBySkuAndPackage(rctx, fc.Args["sku"].(*string), fc.Args["packageArg"].(*string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Custom == nil {
+				return nil, errors.New("directive custom is not implemented")
+			}
+			return ec.directives.Custom(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.Product); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *subgraph/graph/model.Product`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1432,8 +1578,28 @@ func (ec *executionContext) _Entity_findProductBySkuAndVariationID(ctx context.C
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindProductBySkuAndVariationID(rctx, fc.Args["sku"].(*string), fc.Args["variationID"].(string))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Entity().FindProductBySkuAndVariationID(rctx, fc.Args["sku"].(*string), fc.Args["variationID"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Custom == nil {
+				return nil, errors.New("directive custom is not implemented")
+			}
+			return ec.directives.Custom(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.Product); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *subgraph/graph/model.Product`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1616,6 +1782,104 @@ func (ec *executionContext) fieldContext_Entity_findUserByEmail(ctx context.Cont
 	if fc.Args, err = ec.field_Entity_findUserByEmail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Inventory_id(ctx context.Context, field graphql.CollectedField, obj *model.Inventory) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Inventory_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Inventory_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Inventory",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Inventory_deprecatedProducts(ctx context.Context, field graphql.CollectedField, obj *model.Inventory) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Inventory_deprecatedProducts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeprecatedProducts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.DeprecatedProduct)
+	fc.Result = res
+	return ec.marshalNDeprecatedProduct2ᚕᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProductᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Inventory_deprecatedProducts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Inventory",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "sku":
+				return ec.fieldContext_DeprecatedProduct_sku(ctx, field)
+			case "package":
+				return ec.fieldContext_DeprecatedProduct_package(ctx, field)
+			case "reason":
+				return ec.fieldContext_DeprecatedProduct_reason(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_DeprecatedProduct_createdBy(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeprecatedProduct", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -2255,8 +2519,28 @@ func (ec *executionContext) _Query_product(ctx context.Context, field graphql.Co
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Product(rctx, fc.Args["id"].(string))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().Product(rctx, fc.Args["id"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Custom == nil {
+				return nil, errors.New("directive custom is not implemented")
+			}
+			return ec.directives.Custom(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.Product); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *subgraph/graph/model.Product`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2620,7 +2904,7 @@ func (ec *executionContext) _User_averageProductsCreatedPerYear(ctx context.Cont
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.User().AverageProductsCreatedPerYear(rctx, obj)
+		return obj.AverageProductsCreatedPerYear, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2638,8 +2922,8 @@ func (ec *executionContext) fieldContext_User_averageProductsCreatedPerYear(ctx 
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -4646,6 +4930,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._DeprecatedProduct(ctx, sel, obj)
+	case model.Inventory:
+		return ec._Inventory(ctx, sel, &obj)
+	case *model.Inventory:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Inventory(ctx, sel, obj)
 	case model.Product:
 		return ec._Product(ctx, sel, &obj)
 	case *model.Product:
@@ -4837,6 +5128,28 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "findInventoryByID":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findInventoryByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "findProductByID":
 			field := field
 
@@ -4947,6 +5260,50 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var inventoryImplementors = []string{"Inventory", "_Entity"}
+
+func (ec *executionContext) _Inventory(ctx context.Context, sel ast.SelectionSet, obj *model.Inventory) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, inventoryImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Inventory")
+		case "id":
+			out.Values[i] = ec._Inventory_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deprecatedProducts":
+			out.Values[i] = ec._Inventory_deprecatedProducts(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5352,42 +5709,11 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("User")
 		case "averageProductsCreatedPerYear":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._User_averageProductsCreatedPerYear(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._User_averageProductsCreatedPerYear(ctx, field, obj)
 		case "email":
 			out.Values[i] = ec._User_email(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "name":
 			out.Values[i] = ec._User_name(ctx, field, obj)
@@ -5396,7 +5722,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		case "yearsOfEmployment":
 			out.Values[i] = ec._User_yearsOfEmployment(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -5812,6 +6138,50 @@ func (ec *executionContext) marshalNDeprecatedProduct2subgraphᚋgraphᚋmodel�
 	return ec._DeprecatedProduct(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNDeprecatedProduct2ᚕᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProductᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.DeprecatedProduct) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNDeprecatedProduct2ᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProduct(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNDeprecatedProduct2ᚖsubgraphᚋgraphᚋmodelᚐDeprecatedProduct(ctx context.Context, sel ast.SelectionSet, v *model.DeprecatedProduct) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -5865,6 +6235,20 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNInventory2subgraphᚋgraphᚋmodelᚐInventory(ctx context.Context, sel ast.SelectionSet, v model.Inventory) graphql.Marshaler {
+	return ec._Inventory(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNInventory2ᚖsubgraphᚋgraphᚋmodelᚐInventory(ctx context.Context, sel ast.SelectionSet, v *model.Inventory) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Inventory(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNProduct2subgraphᚋgraphᚋmodelᚐProduct(ctx context.Context, sel ast.SelectionSet, v model.Product) graphql.Marshaler {
