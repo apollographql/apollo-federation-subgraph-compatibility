@@ -1,6 +1,6 @@
 # Example Dockerfile from apollo-server
 #
-FROM golang:1.19
+FROM golang:1.20
 
 WORKDIR /go/src/server
 COPY . .

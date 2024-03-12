@@ -16,6 +16,13 @@ type DeprecatedProduct struct {
 
 func (DeprecatedProduct) IsEntity() {}
 
+type Inventory struct {
+	ID                 string               `json:"id"`
+	DeprecatedProducts []*DeprecatedProduct `json:"deprecatedProducts"`
+}
+
+func (Inventory) IsEntity() {}
+
 type Product struct {
 	ID         string             `json:"id"`
 	Sku        *string            `json:"sku,omitempty"`
@@ -45,3 +52,16 @@ func (ProductResearch) IsEntity() {}
 type ProductVariation struct {
 	ID string `json:"id"`
 }
+
+type Query struct {
+}
+
+type User struct {
+	AverageProductsCreatedPerYear *int    `json:"averageProductsCreatedPerYear,omitempty"`
+	Email                         string  `json:"email"`
+	Name                          *string `json:"name,omitempty"`
+	TotalProductsCreated          *int    `json:"totalProductsCreated,omitempty"`
+	YearsOfEmployment             int     `json:"yearsOfEmployment"`
+}
+
+func (User) IsEntity() {}
