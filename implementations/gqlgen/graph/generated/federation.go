@@ -104,6 +104,26 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 				list[idx[i]] = entity
 				return nil
 			}
+		case "Inventory":
+			resolverName, err := entityResolverNameForInventory(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "Inventory": %w`, err)
+			}
+			switch resolverName {
+
+			case "findInventoryByID":
+				id0, err := ec.unmarshalNID2string(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findInventoryByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindInventoryByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "Inventory": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
 		case "Product":
 			resolverName, err := entityResolverNameForProduct(ctx, rep)
 			if err != nil {
@@ -193,6 +213,10 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 					return fmt.Errorf(`resolving Entity "User": %w`, err)
 				}
 
+				err = ec.PopulateUserRequires(ctx, entity, rep)
+				if err != nil {
+					return fmt.Errorf(`populating requires for Entity "User": %w`, err)
+				}
 				list[idx[i]] = entity
 				return nil
 			}
@@ -284,6 +308,23 @@ func entityResolverNameForDeprecatedProduct(ctx context.Context, rep map[string]
 		return "findDeprecatedProductBySkuAndPackage", nil
 	}
 	return "", fmt.Errorf("%w for DeprecatedProduct", ErrTypeNotFound)
+}
+
+func entityResolverNameForInventory(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findInventoryByID", nil
+	}
+	return "", fmt.Errorf("%w for Inventory", ErrTypeNotFound)
 }
 
 func entityResolverNameForProduct(ctx context.Context, rep map[string]interface{}) (string, error) {
