@@ -53,6 +53,6 @@ jobs:
 
   pr-info:
     uses: ./.github/workflows/save-pr-info.yaml
-    if: {{ env.SKIP_PR != true }}
+    if: env.SKIP_PR != true
     with:
       pr_number: ${{ github.event.number }}
