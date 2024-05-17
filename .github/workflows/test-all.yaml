@@ -53,7 +53,7 @@ jobs:
 
   # needs GHCR authentication
   test-grafbase:
-    uses: ./github/workflows/test-subgraph-grafbase.yaml
+    uses: ./.github/workflows/test-subgraph-grafbase.yaml
     with:
       skip_pr_info: true
 
