@@ -19,7 +19,7 @@ jobs:
       - name: generate matrix
         id: matrix
         run: |
-          echo "matrix=$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]") and . != "appsync" and . != "stepzen")]')" >> $GITHUB_OUTPUT
+          echo "matrix=$(ls implementations | jq -cnR '[inputs | select(. | test("^[a-z]") and . != "appsync" and . != "stepzen" and . != "grafbase")]')" >> $GITHUB_OUTPUT
 
   test:
     needs: build-matrix
@@ -50,6 +50,12 @@ jobs:
       format: "json"
     secrets:
       TEST_URL: ${{ secrets.URL_STEPZEN }}
+
+  # needs GHCR authentication
+  test-grafbase:
+    uses: ./github/workflows/test-subgraph-grafbase.yaml
+    with:
+      skip_pr_info: true
 
   report:
     timeout-minutes: 10
