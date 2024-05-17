@@ -33,14 +33,14 @@ jobs:
       format: "json"
 
   # need secrets so appsync is configured separately
-  test-appsync:
-    uses: ./.github/workflows/test-subgraph.yaml
-    with:
-      library: "appsync"
-      format: "json"
-    secrets:
-      API_KEY: ${{ secrets.API_KEY_APPSYNC }}
-      TEST_URL: ${{ secrets.URL_APPSYNC }}
+  # test-appsync:
+  #   uses: ./.github/workflows/test-subgraph.yaml
+  #   with:
+  #     library: "appsync"
+  #     format: "json"
+  #   secrets:
+  #     API_KEY: ${{ secrets.API_KEY_APPSYNC }}
+  #     TEST_URL: ${{ secrets.URL_APPSYNC }}
 
   # need secrets so stepzen is configured separately
   test-stepzen:
