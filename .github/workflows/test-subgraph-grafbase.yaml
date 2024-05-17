@@ -22,33 +22,33 @@ jobs:
   #   uses: ./.github/workflows/test-subgraph.yaml
   #   with:
   #     library: "grafbase"
-  compatibility:
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Setup Environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-      - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Install dependencies and build
-        run: npm install
-      - name: Compatibility test
-        run: npm run compatibility:test -- docker --compose implementations/grafbase/docker-compose.yaml --schema implementations/_template_library_/products.graphql --format markdown
-      - name: Generate Results Summary
-        run: |
-            cat results.md >> $GITHUB_STEP_SUMMARY
-            echo "RESULTS_FILE=results.md" >> $GITHUB_ENV
-      - name: Upload Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.RESULTS_FILE }}
-          path: ./${{ env.RESULTS_FILE }}
-          retention-days: 1
+  # compatibility-grafbase:
+  #   timeout-minutes: 30
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+  #     - name: Setup Environment
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 18
+  #         cache: 'npm'
+  #     - name: Log in to registry
+  #       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  #     - name: Install dependencies and build
+  #       run: npm install
+  #     - name: Compatibility test
+  #       run: npm run compatibility:test -- docker --compose implementations/grafbase/docker-compose.yaml --schema implementations/_template_library_/products.graphql --format markdown
+  #     - name: Generate Results Summary
+  #       run: |
+  #           cat results.md >> $GITHUB_STEP_SUMMARY
+  #           echo "RESULTS_FILE=results.md" >> $GITHUB_ENV
+  #     - name: Upload Results
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ${{ env.RESULTS_FILE }}
+  #         path: ./${{ env.RESULTS_FILE }}
+  #         retention-days: 1
 
 
   pr-info:

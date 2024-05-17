@@ -52,10 +52,10 @@ jobs:
       TEST_URL: ${{ secrets.URL_STEPZEN }}
 
   # needs GHCR authentication
-  test-grafbase:
-    uses: ./.github/workflows/test-subgraph-grafbase.yaml
-    with:
-      skip_pr_info: true
+  # test-grafbase:
+  #   uses: ./.github/workflows/test-subgraph-grafbase.yaml
+  #   with:
+  #     skip_pr_info: true
 
   report:
     timeout-minutes: 10
