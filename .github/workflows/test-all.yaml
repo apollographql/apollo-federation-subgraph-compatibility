@@ -85,13 +85,13 @@ jobs:
           npm run compatibility:report -- final_results.json
       - name: Generate Job Summary
         run: |
-          cat results.md
-          cat results.md >> $GITHUB_STEP_SUMMARY
+          cat results.mdx
+          cat results.mdx >> $GITHUB_STEP_SUMMARY
       - name: Upload Results
         uses: actions/upload-artifact@v4
         with:
-          name: results.md
-          path: ./results.md
+          name: results.mdx
+          path: ./results.mdx
           retention-days: 7
 
   pr-info:

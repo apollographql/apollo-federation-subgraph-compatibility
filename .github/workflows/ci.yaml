@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - '**.md'
+      - '**.md*'
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -39,10 +39,10 @@ jobs:
       - name: Download Result
         uses: actions/download-artifact@v4
         with:
-          name: results.md
+          name: results.mdx
       - name: Build GH page
         run: |
-          mv results.md docs/index.md
+          mv results.mdx docs/index.mdx
           mkdocs build
       - name: Upload GH page
         uses: actions/upload-pages-artifact@v3

@@ -42,10 +42,10 @@ jobs:
                owner: context.repo.owner,
                repo: context.repo.repo,
                run_id: ${{ github.event.workflow_run.id }},
-               name: 'results.md'
+               name: 'results.mdx'
             });
             var compatibilityResult = resultArtifactInfo.data.artifacts.filter((artifact) => {
-              return artifact.name.startsWith("results") && artifact.name.endsWith(".md")
+              return artifact.name.startsWith("results") && artifact.name.endsWith(".mdx")
             })[0];
             var downloadedResultsArtifact = await github.rest.actions.downloadArtifact({
                owner: context.repo.owner,

@@ -42,7 +42,7 @@ implement to be used in the testing suite:
    need to make additional edits to the `docker-compose.yml` file, your edits
    should only affect the `products` service defined.
 4. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
-   and the results will be outputted to `results.md`
+   and the results will be outputted to `results.mdx`
 5. Copy the `.github/workflows/templates/test-subgraph-library.yaml.template` and rename
    it to include the name of your library under `.github/workflows/test-subgraph-<library>.yaml`
    - This is a workflow that will be triggered for PRs opened against your implementation.
@@ -71,7 +71,7 @@ compatibility tests will fail.**
    that will be tested. Calls should be authenticated with basic `x-api-key` header.
    - You can modify the `proxy.conf.template` to specify different authentication header.
 4. Test only your library by running `make setup` and `make test subgraph={YOUR_IMPLEMENTATION_FOLDER_NAME}`
-   and the results will be outputted to `results.md`. Since NGINX proxy will
+   and the results will be outputted to `results.mdx`. Since NGINX proxy will
    require API KEY and URL, you will need to set it as environment variable prior
    running tests.
 
@@ -97,6 +97,7 @@ compatibility tests will fail.**
         API_KEY: ${{ secrets.API_KEY_<HOSTED> }}
         TEST_URL: ${{ secrets.URL_<HOSTED> }}
   ```
+
 7. When you are ready to integrate, reach out to us at [Apollo Community Forums](https://community.apollographql.com/).
    Send a DM to any member of the [Ecosystem Group](https://community.apollographql.com/g/Ecosystem)
    and we'll help you configure your API KEY and URL as a Github Secret. Those secrets will be used

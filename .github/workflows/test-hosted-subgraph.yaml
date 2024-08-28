@@ -60,9 +60,9 @@ jobs:
           TEST_URL: ${{ secrets.URL_STEPZEN }}
       - name: Generate Results Summary
         run: |
-          cat results.md >> $GITHUB_STEP_SUMMARY
-          mv results.md results-${{ env.SUBGRAPH }}.md
-          echo "RESULTS_FILE=results-${{ env.SUBGRAPH }}.md" >> $GITHUB_ENV
+          cat results.mdx >> $GITHUB_STEP_SUMMARY
+          mv results.mdx results-${{ env.SUBGRAPH }}.mdx
+          echo "RESULTS_FILE=results-${{ env.SUBGRAPH }}.mdx" >> $GITHUB_ENV
       - name: Upload Results
         uses: actions/upload-artifact@v4
         with:

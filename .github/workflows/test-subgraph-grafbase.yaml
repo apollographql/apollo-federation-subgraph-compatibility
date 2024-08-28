@@ -41,8 +41,8 @@ jobs:
   #       run: npm run compatibility:test -- docker --compose implementations/grafbase/docker-compose.yaml --schema implementations/_template_library_/products.graphql --format markdown
   #     - name: Generate Results Summary
   #       run: |
-  #           cat results.md >> $GITHUB_STEP_SUMMARY
-  #           echo "RESULTS_FILE=results.md" >> $GITHUB_ENV
+  #           cat results.mdx >> $GITHUB_STEP_SUMMARY
+  #           echo "RESULTS_FILE=results.mdx" >> $GITHUB_ENV
   #     - name: Upload Results
   #       uses: actions/upload-artifact@v4
   #       with:

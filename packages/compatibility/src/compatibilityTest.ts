@@ -45,7 +45,7 @@ export async function compatibilityTest(
   logWithTimestamp('generating results...');
 
   if (runtimeConfig.format == 'markdown') {
-    generateSimplifiedMarkdown(testResults, `results.md`);
+    generateSimplifiedMarkdown(testResults, `results.mdx`);
   } else {
     await writeFile(
       `results.json`,

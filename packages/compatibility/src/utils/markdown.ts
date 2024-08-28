@@ -30,7 +30,7 @@ The following open-source GraphQL server libraries and other solutions support a
 	<tbody>
     {{#implementations}}
 		<tr>
-			<th colspan="3"><big><a href="{{{documentation}}}">{{name}}</a></big></th>
+			<th colSpan="3"><big><a href="{{{documentation}}}">{{name}}</a></big></th>
 		</tr>
 		<tr>
 			<td>{{description}}<br/>
@@ -79,9 +79,11 @@ const singleImplementationTemplate = `
       {{#compatibilities}}
       <td>
         <table>
-        {{#tests}}
-          <tr><th><code>{{name}}</code></th><td>{{result}}</td></tr>
-        {{/tests}}
+          <tbody>
+          {{#tests}}
+            <tr><th><code>{{name}}</code></th><td>{{result}}</td></tr>
+          {{/tests}}
+          </tbody>
         </table>
       </td>
       {{/compatibilities}}
@@ -91,7 +93,7 @@ const singleImplementationTemplate = `
 `;
 
 const apolloIcon: string =
-  '<img style="display:inline-block; height:1em; width:auto;" alt="Maintained by Apollo" src="https://raw.githubusercontent.com/apollographql/apollo-federation-subgraph-compatibility/d7829ef89441c337749bf6538711a642cfa2689c/docs/assets/horizon_logo.png"/>';
+  "<img style={{ display: 'inline-block', height: '1em', width: 'auto' }}  alt='Maintained by Apollo' src='https://raw.githubusercontent.com/apollographql/apollo-federation-subgraph-compatibility/d7829ef89441c337749bf6538711a642cfa2689c/docs/assets/horizon_logo.png'/>";
 const apolloName: string = 'apollographql';
 
 interface CompatibilityResults {
@@ -220,7 +222,7 @@ export function generateMarkdown(results: TestResultDetails[]) {
     apolloIcon: apolloIcon,
   });
 
-  writeFileSync(resolve(process.cwd(), 'results.md'), output, 'utf-8');
+  writeFileSync(resolve(process.cwd(), 'results.mdx'), output, 'utf-8');
 }
 
 export function generateSimplifiedMarkdown(
