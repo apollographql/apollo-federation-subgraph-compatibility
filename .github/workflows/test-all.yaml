@@ -8,6 +8,7 @@ on:
       - 'packages/**'
       - '!**/README.md'
   workflow_call:
+  workflow_dispatch:
 
 jobs:
   build-matrix:
@@ -97,7 +98,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: final_results.json
-          path: ./final_results.json    
+          path: ./final_results.json
+          retention-days: 28    
 
   pr-info:
     if: ${{ github.event_name == 'pull_request' }}
