@@ -93,6 +93,11 @@ jobs:
           name: results.md
           path: ./results.md
           retention-days: 7
+      - name: Upload final JSON results
+        uses: actions/upload-artifact@v4
+        with:
+          name: final_results.json
+          path: ./final_results.json    
 
   pr-info:
     if: ${{ github.event_name == 'pull_request' }}
