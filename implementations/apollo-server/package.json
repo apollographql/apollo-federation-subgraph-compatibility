@@ -4,7 +4,7 @@
   "dependencies": {
     "@apollo/server": "^4.7.1",
     "@apollo/subgraph": "^2.4.7",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6"
   },
   "devDependencies": {
