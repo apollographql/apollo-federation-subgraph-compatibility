@@ -9,7 +9,7 @@
     "@pothos/core": "^3.27.0",
     "@pothos/plugin-directives": "^3.10.0",
     "@pothos/plugin-federation": "^3.10.0",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
