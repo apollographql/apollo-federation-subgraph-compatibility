@@ -1,6 +1,6 @@
 {
-  "fullName": "StepZen, an IBM Company",
+  "fullName": "IBM API Connect for GraphQL",
   "language": "Other Solutions",
-  "documentation": "https://stepzen.com/apollo-stepzen",
+  "documentation": "https://www.ibm.com/docs/en/api-connect/ace",
   "description": "Build GraphQL APIs for all your data in a declarative way. Federate across any data source, including GraphQL."
 }
