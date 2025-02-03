@@ -35,6 +35,7 @@ results.*
 *.ipr
 *.iws
 *.jar
+!maven-wrapper.jar
 *.sw?
 *~
 .#*
