@@ -35,6 +35,7 @@ on:
       - "Sangria Test"
       - "Strawberry GraphQL Test"
       - "Swift Graphiti Test"
+      - "smallrye-graphql Test"
     types:
       - completed
 
