@@ -9,6 +9,8 @@ COPY mvnw ./
 COPY mvnw.cmd ./
 COPY pom.xml ./
 
+RUN ls -lR .
+
 # Package it up
 RUN ./mvnw package
 
