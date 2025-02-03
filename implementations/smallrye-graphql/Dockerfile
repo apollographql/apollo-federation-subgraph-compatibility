@@ -10,6 +10,8 @@ COPY mvnw.cmd ./
 COPY pom.xml ./
 
 RUN ls -lR .
+RUN ls -lR .mvn/wrapper
+RUN mvn -version
 
 # Package it up
 RUN ./mvnw package
