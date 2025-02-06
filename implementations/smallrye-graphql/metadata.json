@@ -1,0 +1,12 @@
+{
+  "fullName": "SmallRye GraphQL",
+  "language": "Java / Kotlin",
+  "documentation": "https://smallrye.io/smallrye-graphql/latest/",
+  "description": "Implementation for MicroProfile GraphQL",
+  "type": "Code first",
+  "repository": {
+    "name": "smallrye-graphql",
+    "owner": "smallrye",
+    "link": "https://github.com/smallrye/smallrye-graphql"
+  }
+}
