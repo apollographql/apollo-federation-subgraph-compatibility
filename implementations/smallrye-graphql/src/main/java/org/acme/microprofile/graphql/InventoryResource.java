@@ -9,6 +9,7 @@ import org.eclipse.microprofile.graphql.Mutation;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Source;
 import org.eclipse.microprofile.graphql.Description;
+import org.acme.microprofile.graphql.InventoryService;
 import org.acme.microprofile.graphql.ProductService;
 import org.acme.microprofile.graphql.UserService;
 import org.eclipse.microprofile.graphql.DefaultValue;
@@ -32,8 +33,6 @@ public class InventoryResource {
  
     @Resolver
     public Inventory resolveById(String id) {
-        Map<String, Object> reference = new HashMap<>();
-        reference.put("id", id);
-        return InventoryService.resolveReference(reference);
+        return InventoryService.resolveById(id);
     }
 }

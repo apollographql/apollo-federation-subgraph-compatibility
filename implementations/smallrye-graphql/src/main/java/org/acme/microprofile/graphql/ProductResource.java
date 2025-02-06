@@ -38,24 +38,16 @@ public class ProductResource {
 
     @Resolver
     public Product resolveById(String id) {
-        Map<String, Object> reference = new HashMap<>();
-        reference.put("id", id);
-        return ProductService.resolveReference(reference);
+        return ProductService.resolveById(id);
     }
 
     @Resolver
     public Product resolveBySkuAndPackage(String sku, @Name("package") String pkg) {
-        Map<String, Object> reference = new HashMap<>();
-        reference.put("sku", sku);
-        reference.put("package", pkg);
-        return ProductService.resolveReference(reference);
+        return ProductService.resolveBySkuAndPackage(sku, pkg);
     }
 
     @Resolver
     public Product resolveBySkuAndVariation(String sku, Object variation) {
-        Map<String, Object> reference = new HashMap<>();
-        reference.put("sku", sku);
-        reference.put("variation", variation);
-        return ProductService.resolveReference(reference);
+        return ProductService.resolveBySkuAndVariation(sku, variation);
     }
 }

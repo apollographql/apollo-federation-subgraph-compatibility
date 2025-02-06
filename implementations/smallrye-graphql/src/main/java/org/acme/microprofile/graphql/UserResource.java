@@ -33,18 +33,12 @@ public class UserResource {
  
     @Resolver
     public User resolveByEmail(String email) {
-        Map<String, Object> reference = new HashMap<>();
-        reference.put("email", email);
-        return UserService.resolveReference(reference);
+        return UserService.resolveByEmail(email);
     }
 
     @Resolver
     public User resolveForAverageProducts(String email, Integer totalProductsCreated, Integer yearsOfEmployment) {
-        Map<String, Object> reference = new HashMap<>();
-        reference.put("email", email);
-        reference.put("totalProductsCreated", totalProductsCreated);
-        reference.put("yearsOfEmployment", yearsOfEmployment);
-        return UserService.resolveReference(reference);
+        return UserService.resolveForAverageProducts(email, totalProductsCreated, yearsOfEmployment);
     }
 
     @Requires(fields = @FieldSet("totalProductsCreated yearsOfEmployment"))

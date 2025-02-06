@@ -32,9 +32,7 @@ public class ProductResearchResource {
     ProductResearchService service;
  
     @Resolver
-    public ProductResearch resolveById(Object study) {
-        Map<String, Object> reference = new HashMap<>();
-        reference.put("study", study);
-        return ProductResearchService.resolveReference(reference);
+    public ProductResearch resolveByStudy(Object study) {
+        return ProductResearchService.resolveByStudy(study);
     }
 }

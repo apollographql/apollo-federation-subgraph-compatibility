@@ -7,8 +7,8 @@ import java.util.Map;
 @ApplicationScoped
 public class ProductResearchService {
 
-  public static ProductResearch resolveReference(Map<String, Object> reference) {
-    if (reference.get("study") instanceof HashMap caseStudy) {
+  public static ProductResearch resolveByStudy(Object study) {
+    if (study instanceof HashMap caseStudy) {
       if (caseStudy.get("caseNumber") instanceof String caseNumber) {
         return ProductResearch.RESEARCH_LIST.stream()
                 .filter(research -> research.getStudy().getCaseNumber().equals(caseNumber))

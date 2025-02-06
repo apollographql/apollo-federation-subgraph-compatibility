@@ -14,18 +14,17 @@ public class UserService {
     }
   }
 
-  public static User resolveReference(Map<String, Object> reference) {
-    if (reference.get("email") instanceof String email) {
-      final User user = new User(email);
-      if (reference.get("totalProductsCreated") instanceof Integer totalProductsCreated) {
-        user.setTotalProductsCreated(totalProductsCreated);
-      }
-      if (reference.get("yearsOfEmployment") instanceof Integer yearsOfEmployment) {
-        user.setYearsOfEmployment(yearsOfEmployment);
-      }
-      return user;
-    }
+  public static User resolveByEmail(String email) {
+    final User user = new User(email);
 
-    return null;
+    return user;
+  }
+
+  public static User resolveForAverageProducts(String email, Integer totalProductsCreated, Integer yearsOfEmployment) {
+    final User user = new User(email);
+    user.setTotalProductsCreated(totalProductsCreated);
+    user.setYearsOfEmployment(yearsOfEmployment);
+    
+    return user;
   }
 }
