@@ -11,6 +11,10 @@ This repository also contains number of [example subgraph implementations](https
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for general contribution guidelines and [Apollo Federation Subgraph Maintainers Implementation Guide](./SUBGRAPH_GUIDE.md) for subgraph implementation instructions. Once you've completed the implementations instructions, feel free to create a PR and we'll review it. If you have any questions please open a GitHub issue on this repository.
 
+## Release
+
+This project is released through Github Actions. To release a new version simply create a new [GH release tag](https://github.com/apollographql/apollo-federation-subgraph-compatibility/releases) with a target release version. Release workflow will then automatically build and publish new NPM packages.
+
 ## Contact
 
 If you have a specific question about the testing library or code, please start a discussion in the [Apollo community forums](https://community.apollographql.com/).
