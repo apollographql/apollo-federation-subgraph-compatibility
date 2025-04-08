@@ -3,7 +3,7 @@ name: Hosted Subgraph Test
 on:
   workflow_run:
     workflows:
-      - "AWS AppSync Test"
+      # - "AWS AppSync Test"
       - "StepZen Test"
     types:
       - completed

@@ -1,6 +1,6 @@
 {
   "name": "@apollo/federation-subgraph-compatibility",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A CLI tool for checking a subgraph's compatibility with a federated gateway",
   "bin": {
     "fedtest": "./dist/compatibilityTestCommand.js"
@@ -26,7 +26,7 @@
     "npm": ">=8.6.0"
   },
   "dependencies": {
-    "@apollo/federation-subgraph-compatibility-tests": "2.2.0",
+    "@apollo/federation-subgraph-compatibility-tests": "2.2.1",
     "commander": "^11.0.0",
     "debug": "^4.3.4"
   },
