@@ -1,4 +1,4 @@
-FROM gradle:jdk17
+FROM gradle:7-jdk17
 WORKDIR /home/gradle
 COPY . /home/gradle
 RUN gradle build
