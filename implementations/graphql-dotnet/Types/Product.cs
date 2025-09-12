@@ -9,53 +9,41 @@ namespace ApolloFederation.SubgraphCompatibility.Products.Types;
 [Directive("custom")]
 public class Product
 {
-    public Product(string id, string? sku, string? package, ProductVariation? variation, ProductDimension? dimensions, User? createdBy, string? notes, List<ProductResearch> research)
-    {
-        Id = id;
-        Sku = sku;
-        Package = package;
-        Variation = variation;
-        Dimensions = dimensions;
-        CreatedBy = createdBy;
-        Notes = notes;
-        Research = research;
-    }
-
     [Id]
-    public string Id { get; }
+    public required string Id { get; set; }
 
-    public string? Sku { get; }
+    public string? Sku { get; set;}
 
-    public string? Package { get; }
+    public string? Package { get; set;}
 
-    public ProductVariation? Variation { get; }
+    public ProductVariation? Variation { get; set;}
 
-    public ProductDimension? Dimensions { get; }
+    public ProductDimension? Dimensions { get; set;}
 
     [Provides("totalProductsCreated")]
-    public User? CreatedBy { get; }
+    public User? CreatedBy { get; set; }
 
     [Directive("tag", "name", "internal")]
-    public string? Notes { get; }
+    public string? Notes { get; set; }
 
-    public List<ProductResearch> Research { get; }
+    public List<ProductResearch> Research { get; set; }
 
     [FederationResolver]
-    public Product? GetProductByVariation([FromServices] Data repository)
+    public Product? GetProduct([FromServices] Data data)
     {
         if (Id != null)
         {
-            return repository.Products.FirstOrDefault(t => t.Id == Id);
+            return data.Products.FirstOrDefault(t => t.Id == Id);
         }
 
         if (Sku != null && Package != null)
         {
-            return repository.Products.FirstOrDefault(t => t.Sku == Sku && t.Package == Package);
+            return data.Products.FirstOrDefault(t => t.Sku == Sku && t.Package == Package);
         }
 
         if (Sku != null && Variation?.Id != null)
         {
-            return repository.Products.FirstOrDefault(t => t.Sku == Sku && t.Variation?.Id == Variation?.Id);
+            return data.Products.FirstOrDefault(t => t.Sku == Sku && t.Variation?.Id == Variation?.Id);
         }
 
         return null;

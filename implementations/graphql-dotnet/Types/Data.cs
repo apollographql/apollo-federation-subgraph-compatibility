@@ -20,8 +20,26 @@ public class Data
 
     public List<Product> Products { get; } =
     [
-        new("apollo-federation", "federation", "@apollo/federation", new ProductVariation("OSS"), Dimension, DefaultUser, null, [FederationStudy]),
-        new("apollo-studio", "studio", string.Empty, new ProductVariation("platform"), Dimension, DefaultUser, null, [StudioStudy])
+        new()
+        {
+            Id = "apollo-federation",
+            Sku = "federation",
+            Package = "@apollo/federation",
+            Variation = new ProductVariation { Id = "OSS" },
+            Dimensions = Dimension,
+            CreatedBy = DefaultUser,
+            Research = [FederationStudy]
+        },
+        new()
+        {
+            Id = "apollo-studio",
+            Sku = "studio",
+            Package = string.Empty,
+            Variation = new ProductVariation { Id = "platform" },
+            Dimensions = Dimension,
+            CreatedBy = DefaultUser,
+            Research = [StudioStudy]
+        }
     ];
 
     public List<DeprecatedProduct> DeprecatedProducts { get; } =

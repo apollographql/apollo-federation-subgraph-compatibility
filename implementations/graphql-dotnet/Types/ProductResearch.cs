@@ -6,7 +6,6 @@ namespace ApolloFederation.SubgraphCompatibility.Products.Types;
 [Key("study { caseNumber }")]
 public class ProductResearch
 {
-
     public ProductResearch(CaseStudy study, string? outcome)
     {
         Study = study;
