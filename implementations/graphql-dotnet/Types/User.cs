@@ -47,9 +47,9 @@ public class User
     }
 
     [FederationResolver]
-    public static User? GetUserByEmail([FromServices] Data repository, string email, int? totalProductsCreated, int? yearsOfEmployment)
+    public static User? ResolveByEmail(string email, int? totalProductsCreated, int? yearsOfEmployment, [FromServices] Data data)
     {
-        var user = repository.Users.FirstOrDefault(u => u.Email == email);
+        var user = data.Users.FirstOrDefault(u => u.Email == email);
         if (user != null)
         {
             if (totalProductsCreated != null)

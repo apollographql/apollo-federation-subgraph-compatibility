@@ -15,10 +15,10 @@ public class Inventory
     [Id]
     public string Id { get; }
 
-    public List<DeprecatedProduct> DeprecatedProducts([FromServices] Data repo) =>
-        repo.DeprecatedProducts.ToList();
+    public List<DeprecatedProduct> DeprecatedProducts([FromServices] Data data) =>
+        data.DeprecatedProducts.ToList();
 
     [FederationResolver]
-    public static Inventory? GetInventoryById(string id, [FromServices] Data repo) =>
-        repo.Inventories().FirstOrDefault(r => r.Id == id);
+    public static Inventory? ResolveById(string id, [FromServices] Data data) =>
+        data.Inventories().FirstOrDefault(r => r.Id == id);
 }

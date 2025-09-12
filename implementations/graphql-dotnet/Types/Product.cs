@@ -29,7 +29,7 @@ public class Product
     public List<ProductResearch> Research { get; set; }
 
     [FederationResolver]
-    public Product? GetProduct([FromServices] Data data)
+    public Product? Resolve([FromServices] Data data)
     {
         if (Id != null)
         {

@@ -4,8 +4,16 @@ public class Data
 {
     private static ProductDimension Dimension = new(size: "small", weight: 1, unit: "kg");
     private static User DefaultUser = new("support@apollographql.com", "Jane Smith");
-    private static ProductResearch FederationStudy = new(new CaseStudy("1234", "Federation Study"), null);
-    private static ProductResearch StudioStudy = new(new CaseStudy("1235", "Studio Study"), null);
+
+    private static ProductResearch FederationStudy = new()
+    {
+        Study = new CaseStudy { CaseNumber = "1234", Description = "Federation Study" }
+    };
+
+    private static ProductResearch StudioStudy = new()
+    {
+        Study = new CaseStudy { CaseNumber = "1235", Description = "Studio Study" }
+    };
 
     public List<User> Users { get; } =
     [

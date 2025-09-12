@@ -6,17 +6,11 @@ namespace ApolloFederation.SubgraphCompatibility.Products.Types;
 [Key("study { caseNumber }")]
 public class ProductResearch
 {
-    public ProductResearch(CaseStudy study, string? outcome)
-    {
-        Study = study;
-        Outcome = outcome;
-    }
+    public CaseStudy Study { get; set; }
 
-    public CaseStudy Study { get; }
-
-    public string? Outcome { get; }
+    public string? Outcome { get; set; }
 
     [FederationResolver]
-    public ProductResearch? GetProductResearchByCaseNumber([FromServices] Data repository) =>
-        repository.ProductResearches.FirstOrDefault(r => r.Study.CaseNumber == Study.CaseNumber);
+    public ProductResearch? Resolve([FromServices] Data data) =>
+        data.ProductResearches.FirstOrDefault(r => r.Study.CaseNumber == Study.CaseNumber);
 }

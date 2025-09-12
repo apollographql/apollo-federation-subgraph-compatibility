@@ -23,6 +23,6 @@ public class DeprecatedProduct
     public User? CreatedBy { get; }
 
     [FederationResolver]
-    public static DeprecatedProduct? GetProductByPackage(string sku, string package, [FromServices] Data repo)
-        => repo.DeprecatedProducts.FirstOrDefault(t => t.Sku == sku && t.Package == package);
+    public static DeprecatedProduct? ResolveBySkuAndPackage(string sku, string package, [FromServices] Data data)
+        => data.DeprecatedProducts.FirstOrDefault(t => t.Sku == sku && t.Package == package);
 }
