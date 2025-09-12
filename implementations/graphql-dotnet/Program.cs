@@ -15,6 +15,7 @@ builder.Services
         {
             link.Imports.Add("@interfaceObject", "@interfaceObject");
             link.Imports.Add("@composeDirective", "@composeDirective");
+            link.Imports.Add("@extends", "@extends");
         })
         .ConfigureSchema(schema =>
         {

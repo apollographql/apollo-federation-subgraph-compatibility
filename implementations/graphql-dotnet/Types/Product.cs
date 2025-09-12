@@ -3,10 +3,10 @@ using GraphQL.Federation;
 
 namespace ApolloFederation.SubgraphCompatibility.Products.Types;
 
+[Directive("custom")]
 [Key("id")]
 [Key("sku package")]
 [Key("sku variation { id }")]
-[Directive("custom")]
 public class Product
 {
     [Id]
