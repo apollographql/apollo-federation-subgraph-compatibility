@@ -28,6 +28,9 @@ builder.Services
 
 var app = builder.Build();
 
+// Sample: print the schema to a file
+File.WriteAllText("schema.graphql", app.Services.GetRequiredService<ISchema>().Print());
+
 app.UseRouting();
 app.UseGraphQL("/");
 
