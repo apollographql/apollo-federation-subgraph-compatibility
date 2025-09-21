@@ -1,5 +1,6 @@
 using ApolloFederation.SubgraphCompatibility.Products.Types;
 using GraphQL;
+using GraphQL.Federation.Types;
 using GraphQL.Types;
 using GraphQLParser.AST;
 

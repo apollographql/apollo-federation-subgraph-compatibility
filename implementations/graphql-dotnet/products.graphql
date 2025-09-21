@@ -2,33 +2,7 @@ schema @link(url: "https://specs.apollo.dev/link/v1.0", import: ["@link"]) @link
   query: Query
 }
 
-directive @link(url: String!, as: String, purpose: link__Purpose, import: [link__Import]) repeatable on SCHEMA
-
-directive @key(fields: federation__FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
-
-directive @interfaceObject on OBJECT
-
-directive @extends on OBJECT | INTERFACE
-
-directive @shareable repeatable on FIELD_DEFINITION | OBJECT
-
-directive @inaccessible on FIELD_DEFINITION | INTERFACE | OBJECT | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
-
-directive @override(from: String!) on FIELD_DEFINITION
-
-directive @external on FIELD_DEFINITION | OBJECT
-
-directive @provides(fields: federation__FieldSet!) on FIELD_DEFINITION
-
-directive @requires(fields: federation__FieldSet!) on FIELD_DEFINITION
-
-directive @tag(name: String!) repeatable on FIELD_DEFINITION | INTERFACE | OBJECT | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION | SCHEMA
-
-directive @composeDirective(name: String!) repeatable on SCHEMA
-
 directive @custom on OBJECT
-
-scalar federation__FieldSet
 
 scalar _Any
 
@@ -95,12 +69,3 @@ type Inventory @key(fields: "id") @interfaceObject {
   id: ID!
   deprecatedProducts: [DeprecatedProduct!]!
 }
-
-enum link__Purpose {
-  "`SECURITY` features provide metadata necessary to securely resolve fields."
-  SECURITY
-  "`EXECUTION` features provide metadata necessary for operation execution."
-  EXECUTION
-}
-
-scalar link__Import
