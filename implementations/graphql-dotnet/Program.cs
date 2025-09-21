@@ -22,10 +22,14 @@ builder.Services
             schema.Directives.Register(new Directive("custom", DirectiveLocation.Object));
             schema.LinkSchema("https://myspecs.dev/myCustomDirective/v1.0", link => link.Imports.Add("@custom", "@custom"));
             schema.ApplyDirective("composeDirective", "name", "@custom");
+            schema.RegisterType<AutoRegisteringObjectGraphType<Inventory>>();
         })
         .ConfigureExecutionOptions(options => options.ThrowOnUnhandledException = true));
 
 var app = builder.Build();
+
+// Sample: print the schema to a file
+File.WriteAllText("schema.graphql", app.Services.GetRequiredService<ISchema>().Print());
 
 app.UseRouting();
 app.UseGraphQL("/");
