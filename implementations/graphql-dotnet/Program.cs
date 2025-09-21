@@ -29,7 +29,7 @@ builder.Services
 var app = builder.Build();
 
 // Sample: print the schema to a file
-File.WriteAllText("products.graphql", app.Services.GetRequiredService<ISchema>().Print());
+File.WriteAllText("products.graphql", app.Services.GetRequiredService<ISchema>().Print(new FederationPrintOptions()));
 
 app.UseRouting();
 app.UseGraphQL("/");
