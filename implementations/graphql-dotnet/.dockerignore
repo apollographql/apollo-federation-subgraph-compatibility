@@ -1,0 +1,40 @@
+# Build output
+bin/
+obj/
+out/
+
+# NuGet packages and cache
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE files
+.vs/
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows specific
+*.lnk
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
