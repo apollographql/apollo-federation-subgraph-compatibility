@@ -1,23 +1,45 @@
-type Product @key(fields: "id") {
+schema @link(url: "https://specs.apollo.dev/link/v1.0", import: ["@link"]) @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key", "@external", "@requires", "@provides", "@shareable", "@inaccessible", "@override", "@tag", "@interfaceObject", "@composeDirective", "@extends"]) @link(url: "https://myspecs.dev/myCustomDirective/v1.0", import: ["@custom"]) @composeDirective(name: "@custom") {
+  query: Query
+}
+
+directive @custom on OBJECT
+
+scalar _Any
+
+type Query {
+  product(id: ID!): Product
+  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
+  _service: _Service!
+  _entities(representations: [_Any!]!): [_Entity]!
+}
+
+type Product @custom @key(fields: "id") @key(fields: "sku package") @key(fields: "sku variation { id }") {
   id: ID!
   sku: String
   package: String
   variation: ProductVariation
   dimensions: ProductDimension
   createdBy: User @provides(fields: "totalProductsCreated")
-  notes: String
+  notes: String @tag(name: "internal")
   research: [ProductResearch!]!
-}
-
-type DeprecatedProduct @key(fields: "sku package") {
-  sku: String!
-  package: String!
-  reason: String
-  createdBy: User
 }
 
 type ProductVariation {
   id: ID!
+}
+
+type ProductDimension @shareable {
+  size: String
+  weight: Float
+  unit: String @inaccessible
+}
+
+type User @key(fields: "email") {
+  email: ID! @external
+  name: String @override(from: "users")
+  totalProductsCreated: Int @external
+  averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
+  yearsOfEmployment: Int! @external
 }
 
 type ProductResearch @key(fields: "study { caseNumber }") {
@@ -30,21 +52,20 @@ type CaseStudy {
   description: String
 }
 
-type ProductDimension {
-  size: String
-  weight: Float
-  unit: String
+type DeprecatedProduct @key(fields: "sku package") {
+  sku: String!
+  package: String!
+  reason: String
+  createdBy: User
 }
 
-extend type Query {
-  product(id: ID!): Product
-  deprecatedProduct(sku: String!, package: String!): DeprecatedProduct @deprecated(reason: "Use product query instead")
+type _Service {
+  sdl: String
 }
 
-extend type User @key(fields: "email") {
-  averageProductsCreatedPerYear: Int @requires(fields: "totalProductsCreated yearsOfEmployment")
-  email: ID! @external
-  name: String
-  totalProductsCreated: Int @external
-  yearsOfEmployment: Int! @external
+union _Entity = Product | User | ProductResearch | DeprecatedProduct | Inventory
+
+type Inventory @key(fields: "id") @interfaceObject {
+  id: ID!
+  deprecatedProducts: [DeprecatedProduct!]!
 }
