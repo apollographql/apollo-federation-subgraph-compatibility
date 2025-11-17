@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate.AspNetCore" Version="13.5.1" />
-    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.5.1" />
-    <PackageReference Include="ApolloGraphQL.HotChocolate.Federation" Version="0.2.0" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.15" />
+    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.9.15" />
+    <PackageReference Include="ApolloGraphQL.HotChocolate.Federation" Version="0.3.0" />
   </ItemGroup>
 
 </Project>
