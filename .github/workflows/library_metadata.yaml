@@ -93,6 +93,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Enable auto merge PR
         run: |
-          gh pr merge
+          gh pr merge metadata_updates
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
