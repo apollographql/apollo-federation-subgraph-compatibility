@@ -90,4 +90,9 @@ jobs:
         run: |
           gh pr create -B main -H metadata_updates --title 'docs: subgraph library metadata updates' --body 'Created by Github Action'
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Enable auto merge PR
+        run: |
+          gh pr merge metadata_updates
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
