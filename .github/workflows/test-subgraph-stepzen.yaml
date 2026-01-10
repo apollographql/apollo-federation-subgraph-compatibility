@@ -16,7 +16,7 @@ jobs:
         run: |
           mkdir -p ./subgraph
           echo stepzen > ./subgraph/subgraph_info
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: subgraph
           path: subgraph/
