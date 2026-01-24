@@ -53,7 +53,7 @@ jobs:
       - run: "echo 'latest release: ${{ steps.repository_metadata.outputs.data }}'"
       - run: |
           echo '${{ steps.repository_metadata.outputs.data }}' | jq '.["description"] = .repository.description | .["stargazerCount"] = .repository.stargazerCount | .["lastRelease"] = .repository.releases.nodes[0].publishedAt | del(.repository)' > github_metadata.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.name }}
           path: github_metadata.json
@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download Metadata
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: implementations
       - name: Check if there are any updates
