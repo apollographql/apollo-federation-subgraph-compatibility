@@ -6,6 +6,8 @@ on:
       - main
     paths-ignore:
       - '**.md'
+  schedule:
+    - cron: 0 0 * * 2
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
