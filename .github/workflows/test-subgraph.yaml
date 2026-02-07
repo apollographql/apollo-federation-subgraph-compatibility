@@ -46,7 +46,7 @@ jobs:
             echo "RESULTS_FILE=results-${{ inputs.library }}.md" >> $GITHUB_ENV
           fi
       - name: Upload Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.RESULTS_FILE }}
           path: ./${{ env.RESULTS_FILE }}

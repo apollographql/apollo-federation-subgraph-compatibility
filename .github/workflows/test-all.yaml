@@ -76,7 +76,7 @@ jobs:
       - name: Compile script
         run: npm run build
       - name: Download Individual Results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
       - name: Generate Final Results
         run: |
           echo "merging results"
@@ -89,13 +89,13 @@ jobs:
           cat results.md
           cat results.md >> $GITHUB_STEP_SUMMARY
       - name: Upload Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: results.md
           path: ./results.md
           retention-days: 7
       - name: Upload final JSON results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: final_results.json
           path: ./final_results.json
