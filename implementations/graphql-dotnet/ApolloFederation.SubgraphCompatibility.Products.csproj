@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="8.3.0" />
-    <PackageReference Include="GraphQL.SystemTextJson" Version="8.6.0" />
-    <PackageReference Include="GraphQL" Version="8.6.0" />
+    <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="8.3.3" />
+    <PackageReference Include="GraphQL.SystemTextJson" Version="8.8.3" />
+    <PackageReference Include="GraphQL" Version="8.8.3" />
   </ItemGroup>
 
   <ItemGroup>
