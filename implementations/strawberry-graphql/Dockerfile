@@ -1,4 +1,4 @@
-FROM python:3.14-slim-bullseye
+FROM python:3.14-slim-bookworm
 WORKDIR /web
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
