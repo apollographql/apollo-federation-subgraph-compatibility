@@ -309,4 +309,4 @@ class Query:
         return None
 
 
-schema = strawberry.federation.Schema(query=Query, enable_federation_2=True, types=[Inventory])
+schema = strawberry.federation.Schema(query=Query, types=[Inventory])

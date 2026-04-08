@@ -1,1 +1,1 @@
-strawberry-graphql[debug-server]==0.180.5
+strawberry-graphql[cli]==0.314.0
