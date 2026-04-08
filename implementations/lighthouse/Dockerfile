@@ -11,7 +11,7 @@ COPY . /workdir
 
 RUN composer update --no-progress \
     && touch database/database.sqlite \
-    && php artisan migrate:fresh --seed
+    && php artisan migrate:fresh --seed \
     && php artisan lighthouse:cache
 
 EXPOSE 4001
