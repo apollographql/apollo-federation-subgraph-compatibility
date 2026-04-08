@@ -87,4 +87,8 @@ return [
          */
         'driver' => Nuwave\Lighthouse\Tracing\FederatedTracing\FederatedTracing::class,
     ],
+
+    'query_cache' => [
+        'enable' => false,
+    ],
 ];

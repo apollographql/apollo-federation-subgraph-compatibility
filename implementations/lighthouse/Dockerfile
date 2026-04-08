@@ -9,11 +9,9 @@ RUN apt-get update \
 WORKDIR /workdir
 COPY . /workdir
 
-RUN composer update --no-progress \
+RUN composer install --no-progress \
     && touch database/database.sqlite \
     && php artisan migrate:fresh --seed \
-    && php artisan lighthouse:cache
 
 EXPOSE 4001
-
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=4001", "-vvv"]
