@@ -15,11 +15,11 @@ jobs:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           cache: 'npm'
       - name: Install dependencies and build
         run: npm install
@@ -64,7 +64,7 @@ jobs:
           mv results.md results-${{ env.SUBGRAPH }}.md
           echo "RESULTS_FILE=results-${{ env.SUBGRAPH }}.md" >> $GITHUB_ENV
       - name: Upload Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.RESULTS_FILE }}
           path: ./${{ env.RESULTS_FILE }}

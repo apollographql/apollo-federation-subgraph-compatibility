@@ -27,11 +27,11 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Checkout Repository
-  #       uses: actions/checkout@v4
+  #       uses: actions/checkout@v6
   #     - name: Setup Environment
-  #       uses: actions/setup-node@v4
+  #       uses: actions/setup-node@v6
   #       with:
-  #         node-version: 18
+  #         node-version: 24
   #         cache: 'npm'
   #     - name: Log in to registry
   #       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -44,7 +44,7 @@ jobs:
   #           cat results.md >> $GITHUB_STEP_SUMMARY
   #           echo "RESULTS_FILE=results.md" >> $GITHUB_ENV
   #     - name: Upload Results
-  #       uses: actions/upload-artifact@v4
+  #       uses: actions/upload-artifact@v7
   #       with:
   #         name: ${{ env.RESULTS_FILE }}
   #         path: ./${{ env.RESULTS_FILE }}

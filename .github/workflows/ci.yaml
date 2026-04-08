@@ -33,13 +33,13 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+        uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: 3.x
       - run: pip install mkdocs-material
       - name: Download Result
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: results.md
       - name: Build GH page
@@ -47,7 +47,7 @@ jobs:
           mv results.md docs/index.md
           mkdocs build
       - name: Upload GH page
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: site
 
@@ -60,4 +60,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v6
