@@ -9,9 +9,9 @@ RUN apt-get update \
 WORKDIR /workdir
 COPY . /workdir
 
-RUN composer install --no-progress \
+RUN composer update --no-progress \
     && touch database/database.sqlite \
-    && php artisan migrate:fresh --seed \
+    && php artisan migrate:fresh --seed
 
 EXPOSE 4001
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=4001", "-vvv"]
