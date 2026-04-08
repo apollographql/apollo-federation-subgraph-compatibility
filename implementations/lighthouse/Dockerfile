@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.5-cli
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -14,5 +14,4 @@ RUN composer update --no-progress \
     && php artisan migrate:fresh --seed
 
 EXPOSE 4001
-
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=4001", "-vvv"]
