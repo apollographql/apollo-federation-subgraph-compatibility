@@ -16,7 +16,7 @@ jobs:
       github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Download Artifacts
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         id: download_artifacts
         with:
           script: |
@@ -61,7 +61,7 @@ jobs:
           unzip pr.zip
           unzip results.zip
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
