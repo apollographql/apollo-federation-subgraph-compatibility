@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@apollo/server": "^4.9.3",
+    "@apollo/server": "^5.0.0",
     "@apollo/subgraph": "^2.5.5",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6"
