@@ -22,16 +22,17 @@
   },
   "homepage": "https://github.com/apollographql/apollo-federation-subgraph-compatibility/blob/main/packages/script/README.md",
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.6.0"
+    "node": ">=24.0.0",
+    "npm": ">=11.6.0"
   },
   "dependencies": {
     "@apollo/federation-subgraph-compatibility-tests": "2.2.2",
-    "commander": "^11.0.0",
-    "debug": "^4.3.4"
+    "commander": "^14.0.1",
+    "debug": "^4.4.3"
   },
   "devDependencies": {
-    "@types/debug": "4.1.12"
+    "@types/debug": "4.1.13",
+    "@types/node": "24.13.3"
   },
   "release": {
     "branches": [

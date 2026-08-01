@@ -16,7 +16,7 @@ jobs:
         run: |
           mkdir -p ./subgraph
           echo <implementation> > ./subgraph/subgraph_info
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v7
         with:
           name: subgraph
           path: subgraph/
