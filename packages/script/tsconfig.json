@@ -5,11 +5,13 @@
     "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "skipLibCheck": true,
+    "types": ["node"],
   },
   "include": [
     "src/**/*"

@@ -8,13 +8,22 @@ import { readFile, writeFile } from 'fs/promises';
 import { createWriteStream } from 'fs';
 
 const COMPOSITION_VERSION =
-  process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.7.8';
+  process.env['APOLLO_ROVER_DEV_COMPOSITION_VERSION'] ?? '2.15.1';
 const ROUTER_VERSION =
-  process.env['APOLLO_ROVER_DEV_ROUTER_VERSION'] ?? '1.52.0';
+  process.env['APOLLO_ROVER_DEV_ROUTER_VERSION'] ?? '2.16.1';
 const roverDebug = debug('rover');
+
+const USERS_URL = 'http://localhost:4002';
+const INVENTORY_URL = 'http://localhost:4003';
 
 /**
  * Composes supergraph using rover dev command and introspection.
+ *
+ * As of rover v0.27.0, `rover dev` no longer supports joining multiple
+ * independent `rover dev` processes into a single session (see
+ * https://github.com/apollographql/rover/releases/tag/v0.27.0). A single
+ * `rover dev --supergraph-config` process listing all subgraphs must be used
+ * instead.
  *
  * @param productsUrl products schema URL
  */
@@ -27,21 +36,56 @@ export async function composeDevSupergraph(
     `\n***********************\nComposing supergraph...\n***********************\n\n`,
   );
 
-  // composing supergraph
-  //   cannot use supergraph.config.js as we need to run rover dev sequentially for each subgraph
-  //   this is a workaround to https://github.com/apollographql/rover/issues/1258
-  // TODO cleanup once multiple subgraphs could be specified with single rover dev command
-  await composeDevSubgraph('products', productsUrl, productsSchema);
-  await composeDevSubgraph(
-    'users',
-    'http://localhost:4002',
-    resolve(__dirname, 'subgraphs', 'users', 'users.graphql'),
+  await Promise.all([
+    healthcheckOrThrow('products', productsUrl),
+    healthcheckOrThrow('users', USERS_URL),
+    healthcheckOrThrow('inventory', INVENTORY_URL),
+  ]);
+
+  const template = await readFile(
+    resolve(__dirname, '../supergraph-dev-config.yaml.template'),
+    'utf-8',
   );
-  await composeDevSubgraph(
-    'inventory',
-    'http://localhost:4003',
-    resolve(__dirname, 'subgraphs', 'inventory', 'inventory.graphql'),
-  );
+  const productsSchemaConfig = productsSchema
+    ? `file: ${productsSchema}`
+    : `subgraph_url: ${productsUrl}`;
+  const supergraphConfig = template
+    .replace('${COMPOSITION_VERSION}', COMPOSITION_VERSION)
+    .replaceAll('${DIST_DIR}', normalizePath(resolve(__dirname)))
+    .replace('${PRODUCTS_URL}', productsUrl)
+    .replace('${PRODUCTS_SCHEMA}', productsSchemaConfig);
+
+  const supergraphConfigPath = resolve('supergraph-dev-config.yaml');
+  await writeFile(supergraphConfigPath, supergraphConfig);
+
+  const routerConfigPath = resolve(__dirname, '../router.yaml');
+  const params = [
+    'start',
+    'rover',
+    '--name',
+    'rover-dev',
+    '--',
+    'dev',
+    '--supergraph-config',
+    supergraphConfigPath,
+    '--router-config',
+    routerConfigPath,
+  ];
+
+  const proc = execa('pm2', params, {
+    env: {
+      APOLLO_ROVER_DEV_COMPOSITION_VERSION: COMPOSITION_VERSION,
+      APOLLO_ROVER_DEV_ROUTER_VERSION: ROUTER_VERSION,
+    },
+  });
+  proc.stdout.pipe(writeableDebugStream(roverDebug));
+  proc.stderr.pipe(writeableDebugStream(roverDebug));
+
+  await proc;
+
+  if (proc.exitCode !== 0) {
+    throw new Error('Failed to compose supergraph');
+  }
 
   const started = await healthcheckRouter();
   if (started) {
@@ -54,52 +98,9 @@ export async function composeDevSupergraph(
   }
 }
 
-async function composeDevSubgraph(
-  subgraphName: string,
-  subgraphUrl: string,
-  schemaFile?: string,
-) {
-  roverDebug(`Composing supergraph - loading ${subgraphName} schema`);
-
+async function healthcheckOrThrow(subgraphName: string, subgraphUrl: string) {
   const started = await healthcheck(subgraphName, subgraphUrl);
-  if (started) {
-    const routerConfigPath = resolve(__dirname, '../router.yaml');
-    const params = [
-      'start',
-      'rover',
-      '--name',
-      `rover-${subgraphName}`,
-      '--',
-      'dev',
-      '--name',
-      subgraphName,
-      '--url',
-      subgraphUrl,
-      '--router-config',
-      routerConfigPath,
-    ];
-
-    if (schemaFile) {
-      params.push('--schema', schemaFile);
-    }
-
-    const proc = execa('pm2', params, {
-      env: {
-        APOLLO_ROVER_DEV_COMPOSITION_VERSION: COMPOSITION_VERSION,
-        APOLLO_ROVER_DEV_ROUTER_VERSION: ROUTER_VERSION,
-      },
-    });
-    proc.stdout.pipe(writeableDebugStream(roverDebug));
-    proc.stderr.pipe(writeableDebugStream(roverDebug));
-
-    await proc;
-
-    if (proc.exitCode !== 0) {
-      throw new Error(
-        `Failed to compose supergraph - failed to load ${subgraphName} schema`,
-      );
-    }
-  } else {
+  if (!started) {
     throw new Error(`${subgraphName} failed to start`);
   }
 }

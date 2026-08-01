@@ -33,8 +33,8 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+        uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: 3.x
       - run: pip install mkdocs-material
@@ -47,7 +47,7 @@ jobs:
           mv results.md docs/index.md
           mkdocs build
       - name: Upload GH page
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: site
 

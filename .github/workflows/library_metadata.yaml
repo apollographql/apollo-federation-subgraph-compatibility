@@ -11,7 +11,7 @@ jobs:
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: generate matrix
         id: matrix
         run: |
@@ -25,13 +25,13 @@ jobs:
       matrix:
         name: ${{ fromJson(needs.build-matrix.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Read Subgraph GH Details
         id: subgraph_details
         run: |
           echo "REPOSITORY_NAME=$(jq -r '.repository.name' implementations/${{ matrix.name }}/metadata.json)" >> $GITHUB_OUTPUT
           echo "REPOSITORY_OWNER=$(jq -r '.repository.owner' implementations/${{ matrix.name }}/metadata.json)" >> $GITHUB_OUTPUT
-      - uses: octokit/graphql-action@v2.x
+      - uses: octokit/graphql-action@v3.x
         id: repository_metadata
         with:
           query: |
@@ -63,7 +63,7 @@ jobs:
     needs: metadata
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Download Metadata
         uses: actions/download-artifact@v8
         with:

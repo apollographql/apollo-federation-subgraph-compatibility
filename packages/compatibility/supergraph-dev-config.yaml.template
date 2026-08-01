@@ -1,0 +1,14 @@
+federation_version: =${COMPOSITION_VERSION}
+subgraphs:
+  products:
+    routing_url: ${PRODUCTS_URL}
+    schema:
+      ${PRODUCTS_SCHEMA}
+  users:
+    routing_url: http://localhost:4002
+    schema:
+      file: ${DIST_DIR}/subgraphs/users/users.graphql
+  inventory:
+    routing_url: http://localhost:4003
+    schema:
+      file: ${DIST_DIR}/subgraphs/inventory/inventory.graphql
