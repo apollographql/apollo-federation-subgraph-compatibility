@@ -1,4 +1,3 @@
-import fetch from 'make-fetch-happen';
 import { infoLog } from './logging';
 
 export const ROUTER_URL = 'http://localhost:4000/';
@@ -75,12 +74,35 @@ export async function healthcheckSupergraph(url: string): Promise<Boolean> {
   );
 }
 
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit,
+  retries: number,
+  maxTimeout: number,
+): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await fetch(url, init);
+    } catch (err) {
+      lastError = err;
+      if (attempt < retries) {
+        await new Promise((r) => setTimeout(r, Math.min(maxTimeout, 1000)));
+      }
+    }
+  }
+  throw lastError;
+}
+
 export async function healthcheckRouter(): Promise<Boolean> {
   infoLog('health check - router', ROUTER_HEALTH_URL);
   try {
-    const routerHealthcheck = await fetch(ROUTER_HEALTH_URL, {
-      retry: { retries: 10, maxTimeout: 1000 },
-    });
+    const routerHealthcheck = await fetchWithRetry(
+      ROUTER_HEALTH_URL,
+      {},
+      10,
+      1000,
+    );
 
     if (!routerHealthcheck.ok) {
       console.log('router failed to start');

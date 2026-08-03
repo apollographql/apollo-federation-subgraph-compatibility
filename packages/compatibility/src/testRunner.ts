@@ -121,6 +121,16 @@ export async function runJest(productsUrl: string): Promise<JestResults> {
 
   const results = JSON.parse(stdout) as JestJSONOutput;
 
+  if (results.numRuntimeErrorTestSuites > 0) {
+    const crashedSuites = results.testResults
+      .filter((suite) => suite.assertionResults.length === 0)
+      .map((suite) => `${suite.name}: ${suite.message}`)
+      .join('\n\n');
+    throw new Error(
+      `${results.numRuntimeErrorTestSuites} test suite(s) failed to run:\n\n${crashedSuites}`,
+    );
+  }
+
   const assertions = results.testResults.flatMap((x) => x.assertionResults);
   const assertionPassed = (name: string) => {
     return !assertions.some((a: any) => {
