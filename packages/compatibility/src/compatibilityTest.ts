@@ -14,6 +14,7 @@ export async function compatibilityTest(
   const testResults: TestResults = {};
   let allRequiredSuccessful = true;
   let allSuccessful = true;
+  let testsErrored = false;
 
   // start supergraph
   const stopSupergraph = await startSupergraph(runtimeConfig);
@@ -38,6 +39,10 @@ export async function compatibilityTest(
     logWithTimestamp('compatibility tests complete...');
   } catch (err) {
     logWithTimestamp(`compatibility tests encountered an error: ${err}`);
+    // we can't trust any test results we may have gathered so far - this is
+    // not a compatibility gap, it's the harness itself failing to run, so it
+    // should never be reported as a passing/successful run.
+    testsErrored = true;
   } finally {
     await stopSupergraph();
   }
@@ -58,7 +63,9 @@ export async function compatibilityTest(
   // print results to console
   logResults(testResults);
 
-  if (runtimeConfig.failOnWarning) {
+  if (testsErrored) {
+    return false;
+  } else if (runtimeConfig.failOnWarning) {
     return allSuccessful;
   } else if (runtimeConfig.failOnRequired) {
     return allRequiredSuccessful;

@@ -30,7 +30,6 @@
     "execa": "^5.1.1",
     "graphql": "^16.14.2",
     "jest": "^30.4.2",
-    "make-fetch-happen": "^16.0.1",
     "mustache": "^4.2.0",
     "pm2": "^7.0.3",
     "ts-jest": "^29.4.12"
@@ -38,7 +37,6 @@
   "devDependencies": {
     "@types/debug": "4.1.13",
     "@types/jest": "30.0.0",
-    "@types/make-fetch-happen": "10.0.4",
     "@types/mustache": "4.2.6",
     "@types/node": "24.13.3"
   },
