@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@apollo/federation-subgraph-compatibility-tests": "3.0.1",
-    "commander": "^14.0.1",
+    "commander": "^15.0.0",
     "debug": "^4.4.3"
   },
   "devDependencies": {
