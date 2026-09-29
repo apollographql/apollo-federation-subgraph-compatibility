@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
+        <version>4.1.1</version>
     </parent>
 
     <groupId>com.netflix.graphql.dgs</groupId>
@@ -15,11 +15,13 @@
     <description>Implementation of dgs for compatibility testing with Apollo Federation</description>
 
     <properties>
-        <java.version>17</java.version>
-        <dgs.version>7.1.0</dgs.version>
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <java.version>25</java.version>
+        <dgs.version>12.1.0</dgs.version>
+        <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
         <!-- override versions -->
-        <federation-jvm.version>3.0.1</federation-jvm.version>
+        <federation-jvm.version>6.2.1</federation-jvm.version>
+        <!-- DGS requires json-path 3.x (Jackson 3 provider), Spring Boot manages 2.x -->
+        <json-path.version>3.0.0</json-path.version>
     </properties>
 
     <dependencyManagement>
@@ -47,11 +49,11 @@
         </dependency>
         <dependency>
             <groupId>com.netflix.graphql.dgs</groupId>
-            <artifactId>graphql-dgs-spring-boot-starter</artifactId>
+            <artifactId>dgs-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

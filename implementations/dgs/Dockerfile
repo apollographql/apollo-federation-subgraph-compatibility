@@ -1,4 +1,4 @@
-FROM maven
+FROM maven:3-eclipse-temurin-25
 
 WORKDIR /build
 COPY src ./src
