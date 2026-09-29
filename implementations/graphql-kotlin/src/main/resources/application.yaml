@@ -4,7 +4,6 @@ graphql:
     - "com.example.demo"
   federation:
     enabled: true
-    optInV2: true
     tracing:
       enabled: true
       debug: true

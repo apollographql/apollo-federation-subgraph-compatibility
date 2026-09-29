@@ -1,14 +1,17 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-	id("org.springframework.boot") version "2.7.5"
-	kotlin("jvm") version "1.7.21"
-	kotlin("plugin.spring") version "1.7.21"
+	id("org.springframework.boot") version "4.1.1"
+	kotlin("jvm") version "2.4.20"
+	kotlin("plugin.spring") version "2.4.20"
 }
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_25
+}
 
 repositories {
 	mavenCentral()
@@ -16,14 +19,13 @@ repositories {
 
 dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("com.expediagroup:graphql-kotlin-spring-server:6.3.6")
+	implementation("com.expediagroup:graphql-kotlin-spring-server:10.2.2")
 }
 
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "17"
+kotlin {
+	compilerOptions {
+		freeCompilerArgs.addAll("-Xjsr305=strict")
+		jvmTarget.set(JvmTarget.JVM_25)
 	}
 }
 
