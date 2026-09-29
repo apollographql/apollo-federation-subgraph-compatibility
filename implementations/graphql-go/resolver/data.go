@@ -76,3 +76,10 @@ var research = []*model.ProductResearch{
 		},
 	},
 }
+
+var inventory = []*model.Inventory{
+	{
+		ID:                 "apollo-oss",
+		DeprecatedProducts: deprecatedProducts,
+	},
+}
