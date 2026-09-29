@@ -10,10 +10,14 @@ import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Server
 import org.http4s.{Header, HttpRoutes}
 import org.typelevel.ci.CIString
+import org.typelevel.log4cats.LoggerFactory
+import org.typelevel.log4cats.noop.NoOpFactory
 import sangria.execution.Middleware
 import sangria.federation.tracing.ApolloFederationTracing
 
 object GraphQLServer {
+
+  private implicit val loggerFactory: LoggerFactory[IO] = NoOpFactory[IO]
 
   private object `apollo-federation-include-trace` {
     val name: CIString = CIString("apollo-federation-include-trace")

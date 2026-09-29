@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1 AS build
+FROM sbtscala/scala-sbt:eclipse-temurin-25.0.4_7_1.13.0_2.13.18 AS build
 
 WORKDIR /build
 COPY project/build.properties ./project/
