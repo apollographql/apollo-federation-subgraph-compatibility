@@ -2,6 +2,7 @@ spring:
   application:
     name: federation-jvm-compatibility
   graphql:
-    path: /
+    http:
+      path: /
 server:
   port: 4001
