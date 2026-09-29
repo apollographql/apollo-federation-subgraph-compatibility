@@ -1,4 +1,4 @@
-FROM lukemathwalker/cargo-chef:latest-rust-1.73 AS chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.98.1-trixie AS chef
 WORKDIR app
 
 FROM chef as planner
@@ -11,6 +11,6 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 RUN cargo build --release
 
-FROM gcr.io/distroless/cc-debian12
+FROM gcr.io/distroless/cc-debian13
 COPY --from=builder /app/target/release/federation-async-graphql-compatibility /usr/local/bin/federation-async-graphql-compatibility
 CMD ["federation-async-graphql-compatibility"]
