@@ -1,4 +1,4 @@
-FROM sbtscala/scala-sbt:graalvm-ce-22.3.3-b1-java17_1.9.8_2.13.12 AS build
+FROM sbtscala/scala-sbt:graalvm-community-25.0.2_1.13.0_2.13.18 AS build
 
 WORKDIR /build
 COPY project/build.properties ./project/
