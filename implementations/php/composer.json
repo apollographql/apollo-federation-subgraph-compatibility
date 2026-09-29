@@ -2,12 +2,21 @@
     "name": "apollo/php-implementation",
     "type": "project",
     "require": {
-        "webonyx/graphql-php": "^14.11",
-        "skillshare/apollo-federation-php": "^1.6"
+        "webonyx/graphql-php": "^14.11.10",
+        "skillshare/apollo-federation-php": "^1.9"
     },
     "autoload": {
         "psr-4": {
             "GraphQL\\Compatibility\\": "src/"
+        }
+    },
+    "config": {
+        "audit": {
+            "ignore": {
+                "PKSA-xwpn-zs9j-6wy5": "graphql-php 14.x is the newest line supported by skillshare/apollo-federation-php; fixed only in 15.x",
+                "PKSA-sf9j-1gs7-xzvx": "graphql-php 14.x is the newest line supported by skillshare/apollo-federation-php; fixed only in 15.x",
+                "PKSA-7h5p-prw9-w5nr": "graphql-php 14.x is the newest line supported by skillshare/apollo-federation-php; fixed only in 15.x"
+            }
         }
     }
 }
