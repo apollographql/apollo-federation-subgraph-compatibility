@@ -25,7 +25,7 @@ COPY . .
 # Build everything, with optimizations
 # Use the native build system: the swiftbuild backend (default since Swift 6.4) fails to
 # link CoreFoundation when using --static-swift-stdlib
-RUN swift build --build-system native -c release --static-swift-stdlib -j 1
+RUN swift build --build-system native -c release --static-swift-stdlib
 
 # Switch to the staging area
 WORKDIR /staging
