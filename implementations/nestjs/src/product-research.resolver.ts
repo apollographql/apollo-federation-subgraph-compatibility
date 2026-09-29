@@ -1,4 +1,4 @@
-import { Resolver, ResolveField, ResolveReference } from "@nestjs/graphql";
+import { Resolver, ResolveReference } from "@nestjs/graphql";
 
 interface CaseStudy {
   caseNumber: string;
@@ -28,11 +28,6 @@ const productResearch = [
 @Resolver("ProductResearch")
 export class ProductResearchResolver {
   constructor() {}
-
-  @ResolveField()
-  getStudy() {
-    return productResearch[0].study;
-  }
 
   @ResolveReference()
   resolveReference(reference: ProductResearch) {

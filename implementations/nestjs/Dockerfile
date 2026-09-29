@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:24-alpine
 WORKDIR /web
 COPY package.json package-lock.json products.graphql tsconfig.json tsconfig.build.json ./
 COPY src ./src
