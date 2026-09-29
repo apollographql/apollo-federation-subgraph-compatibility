@@ -1,4 +1,4 @@
-FROM ruby:3.2
+FROM ruby:4.0
 WORKDIR /web
 COPY ./Gemfile* /web/
 RUN bundle

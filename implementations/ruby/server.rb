@@ -5,6 +5,9 @@ require 'apollo-federation'
 require 'sinatra/base'
 
 class GraphQLServer < Sinatra::Base
+  # allow requests from any host (e.g. router calling `products:4001`)
+  set :host_authorization, { permitted_hosts: [] }
+
   before do
     response.headers['Access-Control-Allow-Origin'] = '*'
   end
@@ -20,9 +23,7 @@ class GraphQLServer < Sinatra::Base
       operation_name: operation_name,
       variables: vars,
       context: {
-        tracing_enabled: ApolloFederation::Tracing.should_add_traces({
-          'apollo-federation-include-trace' => request.env['HTTP_APOLLO_FEDERATION_INCLUDE_TRACE']
-        })
+        tracing_enabled: ApolloFederation::Tracing.should_add_traces(request.env)
       }
     )
     headers 'Content-Type' => 'application/json'
@@ -240,8 +241,9 @@ end
 class ProductSchema < GraphQL::Schema
   include ApolloFederation::Schema
   federation version: '2.0'
-  use ApolloFederation::Tracing
+  trace_with ApolloFederation::Tracing::Tracer
 
-  query(Query)
+  # orphan types must be registered before the query so they are included in the entities
   orphan_types Inventory
+  query(Query)
 end
