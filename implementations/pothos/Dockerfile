@@ -1,8 +1,8 @@
-FROM node:14-alpine
+FROM node:24-alpine
 WORKDIR /web
 COPY package.json package-lock.json ./
 RUN npm install
-COPY index.ts ./
+COPY tsconfig.json index.ts ./
 EXPOSE 4001
 USER node
 CMD npm start

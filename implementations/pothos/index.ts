@@ -9,7 +9,6 @@ import { DirectiveLocation, GraphQLDirective } from 'graphql';
 const serverPort = parseInt(process.env.PRODUCTS_PORT || "") || 4001;
 
 const builder = new SchemaBuilder<{
-  DefaultFieldNullability: true;
   Directives: {
     custom: {
       locations: 'OBJECT'
@@ -17,8 +16,9 @@ const builder = new SchemaBuilder<{
   }
 }>({
   plugins: [DirectivesPlugin, FederationPlugin],
-  useGraphQLToolsUnorderedDirectives: true,
-  defaultFieldNullability: true,
+  directives: {
+    useGraphQLToolsUnorderedDirectives: true,
+  },
 });
 
 interface Product {
