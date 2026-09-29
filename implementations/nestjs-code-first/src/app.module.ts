@@ -23,7 +23,23 @@ import { DirectiveLocation, GraphQLDirective } from "graphql";
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: {
-        federation: 2,
+        federation: {
+          version: 2,
+          importUrl: 'https://specs.apollo.dev/federation/v2.3',
+          directives: [
+            '@composeDirective',
+            '@extends',
+            '@external',
+            '@inaccessible',
+            '@interfaceObject',
+            '@key',
+            '@override',
+            '@provides',
+            '@requires',
+            '@shareable',
+            '@tag',
+          ],
+        },
       },
       buildSchemaOptions: {
         orphanedTypes: [Inventory],
