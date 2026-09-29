@@ -45,3 +45,8 @@ type ProductResearch struct {
 type ProductVariation struct {
 	ID string `json:"id"`
 }
+
+type Inventory struct {
+	ID                 string               `json:"id"`
+	DeprecatedProducts []*DeprecatedProduct `json:"deprecatedProducts"`
+}

@@ -1,5 +1,5 @@
 {
-  "description": "Fork of graphql-go/graphql that adds Apollo Federation support",
-  "stargazerCount": 2,
-  "lastRelease": "2022-11-11T15:33:15Z"
+  "description": "An implementation of GraphQL for Go / Golang",
+  "stargazerCount": 10143,
+  "lastRelease": "2023-04-10T18:20:23Z"
 }

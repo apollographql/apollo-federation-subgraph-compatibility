@@ -74,6 +74,19 @@ func DeprecatedProductEntityResolver(params map[string]interface{}) (*model.Depr
 }
 
 // @key(fields: "id")
+func InventoryEntityResolver(params map[string]interface{}) (*model.Inventory, error) {
+	id, ok := params["id"].(string)
+	if ok {
+		for i := range inventory {
+			if inventory[i].ID == id {
+				return inventory[i], nil
+			}
+		}
+	}
+	return nil, nil
+}
+
+// @key(fields: "id")
 // @key(fields: "sku package")
 // @key(fields: "sku variation { id }")
 func ProductEntityResolver(params map[string]interface{}) (*model.Product, error) {
