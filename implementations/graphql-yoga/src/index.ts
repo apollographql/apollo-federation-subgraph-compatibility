@@ -96,13 +96,15 @@ const resolvers: Resolvers = {
     },
   },
   Product: {
-    variation(parent) {
+    variation(productRef) {
+      const parent = productRef as Product;
       if (parent.variation) return parent.variation;
       const p = products.find((p) => p.id == parent.id);
       return p && p.variation ? p.variation : null;
     },
 
-    research: (reference) => {
+    research: (productRef) => {
+      const reference = productRef as Product;
       if (reference.id === "apollo-federation") {
         return [productResearch[0]];
       } else if (reference.id === "apollo-studio") {
