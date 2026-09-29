@@ -184,7 +184,7 @@ app.use("/", async (req: any, res: any) => {
     query,
     variables,
     request,
-    schema: buildSubgraphSchema({ typeDefs, resolvers }),
+    schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
   });
   sendResult(result, res);
 });
