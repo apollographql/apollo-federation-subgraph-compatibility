@@ -3,15 +3,16 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "target": "esnext",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "skipLibCheck": true,
     "strict": true,
-    "allowJs": true
+    "allowJs": true,
+    "types": ["node"]
   },
   "include": [
     "./src/**/*"

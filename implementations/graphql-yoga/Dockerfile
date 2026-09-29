@@ -1,4 +1,4 @@
-FROM node:17-alpine
+FROM node:24-alpine
 WORKDIR /web
 COPY package.json package-lock.json products.graphql tsconfig.json codegen.yaml ./
 COPY src ./src
