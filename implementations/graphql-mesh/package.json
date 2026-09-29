@@ -10,17 +10,21 @@
   "author": "Denis Badurina <badurinadenis@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@graphql-mesh/cli": "^0.82.24",
-    "@graphql-mesh/graphql": "^0.34.7",
-    "@graphql-mesh/transform-federation": "^0.11.7",
-    "@graphql-tools/schema": "^9.0.16",
-    "@graphql-yoga/plugin-apollo-inline-trace": "^1.7.0",
-    "graphql": "^16.8.1"
+    "@graphql-mesh/cli": "^0.103.2",
+    "@graphql-mesh/graphql": "^0.107.1",
+    "@graphql-mesh/transform-federation": "^0.107.1",
+    "@graphql-tools/schema": "^10.1.1",
+    "@graphql-yoga/plugin-apollo-inline-trace": "^3.24.1",
+    "graphql": "^16.14.2"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^3.2.1",
-    "@graphql-codegen/typescript": "^3.0.1",
-    "@graphql-codegen/typescript-resolvers": "^3.1.0",
-    "@types/node": "^18.14.2"
+    "@graphql-codegen/cli": "^7.4.3",
+    "@graphql-codegen/typescript": "^6.1.0",
+    "@graphql-codegen/typescript-resolvers": "^6.1.0",
+    "@types/node": "^24.19.0",
+    "typescript": "^7.0.2"
+  },
+  "overrides": {
+    "@apollo/subgraph": "~2.14.4"
   }
 }

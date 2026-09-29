@@ -1,61 +1,58 @@
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
 };
 
 export type CaseStudy = {
   __typename?: 'CaseStudy';
-  caseNumber: Scalars['ID'];
-  description?: Maybe<Scalars['String']>;
+  caseNumber: Scalars['ID']['output'];
+  description?: Maybe<Scalars['String']['output']>;
 };
 
 export type DeprecatedProduct = {
   __typename?: 'DeprecatedProduct';
   createdBy?: Maybe<User>;
-  package: Scalars['String'];
-  reason?: Maybe<Scalars['String']>;
-  sku: Scalars['String'];
+  package: Scalars['String']['output'];
+  reason?: Maybe<Scalars['String']['output']>;
+  sku: Scalars['String']['output'];
 };
 
 export type Product = {
   __typename?: 'Product';
   createdBy?: Maybe<User>;
   dimensions?: Maybe<ProductDimension>;
-  id: Scalars['ID'];
-  notes?: Maybe<Scalars['String']>;
-  package?: Maybe<Scalars['String']>;
+  id: Scalars['ID']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  package?: Maybe<Scalars['String']['output']>;
   research: Array<ProductResearch>;
-  sku?: Maybe<Scalars['String']>;
+  sku?: Maybe<Scalars['String']['output']>;
   variation?: Maybe<ProductVariation>;
 };
 
 export type ProductDimension = {
   __typename?: 'ProductDimension';
-  size?: Maybe<Scalars['String']>;
-  unit?: Maybe<Scalars['String']>;
-  weight?: Maybe<Scalars['Float']>;
+  size?: Maybe<Scalars['String']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+  weight?: Maybe<Scalars['Float']['output']>;
 };
 
 export type ProductResearch = {
   __typename?: 'ProductResearch';
-  outcome?: Maybe<Scalars['String']>;
+  outcome?: Maybe<Scalars['String']['output']>;
   study: CaseStudy;
 };
 
 export type ProductVariation = {
   __typename?: 'ProductVariation';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type Query = {
@@ -67,22 +64,22 @@ export type Query = {
 
 
 export type QueryDeprecatedProductArgs = {
-  package: Scalars['String'];
-  sku: Scalars['String'];
+  package: Scalars['String']['input'];
+  sku: Scalars['String']['input'];
 };
 
 
 export type QueryProductArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 export type User = {
   __typename?: 'User';
-  averageProductsCreatedPerYear?: Maybe<Scalars['Int']>;
-  email: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  totalProductsCreated?: Maybe<Scalars['Int']>;
-  yearsOfEmployment: Scalars['Int'];
+  averageProductsCreatedPerYear?: Maybe<Scalars['Int']['output']>;
+  email: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  totalProductsCreated?: Maybe<Scalars['Int']['output']>;
+  yearsOfEmployment: Scalars['Int']['output'];
 };
 
 
@@ -93,7 +90,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -130,21 +127,21 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<TResult, TKey extends string, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
+export type TypeResolveFn<TTypes, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (
   parent: TParent,
   context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
+export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = Record<PropertyKey, never>, TContext = Record<PropertyKey, never>, TArgs = Record<PropertyKey, never>> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -152,44 +149,47 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+
+
+
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CaseStudy: ResolverTypeWrapper<CaseStudy>;
   DeprecatedProduct: ResolverTypeWrapper<DeprecatedProduct>;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Product: ResolverTypeWrapper<Product>;
   ProductDimension: ResolverTypeWrapper<ProductDimension>;
   ProductResearch: ResolverTypeWrapper<ProductResearch>;
   ProductVariation: ResolverTypeWrapper<ProductVariation>;
-  Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Boolean: Scalars['Boolean'];
+  Boolean: Scalars['Boolean']['output'];
   CaseStudy: CaseStudy;
   DeprecatedProduct: DeprecatedProduct;
-  Float: Scalars['Float'];
-  ID: Scalars['ID'];
-  Int: Scalars['Int'];
+  Float: Scalars['Float']['output'];
+  ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
   Product: Product;
   ProductDimension: ProductDimension;
   ProductResearch: ProductResearch;
   ProductVariation: ProductVariation;
-  Query: {};
-  String: Scalars['String'];
+  Query: Record<PropertyKey, never>;
+  String: Scalars['String']['output'];
   User: User;
 };
 
 export type CaseStudyResolvers<ContextType = any, ParentType extends ResolversParentTypes['CaseStudy'] = ResolversParentTypes['CaseStudy']> = {
   caseNumber?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type DeprecatedProductResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeprecatedProduct'] = ResolversParentTypes['DeprecatedProduct']> = {
@@ -197,7 +197,6 @@ export type DeprecatedProductResolvers<ContextType = any, ParentType extends Res
   package?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reason?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   sku?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ProductResolvers<ContextType = any, ParentType extends ResolversParentTypes['Product'] = ResolversParentTypes['Product']> = {
@@ -209,25 +208,21 @@ export type ProductResolvers<ContextType = any, ParentType extends ResolversPare
   research?: Resolver<Array<ResolversTypes['ProductResearch']>, ParentType, ContextType>;
   sku?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   variation?: Resolver<Maybe<ResolversTypes['ProductVariation']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ProductDimensionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductDimension'] = ResolversParentTypes['ProductDimension']> = {
   size?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   unit?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   weight?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ProductResearchResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductResearch'] = ResolversParentTypes['ProductResearch']> = {
   outcome?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   study?: Resolver<ResolversTypes['CaseStudy'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ProductVariationResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProductVariation'] = ResolversParentTypes['ProductVariation']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -241,7 +236,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   totalProductsCreated?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   yearsOfEmployment?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
