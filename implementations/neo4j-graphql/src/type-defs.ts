@@ -27,6 +27,7 @@ export const typeDefs = gql`
     directive @custom on OBJECT
 
     type Product
+        @node
         @custom
         @key(fields: "id")
         @key(fields: "sku package")
@@ -46,28 +47,33 @@ export const typeDefs = gql`
             @relationship(type: "HAS_RESEARCH", direction: OUT)
     }
 
-    type DeprecatedProduct @key(fields: "sku package") {
+    type DeprecatedProduct @node @key(fields: "sku package") {
         sku: String!
         package: String!
         reason: String
         createdBy: User @relationship(type: "CREATED_BY", direction: OUT)
     }
 
-    type ProductVariation {
+    type ProductVariation @node {
         id: ID!
     }
 
-    type ProductResearch @key(fields: "study { caseNumber }") {
-        study: CaseStudy! @relationship(type: "HAS_STUDY", direction: OUT)
+    type ProductResearch @node @key(fields: "study { caseNumber }") {
+        # Non-list relationships cannot be non-nullable, so use @cypher instead
+        study: CaseStudy!
+            @cypher(
+                statement: "MATCH (this)-[:HAS_STUDY]->(study:CaseStudy) RETURN study"
+                columnName: "study"
+            )
         outcome: String
     }
 
-    type CaseStudy {
+    type CaseStudy @node {
         caseNumber: ID!
         description: String
     }
 
-    type ProductDimension @shareable {
+    type ProductDimension @node @shareable {
         size: String
         weight: Float
         unit: String @inaccessible
@@ -88,7 +94,7 @@ export const typeDefs = gql`
     }
 
     # Originally using extends keyword, but this fails our document validation
-    type User @key(fields: "email") @extends {
+    type User @node @key(fields: "email") @extends {
         averageProductsCreatedPerYear: Int
             @requires(fields: "totalProductsCreated yearsOfEmployment")
         email: ID! @external
@@ -97,7 +103,7 @@ export const typeDefs = gql`
         yearsOfEmployment: Int! @external
     }
 
-    type Inventory @interfaceObject @key(fields: "id") {
+    type Inventory @node @interfaceObject @key(fields: "id") {
         id: ID!
         deprecatedProducts: [DeprecatedProduct!]!
             @relationship(type: "HAS_DEPRECATED_PRODUCT", direction: OUT)

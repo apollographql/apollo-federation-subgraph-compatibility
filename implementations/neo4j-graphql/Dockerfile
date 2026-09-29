@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:24-alpine
 WORKDIR /web
 COPY package.json package-lock.json tsconfig.json ./
 COPY src ./src

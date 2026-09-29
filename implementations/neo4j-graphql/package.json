@@ -12,14 +12,18 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@apollo/server": "^4.7.5",
-        "@neo4j/graphql": "^4.0.0",
-        "graphql": "^16.8.1",
-        "graphql-tag": "^2.12.6",
-        "neo4j-driver": "^5.10.0"
+        "@apollo/server": "^5.5.1",
+        "@neo4j/graphql": "^7.6.3",
+        "graphql": "^16.14.2",
+        "graphql-tag": "^2.12.7",
+        "neo4j-driver": "^6.2.0"
     },
     "devDependencies": {
-        "prettier": "^3.0.0",
-        "typescript": "^5.1.6"
+        "@types/node": "^24.19.0",
+        "prettier": "^3.9.9",
+        "typescript": "^7.0.2"
+    },
+    "overrides": {
+        "@apollo/subgraph": "~2.14.4"
     }
 }
