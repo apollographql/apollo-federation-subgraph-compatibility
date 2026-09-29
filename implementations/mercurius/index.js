@@ -154,10 +154,13 @@ const app = Fastify();
 
 app.register(mercurius, { schema, path: "/" });
 
-app.listen(process.env.PRODUCTS_PORT || 4001, "0.0.0.0", (err, url) => {
-  if (err) {
-    app.log.error(err);
-    process.exit(1);
+app.listen(
+  { port: process.env.PRODUCTS_PORT || 4001, host: "0.0.0.0" },
+  (err, url) => {
+    if (err) {
+      app.log.error(err);
+      process.exit(1);
+    }
+    console.log(`🚀 Server ready at ${url}`);
   }
-  console.log(`🚀 Server ready at ${url}`);
-});
+);
