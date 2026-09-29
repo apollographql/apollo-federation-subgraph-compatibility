@@ -1,9 +1,10 @@
-using ApolloGraphQL.HotChocolate.Federation;
+using HotChocolate.ApolloFederation.Types;
+using HotChocolate.ApolloFederation.Resolvers;
 
 namespace Products;
 
 [Key("email")]
-[Extends]
+[ExtendServiceType]
 public class User
 {
     public User(string email, string? name)

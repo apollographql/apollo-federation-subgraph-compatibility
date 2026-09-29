@@ -4,7 +4,7 @@ namespace Products;
 
 public sealed class CustomAttribute : ObjectTypeDescriptorAttribute
 {
-    protected override void OnConfigure(IDescriptorContext context, IObjectTypeDescriptor descriptor, Type type)
+    protected override void OnConfigure(IDescriptorContext context, IObjectTypeDescriptor descriptor, Type? type)
     {
         descriptor.Directive(CustomDirectiveType.CustomDirectiveName);
     }

@@ -1,3 +1,5 @@
+using HotChocolate.ApolloFederation.Types;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
@@ -5,11 +7,10 @@ builder.Services
 
 builder.Services
     .AddGraphQLServer()
-    .AddApolloFederationV2(new CustomSchema())
-    .AddType<CustomDirectiveType>()
+    .AddApolloFederation()
+    .ExportDirective<CustomDirectiveType>()
     .AddType<Inventory>()
-    .AddQueryType<Query>()
-    .RegisterService<Data>();
+    .AddQueryType<Query>();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-using ApolloGraphQL.HotChocolate.Federation;
+using HotChocolate.ApolloFederation.Types;
+using HotChocolate.ApolloFederation.Resolvers;
 
 namespace Products;
 
