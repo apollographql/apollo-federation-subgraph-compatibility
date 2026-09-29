@@ -1,4 +1,5 @@
-using ApolloGraphQL.HotChocolate.Federation;
+using HotChocolate.ApolloFederation.Types;
+using HotChocolate.ApolloFederation.Resolvers;
 
 namespace Products;
 
@@ -34,7 +35,7 @@ public class Product
     [Provides("totalProductsCreated")]
     public User? CreatedBy { get; }
 
-    [ApolloTag("internal")]
+    [Tag("internal")]
     public string? Notes { get; }
 
     public List<ProductResearch> Research { get; }
