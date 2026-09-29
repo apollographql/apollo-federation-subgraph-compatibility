@@ -18,7 +18,6 @@ on:
       - "GraphQL for .Net Test"
       - "GraphQL Go Test"
       - "GraphQL Helix Test"
-      - "GraphQL Java Kickstart Test"
       - "GraphQL Kotlin Test"
       - "GraphQL Mesh Test"
       - "GraphQL Yoga Test"
