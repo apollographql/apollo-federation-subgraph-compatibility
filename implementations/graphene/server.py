@@ -1,9 +1,32 @@
 from flask import Flask
-from graphene_federation.tag import tag
-from graphql_server.flask import GraphQLView
+from graphql import GraphQLArgument, GraphQLNonNull, GraphQLString
+from graphql_server.flask.views import GraphQLView
 from graphene import ObjectType, Field, Float, ID, Int, String, List, NonNull
-from graphene_federation import build_schema, extend, external, key, provides, requires, inaccessible, override, \
-    shareable
+from graphene_directives import CustomDirective, DirectiveLocation
+from graphene_federation import LATEST_VERSION, build_schema, extends, external, key, provides, requires, \
+    inaccessible, override, shareable, tag
+from graphene_federation.apollo_versions import v2_0
+
+# workaround: graphene-federation defines @tag without its required `name` argument
+v2_0.tag_directive = CustomDirective(
+    name="tag",
+    locations=[
+        DirectiveLocation.FIELD_DEFINITION,
+        DirectiveLocation.INTERFACE,
+        DirectiveLocation.OBJECT,
+        DirectiveLocation.UNION,
+        DirectiveLocation.ARGUMENT_DEFINITION,
+        DirectiveLocation.SCALAR,
+        DirectiveLocation.ENUM,
+        DirectiveLocation.ENUM_VALUE,
+        DirectiveLocation.INPUT_OBJECT,
+        DirectiveLocation.INPUT_FIELD_DEFINITION,
+    ],
+    args={"name": GraphQLArgument(GraphQLNonNull(GraphQLString))},
+    is_repeatable=True,
+    description="Federation @tag directive",
+    add_definition_to_schema=False,
+)
 
 # -------- data --------
 
@@ -70,9 +93,10 @@ products = [
 # -------- types --------
 
 
-@extend(fields='email')
+@key(fields='email')
+@extends
 class User(ObjectType):
-    average_products_created_per_year = requires(field=Int(), fields=["total_products_created", "years_of_employment"])
+    average_products_created_per_year = requires(Int(), fields=["total_products_created", "years_of_employment"])
     email = external(ID(required=True))
     name = override(String(), from_="users")
     total_products_created = external(Int())
@@ -104,6 +128,10 @@ class ProductVariation(ObjectType):
     id = ID(required=True)
 
 
+# workaround: graphene-federation expects nested key fields to be non-null (it reads `field.type.of_type`)
+ProductVariation.of_type = ProductVariation
+
+
 @shareable
 class ProductDimension(ObjectType):
     size = String()
@@ -128,7 +156,6 @@ class ProductResearch(ObjectType):
 @key(fields='id')
 @key(fields='sku package')
 @key(fields='sku variation { id }')
-@provides
 class Product(ObjectType):
     id = ID(required=True)
     sku = String()
@@ -186,7 +213,7 @@ def get_product_by_sku_and_package(sku, package):
 
 def get_product_by_sku_and_variation(sku, variation):
     return next((product for product in products if product['sku']
-                 == sku and product['variation'] == variation), None)
+                 == sku and product['variation']['id'] == variation.id), None)
 
 
 def get_deprecated_product_by_sku_and_package(sku, package):
@@ -198,17 +225,17 @@ def get_deprecated_product_by_sku_and_package(sku, package):
 
 def get_product_research_by_study(study):
     return next((product for product in products_research if product['study']['case_number']
-                 == study['caseNumber']), None)
+                 == study.case_number), None)
 
 
 # -------- server --------
 
 
-schema = build_schema(query=Query, enable_federation_2=True)
+schema = build_schema(query=Query, federation_version=LATEST_VERSION)
 app = Flask(__name__)
 app.add_url_rule('/', view_func=GraphQLView.as_view(
     'graphql',
-    schema=schema
+    schema=schema.graphql_schema
 ))
 
 if __name__ == '__main__':
