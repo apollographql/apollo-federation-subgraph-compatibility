@@ -1,4 +1,4 @@
-FROM python:3.14-slim-bookworm
+FROM python:3.14-slim-trixie
 
 COPY requirements.txt server.py ./
 RUN pip install -r requirements.txt
