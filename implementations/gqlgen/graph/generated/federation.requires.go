@@ -8,7 +8,7 @@ import (
 )
 
 // PopulateUserRequires is the requires populator for the User entity.
-func (ec *executionContext) PopulateUserRequires(ctx context.Context, entity *model.User, reps map[string]interface{}) error {
+func (ec *executionContext) PopulateUserRequires(ctx context.Context, entity *model.User, reps map[string]any) error {
 	if reps["totalProductsCreated"] != nil && reps["yearsOfEmployment"] != nil {
 		totalProducts, err := reps["totalProductsCreated"].(json.Number).Int64()
 		if err != nil {

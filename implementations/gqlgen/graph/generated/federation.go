@@ -36,390 +36,560 @@ func (ec *executionContext) __resolve__service(ctx context.Context) (fedruntime.
 	}, nil
 }
 
-func (ec *executionContext) __resolve_entities(ctx context.Context, representations []map[string]interface{}) []fedruntime.Entity {
+func (ec *executionContext) __resolve_entities(ctx context.Context, representations []map[string]any) []fedruntime.Entity {
 	list := make([]fedruntime.Entity, len(representations))
 
-	repsMap := map[string]struct {
-		i []int
-		r []map[string]interface{}
-	}{}
-
-	// We group entities by typename so that we can parallelize their resolution.
-	// This is particularly helpful when there are entity groups in multi mode.
-	buildRepresentationGroups := func(reps []map[string]interface{}) {
-		for i, rep := range reps {
-			typeName, ok := rep["__typename"].(string)
-			if !ok {
-				// If there is no __typename, we just skip the representation;
-				// we just won't be resolving these unknown types.
-				ec.Error(ctx, errors.New("__typename must be an existing string"))
-				continue
-			}
-
-			_r := repsMap[typeName]
-			_r.i = append(_r.i, i)
-			_r.r = append(_r.r, rep)
-			repsMap[typeName] = _r
-		}
-	}
-
-	isMulti := func(typeName string) bool {
-		switch typeName {
-		default:
-			return false
-		}
-	}
-
-	resolveEntity := func(ctx context.Context, typeName string, rep map[string]interface{}, idx []int, i int) (err error) {
-		// we need to do our own panic handling, because we may be called in a
-		// goroutine, where the usual panic handling can't catch us
-		defer func() {
-			if r := recover(); r != nil {
-				err = ec.Recover(ctx, r)
-			}
-		}()
-
-		switch typeName {
-		case "DeprecatedProduct":
-			resolverName, err := entityResolverNameForDeprecatedProduct(ctx, rep)
-			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "DeprecatedProduct": %w`, err)
-			}
-			switch resolverName {
-
-			case "findDeprecatedProductBySkuAndPackage":
-				id0, err := ec.unmarshalNString2string(ctx, rep["sku"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findDeprecatedProductBySkuAndPackage(): %w`, err)
-				}
-				id1, err := ec.unmarshalNString2string(ctx, rep["package"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 1 for findDeprecatedProductBySkuAndPackage(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindDeprecatedProductBySkuAndPackage(ctx, id0, id1)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "DeprecatedProduct": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			}
-		case "Inventory":
-			resolverName, err := entityResolverNameForInventory(ctx, rep)
-			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "Inventory": %w`, err)
-			}
-			switch resolverName {
-
-			case "findInventoryByID":
-				id0, err := ec.unmarshalNID2string(ctx, rep["id"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findInventoryByID(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindInventoryByID(ctx, id0)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "Inventory": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			}
-		case "Product":
-			resolverName, err := entityResolverNameForProduct(ctx, rep)
-			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "Product": %w`, err)
-			}
-			switch resolverName {
-
-			case "findProductByID":
-				id0, err := ec.unmarshalNID2string(ctx, rep["id"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findProductByID(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindProductByID(ctx, id0)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "Product": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			case "findProductBySkuAndPackage":
-				id0, err := ec.unmarshalOString2ᚖstring(ctx, rep["sku"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findProductBySkuAndPackage(): %w`, err)
-				}
-				id1, err := ec.unmarshalOString2ᚖstring(ctx, rep["package"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 1 for findProductBySkuAndPackage(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindProductBySkuAndPackage(ctx, id0, id1)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "Product": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			case "findProductBySkuAndVariationID":
-				id0, err := ec.unmarshalOString2ᚖstring(ctx, rep["sku"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findProductBySkuAndVariationID(): %w`, err)
-				}
-				id1, err := ec.unmarshalNID2string(ctx, rep["variation"].(map[string]interface{})["id"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 1 for findProductBySkuAndVariationID(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindProductBySkuAndVariationID(ctx, id0, id1)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "Product": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			}
-		case "ProductResearch":
-			resolverName, err := entityResolverNameForProductResearch(ctx, rep)
-			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "ProductResearch": %w`, err)
-			}
-			switch resolverName {
-
-			case "findProductResearchByStudyCaseNumber":
-				id0, err := ec.unmarshalNID2string(ctx, rep["study"].(map[string]interface{})["caseNumber"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findProductResearchByStudyCaseNumber(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindProductResearchByStudyCaseNumber(ctx, id0)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "ProductResearch": %w`, err)
-				}
-
-				list[idx[i]] = entity
-				return nil
-			}
-		case "User":
-			resolverName, err := entityResolverNameForUser(ctx, rep)
-			if err != nil {
-				return fmt.Errorf(`finding resolver for Entity "User": %w`, err)
-			}
-			switch resolverName {
-
-			case "findUserByEmail":
-				id0, err := ec.unmarshalNID2string(ctx, rep["email"])
-				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findUserByEmail(): %w`, err)
-				}
-				entity, err := ec.resolvers.Entity().FindUserByEmail(ctx, id0)
-				if err != nil {
-					return fmt.Errorf(`resolving Entity "User": %w`, err)
-				}
-
-				err = ec.PopulateUserRequires(ctx, entity, rep)
-				if err != nil {
-					return fmt.Errorf(`populating requires for Entity "User": %w`, err)
-				}
-				list[idx[i]] = entity
-				return nil
-			}
-
-		}
-		return fmt.Errorf("%w: %s", ErrUnknownType, typeName)
-	}
-
-	resolveManyEntities := func(ctx context.Context, typeName string, reps []map[string]interface{}, idx []int) (err error) {
-		// we need to do our own panic handling, because we may be called in a
-		// goroutine, where the usual panic handling can't catch us
-		defer func() {
-			if r := recover(); r != nil {
-				err = ec.Recover(ctx, r)
-			}
-		}()
-
-		switch typeName {
-
-		default:
-			return errors.New("unknown type: " + typeName)
-		}
-	}
-
-	resolveEntityGroup := func(typeName string, reps []map[string]interface{}, idx []int) {
-		if isMulti(typeName) {
-			err := resolveManyEntities(ctx, typeName, reps, idx)
-			if err != nil {
-				ec.Error(ctx, err)
-			}
-		} else {
-			// if there are multiple entities to resolve, parallelize (similar to
-			// graphql.FieldSet.Dispatch)
-			var e sync.WaitGroup
-			e.Add(len(reps))
-			for i, rep := range reps {
-				i, rep := i, rep
-				go func(i int, rep map[string]interface{}) {
-					err := resolveEntity(ctx, typeName, rep, idx, i)
-					if err != nil {
-						ec.Error(ctx, err)
-					}
-					e.Done()
-				}(i, rep)
-			}
-			e.Wait()
-		}
-	}
-	buildRepresentationGroups(representations)
+	repsMap := ec.buildRepresentationGroups(ctx, representations)
 
 	switch len(repsMap) {
 	case 0:
 		return list
 	case 1:
 		for typeName, reps := range repsMap {
-			resolveEntityGroup(typeName, reps.r, reps.i)
+			ec.resolveEntityGroup(ctx, typeName, reps, list)
 		}
 		return list
 	default:
 		var g sync.WaitGroup
 		g.Add(len(repsMap))
 		for typeName, reps := range repsMap {
-			go func(typeName string, reps []map[string]interface{}, idx []int) {
-				resolveEntityGroup(typeName, reps, idx)
+			go func(typeName string, reps []EntityWithIndex) {
+				ec.resolveEntityGroup(ctx, typeName, reps, list)
 				g.Done()
-			}(typeName, reps.r, reps.i)
+			}(typeName, reps)
 		}
 		g.Wait()
 		return list
 	}
 }
 
-func entityResolverNameForDeprecatedProduct(ctx context.Context, rep map[string]interface{}) (string, error) {
+type EntityWithIndex struct {
+	// The index in the original representation array
+	index  int
+	entity EntityRepresentation
+}
+
+// EntityRepresentation is the JSON representation of an entity sent by the Router
+// used as the inputs for us to resolve.
+//
+// We make it a map because we know the top level JSON is always an object.
+type EntityRepresentation map[string]any
+
+// We group entities by typename so that we can parallelize their resolution.
+// This is particularly helpful when there are entity groups in multi mode.
+func (ec *executionContext) buildRepresentationGroups(
+	ctx context.Context,
+	representations []map[string]any,
+) map[string][]EntityWithIndex {
+	repsMap := make(map[string][]EntityWithIndex)
+	for i, rep := range representations {
+		typeName, ok := rep["__typename"].(string)
+		if !ok {
+			// If there is no __typename, we just skip the representation;
+			// we just won't be resolving these unknown types.
+			ec.Error(ctx, errors.New("__typename must be an existing string"))
+			continue
+		}
+
+		repsMap[typeName] = append(repsMap[typeName], EntityWithIndex{
+			index:  i,
+			entity: rep,
+		})
+	}
+
+	return repsMap
+}
+
+func (ec *executionContext) resolveEntityGroup(
+	ctx context.Context,
+	typeName string,
+	reps []EntityWithIndex,
+	list []fedruntime.Entity,
+) {
+	if isMulti(typeName) {
+		err := ec.resolveManyEntities(ctx, typeName, reps, list)
+		if err != nil {
+			ec.Error(ctx, err)
+		}
+	} else {
+		// if there are multiple entities to resolve, parallelize (similar to
+		// graphql.FieldSet.Dispatch)
+		var e sync.WaitGroup
+		e.Add(len(reps))
+		for i, rep := range reps {
+			i, rep := i, rep
+			go func(i int, rep EntityWithIndex) {
+				entity, err := ec.resolveEntity(ctx, typeName, rep.entity)
+				if err != nil {
+					ec.Error(ctx, err)
+				} else {
+					list[rep.index] = entity
+				}
+				e.Done()
+			}(i, rep)
+		}
+		e.Wait()
+	}
+}
+
+func isMulti(typeName string) bool {
+	switch typeName {
+	default:
+		return false
+	}
+}
+
+func (ec *executionContext) resolveEntity(
+	ctx context.Context,
+	typeName string,
+	rep EntityRepresentation,
+) (e fedruntime.Entity, err error) {
+	// we need to do our own panic handling, because we may be called in a
+	// goroutine, where the usual panic handling can't catch us
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+		}
+	}()
+
+	switch typeName {
+	case "DeprecatedProduct":
+		resolverName, err := entityResolverNameForDeprecatedProduct(ctx, rep)
+		if err != nil {
+			return nil, fmt.Errorf(`finding resolver for Entity "DeprecatedProduct": %w`, err)
+		}
+		switch resolverName {
+
+		case "findDeprecatedProductBySkuAndPackage":
+			id0, err := ec.unmarshalNString2string(ctx, rep["sku"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 0 for findDeprecatedProductBySkuAndPackage(): %w`, err)
+			}
+			id1, err := ec.unmarshalNString2string(ctx, rep["package"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 1 for findDeprecatedProductBySkuAndPackage(): %w`, err)
+			}
+			entity, err := ec.Resolvers.Entity().FindDeprecatedProductBySkuAndPackage(ctx, id0, id1)
+			if err != nil {
+				return nil, fmt.Errorf(`resolving Entity "DeprecatedProduct": %w`, err)
+			}
+
+			return entity, nil
+		}
+	case "Inventory":
+		resolverName, err := entityResolverNameForInventory(ctx, rep)
+		if err != nil {
+			return nil, fmt.Errorf(`finding resolver for Entity "Inventory": %w`, err)
+		}
+		switch resolverName {
+
+		case "findInventoryByID":
+			id0, err := ec.unmarshalNID2string(ctx, rep["id"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 0 for findInventoryByID(): %w`, err)
+			}
+			entity, err := ec.Resolvers.Entity().FindInventoryByID(ctx, id0)
+			if err != nil {
+				return nil, fmt.Errorf(`resolving Entity "Inventory": %w`, err)
+			}
+
+			return entity, nil
+		}
+	case "Product":
+		resolverName, err := entityResolverNameForProduct(ctx, rep)
+		if err != nil {
+			return nil, fmt.Errorf(`finding resolver for Entity "Product": %w`, err)
+		}
+		switch resolverName {
+
+		case "findProductByID":
+			id0, err := ec.unmarshalNID2string(ctx, rep["id"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 0 for findProductByID(): %w`, err)
+			}
+			entity, err := ec.Resolvers.Entity().FindProductByID(ctx, id0)
+			if err != nil {
+				return nil, fmt.Errorf(`resolving Entity "Product": %w`, err)
+			}
+
+			return entity, nil
+		case "findProductBySkuAndPackage":
+			id0, err := ec.unmarshalOString2ᚖstring(ctx, rep["sku"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 0 for findProductBySkuAndPackage(): %w`, err)
+			}
+			id1, err := ec.unmarshalOString2ᚖstring(ctx, rep["package"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 1 for findProductBySkuAndPackage(): %w`, err)
+			}
+			entity, err := ec.Resolvers.Entity().FindProductBySkuAndPackage(ctx, id0, id1)
+			if err != nil {
+				return nil, fmt.Errorf(`resolving Entity "Product": %w`, err)
+			}
+
+			return entity, nil
+		case "findProductBySkuAndVariationID":
+			id0, err := ec.unmarshalOString2ᚖstring(ctx, rep["sku"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 0 for findProductBySkuAndVariationID(): %w`, err)
+			}
+			id1, err := ec.unmarshalNID2string(ctx, rep["variation"].(map[string]any)["id"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 1 for findProductBySkuAndVariationID(): %w`, err)
+			}
+			entity, err := ec.Resolvers.Entity().FindProductBySkuAndVariationID(ctx, id0, id1)
+			if err != nil {
+				return nil, fmt.Errorf(`resolving Entity "Product": %w`, err)
+			}
+
+			return entity, nil
+		}
+	case "ProductResearch":
+		resolverName, err := entityResolverNameForProductResearch(ctx, rep)
+		if err != nil {
+			return nil, fmt.Errorf(`finding resolver for Entity "ProductResearch": %w`, err)
+		}
+		switch resolverName {
+
+		case "findProductResearchByStudyCaseNumber":
+			id0, err := ec.unmarshalNID2string(ctx, rep["study"].(map[string]any)["caseNumber"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 0 for findProductResearchByStudyCaseNumber(): %w`, err)
+			}
+			entity, err := ec.Resolvers.Entity().FindProductResearchByStudyCaseNumber(ctx, id0)
+			if err != nil {
+				return nil, fmt.Errorf(`resolving Entity "ProductResearch": %w`, err)
+			}
+
+			return entity, nil
+		}
+	case "User":
+		resolverName, err := entityResolverNameForUser(ctx, rep)
+		if err != nil {
+			return nil, fmt.Errorf(`finding resolver for Entity "User": %w`, err)
+		}
+		switch resolverName {
+
+		case "findUserByEmail":
+			id0, err := ec.unmarshalNID2string(ctx, rep["email"])
+			if err != nil {
+				return nil, fmt.Errorf(`unmarshalling param 0 for findUserByEmail(): %w`, err)
+			}
+			entity, err := ec.Resolvers.Entity().FindUserByEmail(ctx, id0)
+			if err != nil {
+				return nil, fmt.Errorf(`resolving Entity "User": %w`, err)
+			}
+			err = ec.PopulateUserRequires(ctx, entity, rep)
+			if err != nil {
+				return nil, fmt.Errorf(`populating requires for Entity "User": %w`, err)
+			}
+			return entity, nil
+		}
+
+	}
+	return nil, fmt.Errorf("%w: %s", ErrUnknownType, typeName)
+}
+
+func (ec *executionContext) resolveManyEntities(
+	ctx context.Context,
+	typeName string,
+	reps []EntityWithIndex,
+	list []fedruntime.Entity,
+) (err error) {
+	// we need to do our own panic handling, because we may be called in a
+	// goroutine, where the usual panic handling can't catch us
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+		}
+	}()
+
+	switch typeName {
+
+	default:
+		return errors.New("unknown type: " + typeName)
+	}
+}
+
+func entityResolverNameForDeprecatedProduct(ctx context.Context, rep EntityRepresentation) (string, error) {
+	// we collect errors because a later entity resolver may work fine
+	// when an entity has multiple keys
+	entityResolverErrs := []error{}
 	for {
 		var (
-			m   map[string]interface{}
-			val interface{}
+			m   EntityRepresentation
+			val any
 			ok  bool
 		)
 		_ = val
+		// if all of the KeyFields values for this resolver are null,
+		// we shouldn't use use it
+		allNull := true
 		m = rep
-		if _, ok = m["sku"]; !ok {
+		val, ok = m["sku"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"sku\" for DeprecatedProduct", ErrTypeNotFound))
 			break
 		}
+		if allNull {
+			allNull = val == nil
+		}
 		m = rep
-		if _, ok = m["package"]; !ok {
+		val, ok = m["package"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"package\" for DeprecatedProduct", ErrTypeNotFound))
+			break
+		}
+		if allNull {
+			allNull = val == nil
+		}
+		if allNull {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to all null value KeyFields for DeprecatedProduct", ErrTypeNotFound))
 			break
 		}
 		return "findDeprecatedProductBySkuAndPackage", nil
 	}
-	return "", fmt.Errorf("%w for DeprecatedProduct", ErrTypeNotFound)
+	return "", fmt.Errorf("%w for DeprecatedProduct due to %v", ErrTypeNotFound,
+		errors.Join(entityResolverErrs...).Error())
 }
 
-func entityResolverNameForInventory(ctx context.Context, rep map[string]interface{}) (string, error) {
+func entityResolverNameForInventory(ctx context.Context, rep EntityRepresentation) (string, error) {
+	// we collect errors because a later entity resolver may work fine
+	// when an entity has multiple keys
+	entityResolverErrs := []error{}
 	for {
 		var (
-			m   map[string]interface{}
-			val interface{}
+			m   EntityRepresentation
+			val any
 			ok  bool
 		)
 		_ = val
+		// if all of the KeyFields values for this resolver are null,
+		// we shouldn't use use it
+		allNull := true
 		m = rep
-		if _, ok = m["id"]; !ok {
+		val, ok = m["id"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"id\" for Inventory", ErrTypeNotFound))
+			break
+		}
+		if allNull {
+			allNull = val == nil
+		}
+		if allNull {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to all null value KeyFields for Inventory", ErrTypeNotFound))
 			break
 		}
 		return "findInventoryByID", nil
 	}
-	return "", fmt.Errorf("%w for Inventory", ErrTypeNotFound)
+	return "", fmt.Errorf("%w for Inventory due to %v", ErrTypeNotFound,
+		errors.Join(entityResolverErrs...).Error())
 }
 
-func entityResolverNameForProduct(ctx context.Context, rep map[string]interface{}) (string, error) {
+func entityResolverNameForProduct(ctx context.Context, rep EntityRepresentation) (string, error) {
+	// we collect errors because a later entity resolver may work fine
+	// when an entity has multiple keys
+	entityResolverErrs := []error{}
 	for {
 		var (
-			m   map[string]interface{}
-			val interface{}
+			m   EntityRepresentation
+			val any
 			ok  bool
 		)
 		_ = val
+		// if all of the KeyFields values for this resolver are null,
+		// we shouldn't use use it
+		allNull := true
 		m = rep
-		if _, ok = m["id"]; !ok {
+		val, ok = m["id"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"id\" for Product", ErrTypeNotFound))
+			break
+		}
+		if allNull {
+			allNull = val == nil
+		}
+		if allNull {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to all null value KeyFields for Product", ErrTypeNotFound))
 			break
 		}
 		return "findProductByID", nil
 	}
 	for {
 		var (
-			m   map[string]interface{}
-			val interface{}
+			m   EntityRepresentation
+			val any
 			ok  bool
 		)
 		_ = val
+		// if all of the KeyFields values for this resolver are null,
+		// we shouldn't use use it
+		allNull := true
 		m = rep
-		if _, ok = m["sku"]; !ok {
+		val, ok = m["sku"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"sku\" for Product", ErrTypeNotFound))
 			break
 		}
+		if allNull {
+			allNull = val == nil
+		}
 		m = rep
-		if _, ok = m["package"]; !ok {
+		val, ok = m["package"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"package\" for Product", ErrTypeNotFound))
+			break
+		}
+		if allNull {
+			allNull = val == nil
+		}
+		if allNull {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to all null value KeyFields for Product", ErrTypeNotFound))
 			break
 		}
 		return "findProductBySkuAndPackage", nil
 	}
 	for {
 		var (
-			m   map[string]interface{}
-			val interface{}
+			m   EntityRepresentation
+			val any
 			ok  bool
 		)
 		_ = val
+		// if all of the KeyFields values for this resolver are null,
+		// we shouldn't use use it
+		allNull := true
 		m = rep
-		if _, ok = m["sku"]; !ok {
+		val, ok = m["sku"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"sku\" for Product", ErrTypeNotFound))
 			break
+		}
+		if allNull {
+			allNull = val == nil
 		}
 		m = rep
-		if val, ok = m["variation"]; !ok {
+		val, ok = m["variation"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"variation\" for Product", ErrTypeNotFound))
 			break
 		}
-		if m, ok = val.(map[string]interface{}); !ok {
+		if m, ok = val.(map[string]any); !ok {
+			// nested field value is not a map[string]interface so don't use it
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to nested Key Field \"variation\" value not matching map[string]any for Product", ErrTypeNotFound))
 			break
 		}
-		if _, ok = m["id"]; !ok {
+		val, ok = m["id"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"id\" for Product", ErrTypeNotFound))
+			break
+		}
+		if allNull {
+			allNull = val == nil
+		}
+		if allNull {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to all null value KeyFields for Product", ErrTypeNotFound))
 			break
 		}
 		return "findProductBySkuAndVariationID", nil
 	}
-	return "", fmt.Errorf("%w for Product", ErrTypeNotFound)
+	return "", fmt.Errorf("%w for Product due to %v", ErrTypeNotFound,
+		errors.Join(entityResolverErrs...).Error())
 }
 
-func entityResolverNameForProductResearch(ctx context.Context, rep map[string]interface{}) (string, error) {
+func entityResolverNameForProductResearch(ctx context.Context, rep EntityRepresentation) (string, error) {
+	// we collect errors because a later entity resolver may work fine
+	// when an entity has multiple keys
+	entityResolverErrs := []error{}
 	for {
 		var (
-			m   map[string]interface{}
-			val interface{}
+			m   EntityRepresentation
+			val any
 			ok  bool
 		)
 		_ = val
+		// if all of the KeyFields values for this resolver are null,
+		// we shouldn't use use it
+		allNull := true
 		m = rep
-		if val, ok = m["study"]; !ok {
+		val, ok = m["study"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"study\" for ProductResearch", ErrTypeNotFound))
 			break
 		}
-		if m, ok = val.(map[string]interface{}); !ok {
+		if m, ok = val.(map[string]any); !ok {
+			// nested field value is not a map[string]interface so don't use it
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to nested Key Field \"study\" value not matching map[string]any for ProductResearch", ErrTypeNotFound))
 			break
 		}
-		if _, ok = m["caseNumber"]; !ok {
+		val, ok = m["caseNumber"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"caseNumber\" for ProductResearch", ErrTypeNotFound))
+			break
+		}
+		if allNull {
+			allNull = val == nil
+		}
+		if allNull {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to all null value KeyFields for ProductResearch", ErrTypeNotFound))
 			break
 		}
 		return "findProductResearchByStudyCaseNumber", nil
 	}
-	return "", fmt.Errorf("%w for ProductResearch", ErrTypeNotFound)
+	return "", fmt.Errorf("%w for ProductResearch due to %v", ErrTypeNotFound,
+		errors.Join(entityResolverErrs...).Error())
 }
 
-func entityResolverNameForUser(ctx context.Context, rep map[string]interface{}) (string, error) {
+func entityResolverNameForUser(ctx context.Context, rep EntityRepresentation) (string, error) {
+	// we collect errors because a later entity resolver may work fine
+	// when an entity has multiple keys
+	entityResolverErrs := []error{}
 	for {
 		var (
-			m   map[string]interface{}
-			val interface{}
+			m   EntityRepresentation
+			val any
 			ok  bool
 		)
 		_ = val
+		// if all of the KeyFields values for this resolver are null,
+		// we shouldn't use use it
+		allNull := true
 		m = rep
-		if _, ok = m["email"]; !ok {
+		val, ok = m["email"]
+		if !ok {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to missing Key Field \"email\" for User", ErrTypeNotFound))
+			break
+		}
+		if allNull {
+			allNull = val == nil
+		}
+		if allNull {
+			entityResolverErrs = append(entityResolverErrs,
+				fmt.Errorf("%w due to all null value KeyFields for User", ErrTypeNotFound))
 			break
 		}
 		return "findUserByEmail", nil
 	}
-	return "", fmt.Errorf("%w for User", ErrTypeNotFound)
+	return "", fmt.Errorf("%w for User due to %v", ErrTypeNotFound,
+		errors.Join(entityResolverErrs...).Error())
 }
