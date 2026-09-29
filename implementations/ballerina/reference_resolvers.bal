@@ -15,8 +15,8 @@ type ProductResearchKeyFields record {
     record {string caseNumber;} study?;
 };
 
-function resolveProduct(subgraph:Representation representation) returns Product|error? {
-    ProductKeyFields {id, sku, package, variation} = check representation.ensureType();
+isolated function resolveProduct(subgraph:Representation representation) returns Product|error? {
+    ProductKeyFields {id, sku, package, variation} = check representation.cloneWithType();
     if id is string {
         return getProductById(id);
     }
@@ -29,16 +29,16 @@ function resolveProduct(subgraph:Representation representation) returns Product|
     return error("Primary key for Product not found");
 }
 
-function resolveDeprecatedProduct(subgraph:Representation representation) returns DeprecatedProduct|error? {
-    DepricatedProductKeyFields {sku, package} = check representation.ensureType();
+isolated function resolveDeprecatedProduct(subgraph:Representation representation) returns DeprecatedProduct|error? {
+    DepricatedProductKeyFields {sku, package} = check representation.cloneWithType();
     if sku is string && package is string {
         return deprecatedProduct.sku == sku && deprecatedProduct.package == package ? deprecatedProduct : ();
     }
     return error("Primary key for DeprecatedProduct not found");
 }
 
-function resolveProductResearch(subgraph:Representation representation) returns ProductResearch|error? {
-    ProductResearchKeyFields {study} = check representation.ensureType();
+isolated function resolveProductResearch(subgraph:Representation representation) returns ProductResearch|error? {
+    ProductResearchKeyFields {study} = check representation.cloneWithType();
     if study !is () {
         return getProductResearchByCaseNumber(study.caseNumber);
     }
@@ -46,7 +46,7 @@ function resolveProductResearch(subgraph:Representation representation) returns 
 
 }
 
-function resolveUser(subgraph:Representation representation) returns User|error? {
+isolated function resolveUser(subgraph:Representation representation) returns User|error? {
     string email = check representation["email"].ensureType();
     return user.email == email ? user : ();
 }

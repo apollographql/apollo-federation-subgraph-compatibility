@@ -1,10 +1,10 @@
-final ProductDimension dimension = {
+final readonly & ProductDimension dimension = {
     size: "small",
     weight: 1,
     unit: "kg"
 };
 
-final User user = {
+final readonly & User user = {
     averageProductsCreatedPerYear: 133,
     email: "support@apollographql.com",
     name: "Jane Smith",
@@ -12,14 +12,14 @@ final User user = {
     yearsOfEmployment: 10
 };
 
-final DeprecatedProduct deprecatedProduct = {
+final readonly & DeprecatedProduct deprecatedProduct = {
     sku: "apollo-federation-v1",
     package: "@apollo/federation-v1",
     reason: "Migrate to Federation V2",
     createdBy: user
 };
 
-final ProductResearch[] productsResearch = [
+final readonly & ProductResearch[] productsResearch = [
     {
         study: {
             caseNumber: "1234",
@@ -36,7 +36,7 @@ final ProductResearch[] productsResearch = [
     }
 ];
 
-final Product[] products = [
+final readonly & Product[] products = [
     {
         id: "apollo-federation",
         sku: "federation",
