@@ -1,4 +1,4 @@
-FROM ballerina/ballerina:2201.13.6
+FROM ballerina/ballerina:2201.14.1
 EXPOSE 4001
 COPY . /subgraph
 USER root
